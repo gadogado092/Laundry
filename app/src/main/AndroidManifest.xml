@@ -13,7 +13,7 @@
         android:theme="@style/Theme.KelolaKost"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.screen.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.KelolaKost">
             <intent-filter>
@@ -22,6 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.screen.main.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost" />
+
+        <activity
+            android:name=".ui.screen.information.InformationActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost" />
+
     </application>
 
 </manifest>
