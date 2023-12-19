@@ -6,6 +6,7 @@ import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_IMAGE_VIEW
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_NAV_BUTTON
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_TAG_ROW
 import amat.kelolakost.ui.screen.user.NewUserActivity
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -95,9 +96,10 @@ fun OnboardScreen() {
             currentPage = currentPage.value,
             noOfPages = onboardPages.size,
             onCompleteClicked = {
+                val activity = (context as? Activity)
                 val intent = Intent(context, NewUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
+                activity?.finish()
             }
         ) {
             currentPage.value++

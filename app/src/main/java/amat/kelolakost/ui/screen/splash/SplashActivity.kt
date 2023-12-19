@@ -11,8 +11,6 @@ import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -63,24 +61,21 @@ class SplashActivity : ComponentActivity() {
 
                     Lifecycle.Event.ON_RESUME -> {
                         val intentMainActivity = Intent(this, MainActivity::class.java)
-                        intentMainActivity.flags =
-                            FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
 
-                        val intentInformationActivity =
-                            Intent(this, OnboardActivity::class.java)
-                        intentInformationActivity.flags =
-                            FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+                        val intentOnboardActivity = Intent(this, OnboardActivity::class.java)
 
                         viewModel.getAllUser().observe(this@SplashActivity) {
                             lifecycleScope.launch {
                                 delay(2500)
                                 if (it.isEmpty()) {
                                     launch(context = Dispatchers.Main) {
-                                        startActivity(intentInformationActivity)
+                                        startActivity(intentOnboardActivity)
+                                        finish()
                                     }
                                 } else {
                                     launch(context = Dispatchers.Main) {
                                         startActivity(intentMainActivity)
+                                        finish()
                                     }
                                 }
                             }
