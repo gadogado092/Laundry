@@ -3,7 +3,7 @@ package amat.kelolakost.ui.screen.splash
 import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
-import amat.kelolakost.ui.screen.information.InformationActivity
+import amat.kelolakost.ui.screen.onboard.OnboardActivity
 import amat.kelolakost.ui.screen.main.MainActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontGrey
@@ -49,10 +49,6 @@ import kotlinx.coroutines.launch
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
 
-    companion object {
-        val TAG = "splash"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,7 +67,7 @@ class SplashActivity : ComponentActivity() {
                             FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
 
                         val intentInformationActivity =
-                            Intent(this, InformationActivity::class.java)
+                            Intent(this, OnboardActivity::class.java)
                         intentInformationActivity.flags =
                             FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
 

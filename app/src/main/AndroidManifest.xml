@@ -29,7 +29,12 @@
             android:theme="@style/Theme.KelolaKost" />
 
         <activity
-            android:name=".ui.screen.information.InformationActivity"
+            android:name=".ui.screen.onboard.OnboardActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost" />
+
+        <activity
+            android:name=".ui.screen.user.NewUserActivity"
             android:exported="true"
             android:theme="@style/Theme.KelolaKost" />
 

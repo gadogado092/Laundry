@@ -1,4 +1,4 @@
-package amat.kelolakost.ui.screen.information
+package amat.kelolakost.ui.screen.onboard
 
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.os.Bundle
@@ -7,10 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 
-class InformationActivity : ComponentActivity() {
+class OnboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -19,7 +18,7 @@ class InformationActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Text(text = "Information")
+                    OnboardScreen()
                 }
             }
         }
