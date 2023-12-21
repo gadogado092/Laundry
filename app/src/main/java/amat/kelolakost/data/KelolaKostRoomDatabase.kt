@@ -7,12 +7,13 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        User::class
+        User::class, Kost::class
     ],
     version = 1
 )
 abstract class KelolaKostRoomDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun kostDao(): KostDao
 
     companion object {
         @Volatile
@@ -21,7 +22,9 @@ abstract class KelolaKostRoomDatabase : RoomDatabase() {
         fun getDatabase(context: Context): KelolaKostRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext, KelolaKostRoomDatabase::class.java, "kelola_kost_database"
+                    context.applicationContext,
+                    KelolaKostRoomDatabase::class.java,
+                    "kelola_kost_database"
                 ).build()
                 INSTANCE = instance
                 return instance

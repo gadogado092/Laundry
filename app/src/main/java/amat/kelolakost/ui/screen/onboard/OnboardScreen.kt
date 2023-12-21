@@ -43,7 +43,7 @@ val onboardPagesList = listOf(
     OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Selamat Datang",
-        description = "KeKost merupakan aplikasi memudahkan pengelolaan kost. Kekost berbasis offline atau data tersimpan pada smartphone pengguna, sehingga dapat digunakan tanpa jaringan internet"
+        description = "KeKost merupakan aplikasi memudahkan pengelolaan kost, kontrakan, penginapan maupun guest house. Kekost berbasis offline atau data tersimpan pada smartphone pengguna, sehingga dapat digunakan tanpa jaringan internet"
     ), OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Jelajahi Fitur Menarik",
@@ -182,7 +182,9 @@ fun OnBoardNavButton(
             } else {
                 onCompleteClicked()
             }
-        }, modifier = modifier.testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
+        }, modifier = modifier
+            .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
+            .fillMaxWidth(0.6F)
     ) {
         Text(text = if (currentPage < noOfPages - 1) "Selanjutnya" else "Coba Sekarang")
     }

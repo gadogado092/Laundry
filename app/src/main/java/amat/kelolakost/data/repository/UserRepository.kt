@@ -9,6 +9,10 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getAllUser()
     }
 
+    suspend fun insertUser(user: User) {
+        userDao.insert(user)
+    }
+
     companion object {
         @Volatile
         private var instance: UserRepository? = null

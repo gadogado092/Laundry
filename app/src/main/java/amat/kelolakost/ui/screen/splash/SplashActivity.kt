@@ -3,8 +3,8 @@ package amat.kelolakost.ui.screen.splash
 import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
-import amat.kelolakost.ui.screen.onboard.OnboardActivity
 import amat.kelolakost.ui.screen.main.MainActivity
+import amat.kelolakost.ui.screen.onboard.OnboardActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontGrey
 import amat.kelolakost.ui.theme.GreenDark
