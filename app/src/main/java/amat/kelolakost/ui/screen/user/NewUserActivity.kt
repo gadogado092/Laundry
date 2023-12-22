@@ -3,10 +3,12 @@ package amat.kelolakost.ui.screen.user
 import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.component.MyOutlinedTextField
+import amat.kelolakost.ui.screen.main.MainActivity
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -31,6 +33,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class NewUserActivity : ComponentActivity() {
@@ -41,6 +46,12 @@ class NewUserActivity : ComponentActivity() {
                 NewUserScreen()
             }
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+            val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            view.updatePadding(bottom = bottom)
+            insets
+        }
     }
 }
 
@@ -48,7 +59,7 @@ class NewUserActivity : ComponentActivity() {
 fun NewUserScreen() {
 
     val context = LocalContext.current
-    val _userViewModel: UserViewModel =
+    val userViewModel: UserViewModel =
         viewModel(
             factory = UserViewModelFactory(
                 Injection.provideUserRepository(context),
@@ -56,13 +67,21 @@ fun NewUserScreen() {
             )
         )
 
+    if (userViewModel.startToMain.collectAsState().value) {
+        Toast.makeText(context, "Pendaftaran Berhasil Dilakukan", Toast.LENGTH_SHORT).show()
+        val activity = (context as? Activity)
+        val intentMainActivity = Intent(context, MainActivity::class.java)
+        context.startActivity(intentMainActivity)
+        activity?.finish()
+    }
+
     Column {
         TopAppBar(
             title = {
                 Text(
                     text = stringResource(id = R.string.title_new_user),
                     color = FontWhite,
-                    fontSize = 20.sp
+                    fontSize = 22.sp
                 )
             },
             backgroundColor = GreenDark,
@@ -70,97 +89,94 @@ fun NewUserScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
             MyOutlinedTextField(
                 label = "Nama Pemilik",
-                value = _userViewModel.user.collectAsState().value.name,
+                value = userViewModel.user.collectAsState().value.name,
                 onValueChange = {
-                    _userViewModel.setName(it)
+                    userViewModel.setName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
+                isError = userViewModel.isUserNameValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isUserNameValid.collectAsState().value.errorMessage
             )
 
             MyOutlinedTextField(
                 label = "Nomor Handphone",
-                value = _userViewModel.user.collectAsState().value.numberPhone,
+                value = userViewModel.user.collectAsState().value.numberPhone,
                 onValueChange = {
-                    _userViewModel.setNumberPhone(it)
+                    userViewModel.setNumberPhone(it)
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                isError = userViewModel.isUserNumberPhoneValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isUserNumberPhoneValid.collectAsState().value.errorMessage
             )
 
             MyOutlinedTextField(
                 label = "Alamat Email",
-                value = _userViewModel.user.collectAsState().value.email,
+                value = userViewModel.user.collectAsState().value.email,
                 onValueChange = {
-                    _userViewModel.setEmail(it)
+                    userViewModel.setEmail(it)
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                isError = userViewModel.isUserEmailValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isUserEmailValid.collectAsState().value.errorMessage
             )
 
             MyOutlinedTextField(
                 label = "Nama Kost/Kontrakan/Penginapan",
-                value = _userViewModel.kost.collectAsState().value.name,
+                value = userViewModel.kost.collectAsState().value.name,
                 onValueChange = {
-                    _userViewModel.setKostName(it)
+                    userViewModel.setKostName(it)
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .fillMaxWidth(),
+                isError = userViewModel.isKostNameValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isKostNameValid.collectAsState().value.errorMessage
             )
 
             MyOutlinedTextField(
                 label = "Alamat Kost/Kontrakan/Penginapan",
-                value = _userViewModel.kost.collectAsState().value.address,
+                value = userViewModel.kost.collectAsState().value.address,
                 onValueChange = {
-                    _userViewModel.setKostAddress(it)
+                    userViewModel.setKostAddress(it)
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                isError = userViewModel.isKostAddressValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isKostAddressValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Keterangan Tambahan",
-                value = _userViewModel.kost.collectAsState().value.note,
+                value = userViewModel.kost.collectAsState().value.note,
                 onValueChange = {
-                    _userViewModel.setNote(it)
+                    userViewModel.setNote(it)
                 },
                 modifier = Modifier
                     .height(120.dp)
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .fillMaxWidth(),
                 singleLine = false
             )
             Button(
                 onClick = {
-//                    viewModel.isEntryValid()
+                    userViewModel.prosesRegistration()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
-                Text(text = "Daftar Sekarang", color = FontWhite)
+                Text(text = "DAFTAR SEKARANG", color = FontWhite)
             }
 
 
         }
     }
-}
-
-fun checkData() {
-
-}
-
-fun Context.toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

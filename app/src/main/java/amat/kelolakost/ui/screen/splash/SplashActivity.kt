@@ -66,7 +66,7 @@ class SplashActivity : ComponentActivity() {
 
                         viewModel.getAllUser().observe(this@SplashActivity) {
                             lifecycleScope.launch {
-                                delay(2500)
+                                delay(2000)
                                 if (it.isEmpty()) {
                                     launch(context = Dispatchers.Main) {
                                         startActivity(intentOnboardActivity)

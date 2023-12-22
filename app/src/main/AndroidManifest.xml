@@ -36,7 +36,8 @@
         <activity
             android:name=".ui.screen.user.NewUserActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
