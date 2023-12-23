@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Kelola Kost</string>
     <string name="title_new_user">Selamat Datang</string>
+    <string name="title_unit">Unit</string>
+    <string name="title_tenant">Penyewa</string>
+    <string name="title_cash_flow">Alur Kas</string>
+    <string name="title_other">Lainnya</string>
 </resources>

@@ -1,0 +1,8 @@
+package amat.kelolakost.ui.navigation
+
+sealed class Screen(val route: String){
+    object Unit: Screen("unit")
+    object Tenant: Screen("tenant")
+    object CashFlow: Screen("cash_flow")
+    object Other: Screen("other")
+}
