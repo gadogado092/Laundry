@@ -5,4 +5,8 @@
     <string name="title_tenant">Penyewa</string>
     <string name="title_cash_flow">Alur Kas</string>
     <string name="title_other">Lainnya</string>
+
+    <string name="title_bottom_sheet">Title Bottom Sheet</string>
+    <string name="note_empty_data">Data kosong</string>
+    <string name="select_status">Select Status</string>
 </resources>

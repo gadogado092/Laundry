@@ -21,13 +21,12 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CardMembership
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.filled.Bed
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,7 +58,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -128,12 +126,12 @@ fun BottomBar(
         val navigationItems = listOf(
             NavigationItem(
                 title = stringResource(R.string.title_unit),
-                icon = Icons.Default.Home,
+                icon = Icons.Default.Bed,
                 screen = Screen.Unit
             ),
             NavigationItem(
                 title = stringResource(R.string.title_tenant),
-                icon = Icons.Default.CardMembership,
+                icon = Icons.Default.People,
                 screen = Screen.Tenant,
             ),
             NavigationItem(

@@ -5,6 +5,27 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+
+    <color name="black">#121212</color>
+    <color name="grey">#888888</color>
+    <color name="grey_soft">#C5C5C5</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red_700">#FFD32F2F</color>
+    <color name="blue_in">#29D5FF</color>
+    <color name="black_font">#121212</color>
+    <color name="black_soft_font">#5A5A5A</color>
+    <color name="background_cancel">#FFCBCB</color>
+    <color name="background_finish">#BAFFB2</color>
+    <color name="background_book">#0099FF</color>
+    <color name="background_play">#06912F</color>
+    <color name="font_cancel">#FF0000</color>
+    <color name="font_finish">#0B7E00</color>
+    <color name="font_book">#FFFFFF</color>
+    <color name="font_play">#FFFFFF</color>
+    <color name="font_not_selected_grey">#666666</color>
+    <color name="background_not_selected_grey">#CCCCCC</color>
+    <color name="background_regular">#C0C0C0</color>
+    <color name="background_member">#E5B80B</color>
+    <color name="font_regular">#2E2E2E</color>
+    <color name="font_member">#323E3E</color>
 </resources>

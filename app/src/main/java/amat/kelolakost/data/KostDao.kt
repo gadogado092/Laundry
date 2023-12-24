@@ -13,4 +13,7 @@ interface KostDao {
 
     @Query("SELECT * FROM Kost")
     fun getAllKost(): Flow<List<Kost>>
+
+    @Query("SELECT * FROM Kost")
+    suspend fun getKost(): List<Kost>
 }

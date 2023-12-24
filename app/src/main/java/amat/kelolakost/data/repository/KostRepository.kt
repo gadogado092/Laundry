@@ -9,6 +9,10 @@ class KostRepository(private val kostDao: KostDao) {
         return kostDao.getAllKost()
     }
 
+    suspend fun getKost(): List<Kost> {
+        return kostDao.getKost()
+    }
+
     suspend fun insertKost(kost: Kost) {
         kostDao.insert(kost)
     }
