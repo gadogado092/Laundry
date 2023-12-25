@@ -106,7 +106,24 @@ fun MainScreen(
                 CashFlowScreen(context = context)
             }
             composable(Screen.Other.route) {
-                OtherScreen(context = context)
+                OtherScreen(
+                    context = context,
+                    onClickExtend = {
+
+                    },
+                    navigateToTenant = {
+
+                    },
+                    navigateToBooking = {
+
+                    },
+                    onClickTutorial = {
+
+                    },
+                    onClickCostumerService = {
+
+                    },
+                )
             }
         }
     }
