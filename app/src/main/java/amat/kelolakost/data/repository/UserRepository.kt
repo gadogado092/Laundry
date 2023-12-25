@@ -9,6 +9,10 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getAllUser()
     }
 
+    suspend fun getUser(): List<User> {
+        return userDao.getUser()
+    }
+
     suspend fun insertUser(user: User) {
         userDao.insert(user)
     }

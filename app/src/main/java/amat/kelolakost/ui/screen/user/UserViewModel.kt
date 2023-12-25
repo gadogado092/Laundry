@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.screen.user
 
+import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
@@ -8,7 +9,6 @@ import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.generateDateTimeNow
 import amat.kelolakost.isEmailValid
 import amat.kelolakost.isNumberPhoneValid
-import android.net.Uri.decode
 import android.net.Uri.encode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -154,8 +154,7 @@ class UserViewModel(
                 val userId = UUID.randomUUID()
                 val kostId = UUID.randomUUID()
                 val createAt = generateDateTimeNow()
-                val encodedDateTime = encode(createAt)
-                val decodedDateTime = decode(encodedDateTime)
+                val encodedDateTime = encode(addDateLimitApp(createAt, "Bulan", 1))
                 val key = UUID.randomUUID().toString().substring(0, 4).uppercase()
 
                 val user =

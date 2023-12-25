@@ -1,9 +1,18 @@
 package amat.kelolakost.ui.screen.other
 
 import amat.kelolakost.R
+import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.dateToDisplayMidFormat
+import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
+import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.OtherMenuItem
+import amat.kelolakost.ui.screen.splash.OtherViewModel
+import amat.kelolakost.ui.screen.splash.OtherViewModelFactory
 import amat.kelolakost.ui.theme.GreyLight
+import amat.kelolakost.ui.theme.TealGreen
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +26,7 @@ import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun OtherScreen(
@@ -35,6 +47,22 @@ fun OtherScreen(
     onClickTutorial: () -> Unit,
     onClickCostumerService: () -> Unit,
 ) {
+    val viewModel: OtherViewModel =
+        viewModel(factory = OtherViewModelFactory(Injection.provideUserRepository(context)))
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.getKostInit()
+            }
+
+            else -> {}
+        }
+
+    }
+
+
     Column {
         Divider(
             color = GreyLight,
@@ -52,8 +80,7 @@ fun OtherScreen(
                     style = TextStyle(fontSize = 12.sp),
                     color = Color.Gray
                 )
-                Text(text = "20 Oktober 1992")
-                Text(text = "25.000/Bulan")
+                ContentPrice(viewModel)
             }
             OutlinedButton(onClick = onClickExtend) {
                 Text(text = stringResource(id = R.string.extend))
@@ -120,3 +147,33 @@ fun OtherScreen(
     }
 
 }
+
+@Composable
+fun ContentPrice(viewModel: OtherViewModel) {
+    viewModel.stateUser.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                Text(text = uiState.errorMessage, style = TextStyle(fontSize = 12.sp))
+                Text(text = uiState.errorMessage, color = TealGreen)
+            }
+
+            UiState.Loading -> {
+                Text(text = "Loading", style = TextStyle(fontSize = 12.sp))
+                Text(text = "Loading", color = TealGreen)
+            }
+
+            is UiState.Success -> {
+                val decodedDateTime = Uri.decode(uiState.data.limit)
+                Text(
+                    text = dateToDisplayMidFormat(decodedDateTime),
+                    style = TextStyle(fontSize = 12.sp),
+                )
+                Text(
+                    text = currencyFormatterStringViewZero(uiState.data.cost.toString()) + "/Bulan",
+                    color = TealGreen
+                )
+            }
+        }
+    }
+}
+
