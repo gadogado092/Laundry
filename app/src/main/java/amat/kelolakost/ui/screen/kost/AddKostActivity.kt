@@ -140,14 +140,14 @@ fun AddKostScreen(
             )
             Button(
                 onClick = {
-                    addKostViewModel.prosesRegistration()
+                    addKostViewModel.prosesInsert()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
-                Text(text = "SIMPAN", color = FontWhite)
+                Text(text = stringResource(id = R.string.save), color = FontWhite)
             }
         }
     }

@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingLayout() {
-    CenterLayout(
+fun LoadingLayout(modifier: Modifier = Modifier) {
+    CenterLayout(modifier = modifier,
         content = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator(

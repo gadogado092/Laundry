@@ -86,7 +86,7 @@ fun KostScreen(
                     }
 
                     is UiState.Success -> {
-                        listKostView(listKost = uiState.data, onItemClick = {
+                        ListKostView(listKost = uiState.data, onItemClick = {
                             val intent = Intent(context, UpdateKostActivity::class.java)
                             intent.putExtra("id", it)
                             context.startActivity(intent)
@@ -117,7 +117,7 @@ fun KostScreen(
 }
 
 @Composable
-fun listKostView(
+fun ListKostView(
     listKost: List<Kost>,
     onItemClick: (String) -> Unit,
 ) {

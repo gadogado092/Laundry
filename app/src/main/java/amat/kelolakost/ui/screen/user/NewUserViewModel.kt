@@ -30,7 +30,7 @@ class NewUserViewModel(
         get() = _user
 
     private val _kost: MutableStateFlow<Kost> =
-        MutableStateFlow(Kost("", "", "", "", ""))
+        MutableStateFlow(Kost("", "", "", "", "",false))
     val kost: StateFlow<Kost>
         get() = _kost
 

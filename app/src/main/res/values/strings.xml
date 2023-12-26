@@ -16,6 +16,9 @@
 
     <string name="limit_extend">Batas pemakaian</string>
     <string name="extend">Perpanjang</string>
+    <string name="update">"UPDATE"</string>
+    <string name="delete">"DELETE"</string>
+    <string name="save">"SIMPAN"</string>
 
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
@@ -29,11 +32,14 @@
     <string name="subtitle_tutorial">Lihat video tutorial aplikasi</string>
     <string name="title_customer_service">Customer Service</string>
     <string name="subtitle_customer_service">Hubungi customer service apapun kendala anda\nChat Via WA 085241527504</string>
+    <string name="title_profile">Profil</string>
+    <string name="subtitle_profile">Lihat profil dan pengaturan</string>
 
     <string name="title_add_kost">Tambah Kost</string>
     <string name="title_update_kost">Update Kost</string>
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">"Tambah data berhasil"</string>
+    <string name="success_update_data">"Update data berhasil"</string>
     <string name="error_input_data">"Ada kesalahan input"</string>
 </resources>

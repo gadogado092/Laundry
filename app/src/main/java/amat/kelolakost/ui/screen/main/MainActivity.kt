@@ -130,6 +130,9 @@ fun MainScreen(
                     navigateToKost = {
                         navController.navigate(Screen.Kost.route)
                     },
+                    navigateToProfile = {
+
+                    },
                     onClickTutorial = {
                         try {
                             val webIntent =

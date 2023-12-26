@@ -9,12 +9,20 @@ class KostRepository(private val kostDao: KostDao) {
         return kostDao.getAllKost()
     }
 
+    fun getDetail(id: String): Flow<Kost> {
+        return kostDao.getDetail(id)
+    }
+
     suspend fun getKost(): List<Kost> {
         return kostDao.getKost()
     }
 
     suspend fun insertKost(kost: Kost) {
         kostDao.insert(kost)
+    }
+
+    suspend fun updateKost(kost: Kost) {
+        kostDao.update(kost)
     }
 
     companion object {

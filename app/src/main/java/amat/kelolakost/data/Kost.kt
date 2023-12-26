@@ -10,5 +10,6 @@ data class Kost(
     val name: String,
     val address: String,
     val note: String,
-    val createAt: String
+    val createAt: String,
+    val isDelete: Boolean
 )

@@ -27,7 +27,7 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
     val stateListKost: StateFlow<UiState<List<Kost>>>
         get() = _stateListKost
 
-    private val _kostSelected = MutableStateFlow(Kost("", "", "", "", ""))
+    private val _kostSelected = MutableStateFlow(Kost("", "", "", "", "", false))
     val kostSelected: StateFlow<Kost>
         get() = _kostSelected
 

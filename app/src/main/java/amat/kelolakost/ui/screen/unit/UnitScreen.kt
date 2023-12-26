@@ -84,7 +84,8 @@ fun showBottomSheetSelectStatus(context: Context, viewModel: UnitViewModel) {
 
 @Composable
 fun ContentKost(viewModel: UnitViewModel) {
-    val kostSelected = viewModel.kostSelected.collectAsState(initial = Kost("", "", "", "", ""))
+    val kostSelected =
+        viewModel.kostSelected.collectAsState(initial = Kost("", "", "", "", "", false))
     viewModel.stateListKost.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {

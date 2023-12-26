@@ -3,16 +3,22 @@ package amat.kelolakost.ui.screen.kost
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.KostRepository
-import amat.kelolakost.generateDateTimeNow
+import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class AddKostViewModel(private val kostRepository: KostRepository) : ViewModel() {
+class UpdateKostViewModel(private val kostRepository: KostRepository) : ViewModel() {
+
+    private val _stateInitKost: MutableStateFlow<UiState<Kost>> =
+        MutableStateFlow(UiState.Loading)
+    val stateInitKost: StateFlow<UiState<Kost>>
+        get() = _stateInitKost
+
     private val _kost: MutableStateFlow<Kost> =
         MutableStateFlow(Kost("", "", "", "", "", false))
     val kost: StateFlow<Kost>
@@ -28,10 +34,10 @@ class AddKostViewModel(private val kostRepository: KostRepository) : ViewModel()
     val isKostAddressValid: StateFlow<ValidationResult>
         get() = _isKostAddressValid
 
-    private val _isInsertSuccess: MutableStateFlow<Boolean> =
+    private val _isUpdateSuccess: MutableStateFlow<Boolean> =
         MutableStateFlow(false)
-    val isInsertSuccess: StateFlow<Boolean>
-        get() = _isInsertSuccess
+    val isUpdateSuccess: StateFlow<Boolean>
+        get() = _isUpdateSuccess
 
     fun setKostName(value: String) {
         _kost.value = _kost.value.copy(name = value)
@@ -55,7 +61,21 @@ class AddKostViewModel(private val kostRepository: KostRepository) : ViewModel()
         _kost.value = _kost.value.copy(note = value)
     }
 
-    fun prosesInsert() {
+    fun getDetail(id: String) {
+        viewModelScope.launch {
+            _stateInitKost.value = UiState.Loading
+            kostRepository.getDetail(id)
+                .catch {
+                    _stateInitKost.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    _stateInitKost.value = UiState.Success(data)
+                    _kost.value = data
+                }
+        }
+    }
+
+    fun prosesUpdate() {
         if (_kost.value.name.trim().isEmpty()) {
             _isKostNameValid.value = ValidationResult(true, "Nama Kost Tidak Boleh Kosong")
         }
@@ -68,30 +88,27 @@ class AddKostViewModel(private val kostRepository: KostRepository) : ViewModel()
             && !_isKostAddressValid.value.isError
         ) {
             viewModelScope.launch {
-                val kostId = UUID.randomUUID()
-                val createAt = generateDateTimeNow()
-
-                val kost = _kost.value.copy(id = kostId.toString(), createAt = createAt)
-                insertKost(kost)
+                val kost = _kost.value
+                updateKost(kost)
             }
         }
     }
 
-    private suspend fun insertKost(kost: Kost) {
-        kostRepository.insertKost(kost)
-        _isInsertSuccess.value = true
+    private suspend fun updateKost(kost: Kost) {
+        kostRepository.updateKost(kost)
+        _isUpdateSuccess.value = true
     }
 }
 
-class AddKostViewModelFactory(
+class UpdateKostViewModelFactory(
     private val kostRepository: KostRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddKostViewModel::class.java)) {
-            return AddKostViewModel(kostRepository) as T
+        if (modelClass.isAssignableFrom(UpdateKostViewModel::class.java)) {
+            return UpdateKostViewModel(kostRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

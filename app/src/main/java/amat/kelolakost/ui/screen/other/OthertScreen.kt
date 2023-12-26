@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.House
@@ -43,6 +44,7 @@ fun OtherScreen(
     navigateToBooking: () -> Unit,
     navigateToTenant: () -> Unit,
     navigateToKost: () -> Unit,
+    navigateToProfile: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit,
 ) {
@@ -123,6 +125,15 @@ fun OtherScreen(
             modifier = Modifier
                 .clickable {
                     navigateToTenant()
+                },
+        )
+        OtherMenuItem(
+            Icons.Default.AccountCircle,
+            stringResource(id = R.string.title_profile),
+            stringResource(id = R.string.subtitle_profile),
+            modifier = Modifier
+                .clickable {
+                    navigateToProfile()
                 },
         )
         OtherMenuItem(
