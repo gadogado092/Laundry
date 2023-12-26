@@ -148,13 +148,21 @@ fun MainScreen(
                         }
                     },
                     onClickCostumerService = {
-                        //TODO wa tipe ambil dari database user
-                        sendWhatsApp(
-                            context,
-                            numberCs,
-                            messageCs,
-                            typeWa = "Standard"
-                        )
+                        if (it == "") {
+                            sendWhatsApp(
+                                context,
+                                numberCs,
+                                messageCs
+                            )
+                        } else {
+                            sendWhatsApp(
+                                context,
+                                numberCs,
+                                messageCs,
+                                typeWa = it
+                            )
+                        }
+
                     },
                 )
             }

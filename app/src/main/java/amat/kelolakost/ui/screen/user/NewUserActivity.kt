@@ -13,7 +13,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,10 +25,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.RadioButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -129,7 +133,39 @@ fun NewUserScreen() {
                 isError = userViewModel.isUserEmailValid.collectAsState().value.isError,
                 errorMessage = userViewModel.isUserEmailValid.collectAsState().value.errorMessage
             )
-
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Tipe Whatsapp")
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                userViewModel.setTypeWa("Standard")
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = ("Standard" == userViewModel.user.collectAsState().value.typeWa),
+                            onClick = { userViewModel.setTypeWa("Standard") }
+                        )
+                        Text(text = "Standard")
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                userViewModel.setTypeWa("Business")
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = ("Business" == userViewModel.user.collectAsState().value.typeWa),
+                            onClick = { userViewModel.setTypeWa("Business") }
+                        )
+                        Text(text = "Business")
+                    }
+                }
+            }
             MyOutlinedTextField(
                 label = "Nama Kost/Kontrakan/Penginapan",
                 value = userViewModel.kost.collectAsState().value.name,

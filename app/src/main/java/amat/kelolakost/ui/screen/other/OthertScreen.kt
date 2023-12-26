@@ -44,7 +44,7 @@ fun OtherScreen(
     navigateToTenant: () -> Unit,
     navigateToKost: () -> Unit,
     onClickTutorial: () -> Unit,
-    onClickCostumerService: () -> Unit,
+    onClickCostumerService: (String) -> Unit,
 ) {
     val viewModel: OtherViewModel =
         viewModel(factory = OtherViewModelFactory(Injection.provideUserRepository(context)))
@@ -140,7 +140,7 @@ fun OtherScreen(
             stringResource(id = R.string.subtitle_customer_service),
             modifier = Modifier
                 .clickable {
-                    onClickCostumerService()
+                    onClickCostumerService(viewModel.typeWa.value)
                 },
         )
     }

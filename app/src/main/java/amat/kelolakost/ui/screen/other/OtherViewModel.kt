@@ -17,11 +17,17 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
     val stateUser: StateFlow<UiState<User>>
         get() = _stateUser
 
+    private val _typeWa: MutableStateFlow<String> =
+        MutableStateFlow("")
+    val typeWa: StateFlow<String>
+        get() = _typeWa
+
     fun getKostInit() {
         viewModelScope.launch {
             _stateUser.value = UiState.Loading
             val data = repository.getUser()
             _stateUser.value = UiState.Success(data[0])
+            _typeWa.value = data[0].typeWa
         }
 
     }

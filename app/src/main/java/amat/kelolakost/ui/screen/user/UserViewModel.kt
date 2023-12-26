@@ -25,7 +25,7 @@ class UserViewModel(
     ViewModel() {
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "", 25000, "", ""))
+        MutableStateFlow(User("", "", "", "", "Standard", "", 25000, "", ""))
     val user: StateFlow<User>
         get() = _user
 
@@ -117,6 +117,10 @@ class UserViewModel(
 
     fun setNote(value: String) {
         _kost.value = _kost.value.copy(note = value)
+    }
+
+    fun setTypeWa(value: String) {
+        _user.value = _user.value.copy(typeWa = value)
     }
 
     fun prosesRegistration() {
