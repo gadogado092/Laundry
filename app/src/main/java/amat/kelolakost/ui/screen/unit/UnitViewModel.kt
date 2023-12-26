@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
@@ -53,12 +54,19 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
 //        getRoom()
     }
 
-    fun getAllKostInit() {
+    private fun getAllKostInit() {
         viewModelScope.launch {
             _stateListKost.value = UiState.Loading
-            val data = kostRepository.getKost()
-            _stateListKost.value = UiState.Success(data)
-            updateKostSelected(data[0])
+//            val data = kostRepository.getKost()
+//            _stateListKost.value = UiState.Success(data)
+            kostRepository.getAllKost()
+                .catch {
+                    _stateListKost.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    _stateListKost.value = UiState.Success(data)
+                    updateKostSelected(data[0])
+                }
         }
 
     }

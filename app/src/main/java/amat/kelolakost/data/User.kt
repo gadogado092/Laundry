@@ -10,6 +10,7 @@ data class User(
     val name: String,
     val numberPhone: String,
     val email: String,
+    val typeWa: String,
     //limit is date encode by Base64
     val limit: String,
     val cost: Int,

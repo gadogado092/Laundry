@@ -1,4 +1,4 @@
-package amat.kelolakost.ui.screen.splash
+package amat.kelolakost.ui.screen.other
 
 import amat.kelolakost.data.User
 import amat.kelolakost.data.repository.UserRepository

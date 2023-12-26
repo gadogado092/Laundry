@@ -7,8 +7,6 @@ import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.OtherMenuItem
-import amat.kelolakost.ui.screen.splash.OtherViewModel
-import amat.kelolakost.ui.screen.splash.OtherViewModelFactory
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
 import android.content.Context
@@ -44,6 +42,7 @@ fun OtherScreen(
     onClickExtend: () -> Unit,
     navigateToBooking: () -> Unit,
     navigateToTenant: () -> Unit,
+    navigateToKost: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: () -> Unit,
 ) {
@@ -114,7 +113,7 @@ fun OtherScreen(
             stringResource(id = R.string.subtitle_other_kost),
             modifier = Modifier
                 .clickable {
-                    navigateToTenant()
+                    navigateToKost()
                 },
         )
         OtherMenuItem(

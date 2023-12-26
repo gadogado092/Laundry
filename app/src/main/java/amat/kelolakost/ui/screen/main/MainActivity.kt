@@ -1,9 +1,11 @@
 package amat.kelolakost.ui.screen.main
 
 import amat.kelolakost.R
+import amat.kelolakost.sendWhatsApp
 import amat.kelolakost.ui.navigation.NavigationItem
 import amat.kelolakost.ui.navigation.Screen
 import amat.kelolakost.ui.screen.cash_flow.CashFlowScreen
+import amat.kelolakost.ui.screen.kost.KostScreen
 import amat.kelolakost.ui.screen.other.OtherScreen
 import amat.kelolakost.ui.screen.tenant.TenantScreen
 import amat.kelolakost.ui.screen.unit.UnitScreen
@@ -11,7 +13,11 @@ import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.GreyLight2
 import amat.kelolakost.ui.theme.KelolaKostTheme
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -106,6 +112,10 @@ fun MainScreen(
                 CashFlowScreen(context = context)
             }
             composable(Screen.Other.route) {
+                //TODO url_tutorial_app belum dimasukkan
+                val urlTutorial = stringResource(R.string.url_tutorial_app)
+                val numberCs = stringResource(R.string.number_cs)
+                val messageCs = stringResource(R.string.message_cs)
                 OtherScreen(
                     context = context,
                     onClickExtend = {
@@ -117,13 +127,41 @@ fun MainScreen(
                     navigateToBooking = {
 
                     },
+                    navigateToKost = {
+                        navController.navigate(Screen.Kost.route)
+                    },
                     onClickTutorial = {
-
+                        try {
+                            val webIntent =
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(urlTutorial)
+                                )
+                            context.startActivity(webIntent)
+                        } catch (ex: ActivityNotFoundException) {
+                            Toast.makeText(
+                                context,
+                                "Tidak Bisa Akses Tutorial",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
                     },
                     onClickCostumerService = {
-
+                        //TODO wa tipe ambil dari database user
+                        sendWhatsApp(
+                            context,
+                            numberCs,
+                            messageCs,
+                            typeWa = "Standard"
+                        )
                     },
                 )
+            }
+            composable(Screen.Kost.route) {
+                KostScreen(context = context, navigateBack = {
+                    navController.navigateUp()
+                })
             }
         }
     }

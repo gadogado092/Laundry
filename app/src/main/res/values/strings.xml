@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Kelola Kost</string>
     <string name="number_cs">+6285241527504</string>
+    <string name="url_tutorial_app">https://www.youtube.com/</string>
+    <string name="message_cs">Hai Customer Service Kelola Lapanga, saya ingin bertanya tentang aplikasi.</string>
+
     <string name="title_new_user">Selamat Datang</string>
     <string name="title_unit">Unit</string>
     <string name="title_tenant">Penyewa</string>
@@ -26,4 +29,9 @@
     <string name="subtitle_tutorial">Lihat video tutorial aplikasi</string>
     <string name="title_customer_service">Customer Service</string>
     <string name="subtitle_customer_service">Hubungi customer service apapun kendala anda\nChat Via WA 085241527504</string>
+
+    <string name="title_add_kost">Tambah Kost</string>
+    <string name="title_update_kost">Update Kost</string>
+    <string name="please_wait">Tunggu sebentar</string>
+    <string name="try_again">Coba lagi</string>
 </resources>
