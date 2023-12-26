@@ -34,4 +34,6 @@
     <string name="title_update_kost">Update Kost</string>
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
+    <string name="success_add_data">"Tambah data berhasil"</string>
+    <string name="error_input_data">"Ada kesalahan input"</string>
 </resources>

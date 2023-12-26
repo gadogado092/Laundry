@@ -63,9 +63,9 @@ class NewUserActivity : ComponentActivity() {
 fun NewUserScreen() {
 
     val context = LocalContext.current
-    val userViewModel: UserViewModel =
+    val userViewModel: NewUserViewModel =
         viewModel(
-            factory = UserViewModelFactory(
+            factory = NewUserViewModelFactory(
                 Injection.provideUserRepository(context),
                 Injection.provideKostRepository(context)
             )

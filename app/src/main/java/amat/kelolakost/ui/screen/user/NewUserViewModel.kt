@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class UserViewModel(
+class NewUserViewModel(
     private val userRepository: UserRepository,
     private val kostRepository: KostRepository
 ) :
@@ -183,7 +183,7 @@ class UserViewModel(
 
 }
 
-class UserViewModelFactory(
+class NewUserViewModelFactory(
     private val userRepository: UserRepository,
     private val kostRepository: KostRepository
 ) :
@@ -191,8 +191,8 @@ class UserViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
-            return UserViewModel(userRepository, kostRepository) as T
+        if (modelClass.isAssignableFrom(NewUserViewModel::class.java)) {
+            return NewUserViewModel(userRepository, kostRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
