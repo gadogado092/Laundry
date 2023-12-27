@@ -49,6 +49,7 @@ fun addDateLimitApp(dateString: String, type: String, valueAdd: Int): String {
     val fmtOut = SimpleDateFormat("yyyy-MM-dd")
     return fmtOut.format(c.time)
 }
+
 @SuppressLint("SimpleDateFormat")
 fun dateToDisplayMidFormat(dateString: String): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd")
@@ -57,12 +58,14 @@ fun dateToDisplayMidFormat(dateString: String): String {
     val fmtOut = SimpleDateFormat("dd MMM yyyy")
     return fmtOut.format(date)
 }
+
 fun currencyFormatterStringViewZero(num: String): String {
-    if (num == "0" || num == "" || num == "null" || num.isEmpty()) {
+    val numClean = num.replace(".", "")
+    if (numClean == "0" || numClean == "" || numClean == "null" || numClean.isEmpty()) {
         return "0"
     }
     try {
-        val m = num.toDouble()
+        val m = numClean.toDouble()
         val formatter = DecimalFormat("###,###,###,###,###")
         return formatter.format(m).replace(',', '.')
     } catch (e: Exception) {
@@ -70,7 +73,21 @@ fun currencyFormatterStringViewZero(num: String): String {
     }
 }
 
-fun sendWhatsApp(c: Context, phone: String, message: String, typeWa:String="Standard") {
+fun currencyFormatterString(num: String): String {
+    val numClean = num.replace(".", "")
+    if (numClean == "0" || numClean == "" || numClean == "null" || numClean.isEmpty()) {
+        return ""
+    }
+    return try {
+        val m = numClean.toDouble()
+        val formatter = DecimalFormat("###,###,###,###,###")
+        formatter.format(m).replace(',', '.')
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+fun sendWhatsApp(c: Context, phone: String, message: String, typeWa: String = "Standard") {
     var str = phone
     if (str.isNotEmpty()) {
         if (phone[0] == '0') {

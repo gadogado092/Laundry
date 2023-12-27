@@ -9,6 +9,7 @@ import amat.kelolakost.ui.screen.kost.KostScreen
 import amat.kelolakost.ui.screen.other.OtherScreen
 import amat.kelolakost.ui.screen.tenant.TenantScreen
 import amat.kelolakost.ui.screen.unit.UnitScreen
+import amat.kelolakost.ui.screen.unit_type.UnitTypeScreen
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.GreyLight2
@@ -130,6 +131,9 @@ fun MainScreen(
                     navigateToKost = {
                         navController.navigate(Screen.Kost.route)
                     },
+                    navigateToUnitType = {
+                        navController.navigate(Screen.UnitType.route)
+                    },
                     navigateToProfile = {
 
                     },
@@ -171,6 +175,11 @@ fun MainScreen(
             }
             composable(Screen.Kost.route) {
                 KostScreen(context = context, navigateBack = {
+                    navController.navigateUp()
+                })
+            }
+            composable(Screen.UnitType.route) {
+                UnitTypeScreen(context = context, navigateBack = {
                     navController.navigateUp()
                 })
             }

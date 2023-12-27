@@ -4,6 +4,8 @@ import amat.kelolakost.ui.theme.ErrorColor
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
@@ -46,6 +48,49 @@ fun MyOutlinedTextField(
             fontSize = 14.sp,
             color = Color.Red
         )
+    }
+}
+
+@Composable
+fun MyOutlinedTextFieldCurrency(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    isError: Boolean = false,
+    currencyValue: String = "",
+    errorMessage: String = ""
+) {
+    Column {
+        OutlinedTextField(
+            modifier = modifier,
+            value = value,
+            keyboardOptions = keyboardOptions,
+            isError = isError,
+            label = { Text(text = label, color = FontBlack) },
+            singleLine = singleLine,
+            onValueChange = onValueChange,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = TealGreen,
+                errorBorderColor = ErrorColor
+            )
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                modifier = Modifier.padding(start = 4.dp),
+                text = currencyValue,
+                fontSize = 14.sp,
+                color = FontBlack
+            )
+            Text(
+                modifier = Modifier.padding(start = 4.dp),
+                text = errorMessage,
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+        }
     }
 
 }

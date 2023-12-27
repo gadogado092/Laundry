@@ -36,10 +36,18 @@
     <string name="subtitle_profile">Lihat profil dan pengaturan</string>
 
     <string name="title_add_kost">Tambah Kost</string>
+    <string name="title_add_unit_type">Tambah Tipe Unit/Kamar</string>
     <string name="title_update_kost">Update Kost</string>
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">"Tambah data berhasil"</string>
     <string name="success_update_data">"Update data berhasil"</string>
     <string name="error_input_data">"Ada kesalahan input"</string>
+    <string name="subtitle_price_unit">"Biaya/Harga Sewa Kamar"</string>
+    <string name="subtitle_price_day">"1 Hari"</string>
+    <string name="subtitle_price_week">"1 Minggu"</string>
+    <string name="subtitle_price_month">"1 Bulan"</string>
+    <string name="subtitle_price_three_month">"3 Bulan"</string>
+    <string name="subtitle_price_six_month">"6 Bulan"</string>
+    <string name="subtitle_price_year">"1 Tahun"</string>
 </resources>

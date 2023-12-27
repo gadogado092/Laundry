@@ -44,6 +44,7 @@ fun OtherScreen(
     navigateToBooking: () -> Unit,
     navigateToTenant: () -> Unit,
     navigateToKost: () -> Unit,
+    navigateToUnitType: () -> Unit,
     navigateToProfile: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit,
@@ -124,7 +125,7 @@ fun OtherScreen(
             stringResource(id = R.string.subtitle_type_unit),
             modifier = Modifier
                 .clickable {
-                    navigateToTenant()
+                    navigateToUnitType()
                 },
         )
         OtherMenuItem(

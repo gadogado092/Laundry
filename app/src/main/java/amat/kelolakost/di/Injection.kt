@@ -3,6 +3,7 @@ package amat.kelolakost.di
 import amat.kelolakost.data.KelolaKostRoomDatabase
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.UnitStatusRepository
+import amat.kelolakost.data.repository.UnitTypeRepository
 import amat.kelolakost.data.repository.UserRepository
 import android.content.Context
 
@@ -22,6 +23,12 @@ object Injection {
     fun provideUnitStatusRepository(context: Context): UnitStatusRepository {
         return UnitStatusRepository.getInstance(
             KelolaKostRoomDatabase.getDatabase(context).unitStatusDao()
+        )
+    }
+
+    fun provideUnitTypeRepository(context: Context): UnitTypeRepository {
+        return UnitTypeRepository.getInstance(
+            KelolaKostRoomDatabase.getDatabase(context).unitTypeDao()
         )
     }
 }
