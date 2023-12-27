@@ -40,10 +40,10 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
         val listStatus = listOf(
             FilterEntity("Semua", "0"),
             FilterEntity("Terisi", "1"),
-            FilterEntity("Jatuh Tempo", "2"),
-            FilterEntity("Kosong", "3"),
-            FilterEntity("Renovasi", "4"),
-            FilterEntity("Arsip", "5")
+            FilterEntity("Jatuh Tempo", "5"),
+            FilterEntity("Kosong", "2"),
+            FilterEntity("Pembersihan", "3"),
+            FilterEntity("Perbaikan", "4"),
         )
         _listStatus.value = listStatus
         _statusSelected.value = listStatus[1]

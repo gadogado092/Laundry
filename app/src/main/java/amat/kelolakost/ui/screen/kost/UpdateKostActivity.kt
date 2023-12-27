@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -167,6 +169,7 @@ fun FormUpdate(updateKostViewModel: UpdateKostViewModel) {
     ) {
         MyOutlinedTextField(
             label = "Nama Kost/Kontrakan/Penginapan",
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             value = updateKostViewModel.kost.collectAsState().value.name,
             onValueChange = {
                 updateKostViewModel.setKostName(it)

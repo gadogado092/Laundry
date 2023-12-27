@@ -2,9 +2,11 @@ package amat.kelolakost.ui.screen.user
 
 import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.Kost
+import amat.kelolakost.data.UnitStatus
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.KostRepository
+import amat.kelolakost.data.repository.UnitStatusRepository
 import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.generateDateTimeNow
 import amat.kelolakost.isEmailValid
@@ -20,7 +22,8 @@ import java.util.UUID
 
 class NewUserViewModel(
     private val userRepository: UserRepository,
-    private val kostRepository: KostRepository
+    private val kostRepository: KostRepository,
+    private val unitStatusRepository: UnitStatusRepository
 ) :
     ViewModel() {
 
@@ -30,7 +33,7 @@ class NewUserViewModel(
         get() = _user
 
     private val _kost: MutableStateFlow<Kost> =
-        MutableStateFlow(Kost("", "", "", "", "",false))
+        MutableStateFlow(Kost("", "", "", "", "", false))
     val kost: StateFlow<Kost>
         get() = _kost
 
@@ -178,6 +181,13 @@ class NewUserViewModel(
     private suspend fun insertNewUser(user: User, kost: Kost) {
         userRepository.insertUser(user)
         kostRepository.insertKost(kost)
+        val listStatus = listOf(
+            UnitStatus(1, "Terisi"),
+            UnitStatus(2, "Kosong"),
+            UnitStatus(3, "Pembersihan"),
+            UnitStatus(4, "Perbaikan")
+        )
+        unitStatusRepository.insert(listStatus)
         _startToMain.value = true
     }
 
@@ -185,14 +195,15 @@ class NewUserViewModel(
 
 class NewUserViewModelFactory(
     private val userRepository: UserRepository,
-    private val kostRepository: KostRepository
+    private val kostRepository: KostRepository,
+    private val unitStatusRepository: UnitStatusRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewUserViewModel::class.java)) {
-            return NewUserViewModel(userRepository, kostRepository) as T
+            return NewUserViewModel(userRepository, kostRepository, unitStatusRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

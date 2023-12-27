@@ -7,13 +7,16 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        User::class, Kost::class
+        User::class, Kost::class, UnitStatus::class, UnitType::class, Unit::class
     ],
     version = 1
 )
 abstract class KelolaKostRoomDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun kostDao(): KostDao
+    abstract fun unitStatusDao(): UnitStatusDao
+    abstract fun unitTypeDao(): UnitTypeDao
+    abstract fun unitDao(): UnitDao
 
     companion object {
         @Volatile

@@ -67,7 +67,8 @@ fun NewUserScreen() {
         viewModel(
             factory = NewUserViewModelFactory(
                 Injection.provideUserRepository(context),
-                Injection.provideKostRepository(context)
+                Injection.provideKostRepository(context),
+                Injection.provideUnitStatusRepository(context)
             )
         )
 
