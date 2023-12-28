@@ -87,6 +87,19 @@ fun currencyFormatterString(num: String): String {
     }
 }
 
+fun cleanCurrencyFormatter(num: String): Int {
+    return try {
+        val numClean = num.replace(".", "")
+        if (numClean == "0" || numClean == "" || numClean == "null" || numClean.isEmpty()) {
+            0
+        } else {
+            numClean.toInt()
+        }
+    } catch (e: Exception) {
+        0
+    }
+}
+
 fun sendWhatsApp(c: Context, phone: String, message: String, typeWa: String = "Standard") {
     var str = phone
     if (str.isNotEmpty()) {

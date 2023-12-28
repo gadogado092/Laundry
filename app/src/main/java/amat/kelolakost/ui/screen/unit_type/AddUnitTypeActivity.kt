@@ -70,11 +70,20 @@ fun AddKostScreen(
     val addUnitTypeViewModel: AddUnitTypeViewModel =
         viewModel(factory = AddUnitTypeViewModelFactory(Injection.provideUnitTypeRepository(context)))
 
-    if (addUnitTypeViewModel.isInsertSuccess.collectAsState().value) {
+    if (!addUnitTypeViewModel.isInsertSuccess.collectAsState().value.isError) {
         Toast.makeText(context, stringResource(id = R.string.success_add_data), Toast.LENGTH_SHORT)
             .show()
         val activity = (context as? Activity)
         activity?.finish()
+    } else {
+        if (addUnitTypeViewModel.isInsertSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                addUnitTypeViewModel.isInsertSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
     }
 
     Column {

@@ -9,7 +9,7 @@ class UnitTypeRepository(private val unitTypeDao: UnitTypeDao) {
         return unitTypeDao.getAllUnitType()
     }
 
-//    fun getDetail(id: String): Flow<Kost> {
+    //    fun getDetail(id: String): Flow<Kost> {
 //        return kostDao.getDetail(id)
 //    }
 //
@@ -17,9 +17,9 @@ class UnitTypeRepository(private val unitTypeDao: UnitTypeDao) {
 //        return kostDao.getKost()
 //    }
 //
-//    suspend fun insertKost(kost: Kost) {
-//        kostDao.insert(kost)
-//    }
+    suspend fun insertUnitType(unitType: UnitType) {
+        unitTypeDao.insert(unitType)
+    }
 //
 //    suspend fun updateKost(kost: Kost) {
 //        kostDao.update(kost)
