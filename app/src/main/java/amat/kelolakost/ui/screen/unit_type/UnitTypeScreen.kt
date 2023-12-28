@@ -88,9 +88,9 @@ fun UnitTypeScreen(
 
                     is UiState.Success -> {
                         ListUnitTypeView(listData = uiState.data, onItemClick = {
-//                            val intent = Intent(context, UpdateKostActivity::class.java)
-//                            intent.putExtra("id", it)
-//                            context.startActivity(intent)
+                            val intent = Intent(context, UpdateUnitTypeActivity::class.java)
+                            intent.putExtra("id", it)
+                            context.startActivity(intent)
                         })
                     }
                 }

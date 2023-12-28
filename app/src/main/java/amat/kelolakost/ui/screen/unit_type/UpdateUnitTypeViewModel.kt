@@ -5,15 +5,22 @@ import amat.kelolakost.currencyFormatterString
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.UnitTypeRepository
+import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) : ViewModel() {
+class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) : ViewModel() {
+
+    private val _stateInitUnitType: MutableStateFlow<UiState<UnitType>> =
+        MutableStateFlow(UiState.Loading)
+    val stateInitUnitType: StateFlow<UiState<UnitType>>
+        get() = _stateInitUnitType
+
     private val _unitTypeUi: MutableStateFlow<UnitTypeUi> =
         MutableStateFlow(UnitTypeUi())
     val unitTypeUi: StateFlow<UnitTypeUi>
@@ -24,13 +31,13 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     val isNameValid: StateFlow<ValidationResult>
         get() = _isNameValid
 
-    private val _isInsertSuccess: MutableStateFlow<ValidationResult> =
+    private val _isUpdateSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
-    val isInsertSuccess: StateFlow<ValidationResult>
-        get() = _isInsertSuccess
+    val isUpdateSuccess: StateFlow<ValidationResult>
+        get() = _isUpdateSuccess
 
     fun setName(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(name = value)
         if (_unitTypeUi.value.name.trim().isEmpty()) {
             _isNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
@@ -40,7 +47,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceGuarantee(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceGuarantee = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceGuarantee = "")
@@ -51,7 +58,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceDay(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceDay = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceDay = "")
@@ -62,7 +69,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceWeek(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceWeek = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceWeek = "")
@@ -73,7 +80,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceMonth(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceMonth = "")
@@ -84,7 +91,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceThreeMonth(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceThreeMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceThreeMonth = "")
@@ -95,7 +102,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceSixMonth(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceSixMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceSixMonth = "")
@@ -106,7 +113,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setPriceYear(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(priceYear = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceYear = "")
@@ -117,15 +124,41 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     fun setNote(value: String) {
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitTypeUi.value = _unitTypeUi.value.copy(note = value)
     }
 
-    fun prosesInsert() {
-        _isInsertSuccess.value = ValidationResult(true, "")
+    fun getDetail(id: String) {
+        viewModelScope.launch {
+            _stateInitUnitType.value = UiState.Loading
+            unitTypeRepository.getDetail(id)
+                .catch {
+                    _stateInitUnitType.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    _stateInitUnitType.value = UiState.Success(data)
+                    _unitTypeUi.value =
+                        UnitTypeUi(
+                            id = data.id,
+                            name = data.name,
+                            note = data.note,
+                            priceDay = data.priceDay.toString(),
+                            priceWeek = data.priceWeek.toString(),
+                            priceMonth = data.priceMonth.toString(),
+                            priceThreeMonth = data.priceThreeMonth.toString(),
+                            priceSixMonth = data.priceSixMonth.toString(),
+                            priceYear = data.priceYear.toString(),
+                            priceGuarantee = data.priceGuarantee.toString()
+                        )
+                }
+        }
+    }
+
+    fun prosesUpdate() {
+        _isUpdateSuccess.value = ValidationResult(true, "")
         if (_unitTypeUi.value.name.trim().isEmpty()) {
             _isNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
-            _isInsertSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            _isUpdateSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
             return
         }
 
@@ -135,17 +168,33 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
             && _unitTypeUi.value.priceThreeMonth.trim().isEmpty()
             && _unitTypeUi.value.priceSixMonth.trim().isEmpty()
             && _unitTypeUi.value.priceYear.trim().isEmpty()
+
+            && _unitTypeUi.value.priceDay.trim() == "0"
+            && _unitTypeUi.value.priceWeek.trim() == "0"
+            && _unitTypeUi.value.priceMonth.trim() == "0"
+            && _unitTypeUi.value.priceThreeMonth.trim() == "0"
+            && _unitTypeUi.value.priceSixMonth.trim() == "0"
+            && _unitTypeUi.value.priceYear.trim() == "0"
         ) {
-            _isInsertSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
+            _isUpdateSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
+            return
+        }
+
+        if (_unitTypeUi.value.priceDay.trim() == "0"
+            && _unitTypeUi.value.priceWeek.trim() == "0"
+            && _unitTypeUi.value.priceMonth.trim() == "0"
+            && _unitTypeUi.value.priceThreeMonth.trim() == "0"
+            && _unitTypeUi.value.priceSixMonth.trim() == "0"
+            && _unitTypeUi.value.priceYear.trim() == "0"
+        ) {
+            _isUpdateSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
             return
         }
 
         if (!_isNameValid.value.isError) {
             viewModelScope.launch {
-                val id = UUID.randomUUID()
-
                 val unitType = UnitType(
-                    id = id.toString(),
+                    id = _unitTypeUi.value.id,
                     name = _unitTypeUi.value.name,
                     note = _unitTypeUi.value.note,
                     priceGuarantee = cleanCurrencyFormatter(_unitTypeUi.value.priceGuarantee),
@@ -157,26 +206,26 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
                     priceYear = cleanCurrencyFormatter(_unitTypeUi.value.priceYear),
                     isDelete = false
                 )
-                insertUnitType(unitType)
+                updateUnitType(unitType)
             }
         }
     }
 
-    private suspend fun insertUnitType(unitType: UnitType) {
-        unitTypeRepository.insertUnitType(unitType)
-        _isInsertSuccess.value = ValidationResult(false)
+    private suspend fun updateUnitType(unitType: UnitType) {
+        unitTypeRepository.updateUnitType(unitType)
+        _isUpdateSuccess.value = ValidationResult(false)
     }
 }
 
-class AddUnitTypeViewModelFactory(
+class UpdateUnitTypeViewModelFactory(
     private val unitTyRepository: UnitTypeRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddUnitTypeViewModel::class.java)) {
-            return AddUnitTypeViewModel(unitTyRepository) as T
+        if (modelClass.isAssignableFrom(UpdateUnitTypeViewModel::class.java)) {
+            return UpdateUnitTypeViewModel(unitTyRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

@@ -212,7 +212,7 @@ fun FormUpdate(updateKostViewModel: UpdateKostViewModel) {
                 modifier = Modifier
                     .weight(1F),
                 onClick = {
-                    //TODO
+                    //TODO check relasi sebelum delete
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = GreyLight

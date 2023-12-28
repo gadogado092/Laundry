@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,4 +14,10 @@ interface UnitTypeDao {
 
     @Query("SELECT * FROM UnitType WHERE isDelete=0")
     fun getAllUnitType(): Flow<List<UnitType>>
+
+    @Query("SELECT * FROM UnitType WHERE id = :id")
+    fun getDetail(id: String): Flow<UnitType>
+
+    @Update
+    suspend fun update(kost: UnitType)
 }
