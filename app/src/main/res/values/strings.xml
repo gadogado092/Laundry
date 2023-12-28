@@ -50,4 +50,5 @@
     <string name="subtitle_price_three_month">"3 Bulan"</string>
     <string name="subtitle_price_six_month">"6 Bulan"</string>
     <string name="subtitle_price_year">"1 Tahun"</string>
+    <string name="subtitle_price_guarantee">"Uang Deposit/Jaminan"</string>
 </resources>

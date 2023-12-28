@@ -140,7 +140,7 @@ fun AddKostScreen(
                 singleLine = false
             )
             MyOutlinedTextFieldCurrency(
-                label = "Uang Deposit/Jaminan",
+                label = stringResource(id = R.string.subtitle_price_year),
                 value = addUnitTypeViewModel.unitTypeUi.collectAsState().value.priceGuarantee.replace(
                     ".",
                     ""

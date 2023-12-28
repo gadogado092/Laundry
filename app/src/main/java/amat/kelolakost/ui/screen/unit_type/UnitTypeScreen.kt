@@ -1,16 +1,19 @@
 package amat.kelolakost.ui.screen.unit_type
 
 import amat.kelolakost.R
+import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
+import amat.kelolakost.ui.component.UnitTypeItem
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -135,7 +138,20 @@ fun ListUnitTypeView(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
             items(listData) { data ->
-                Text(text = data.name)
+                UnitTypeItem(
+                    modifier = Modifier.clickable {
+                        onItemClick(data.id)
+                    },
+                    name = data.name,
+                    note = data.note,
+                    priceGuarantee = currencyFormatterStringViewZero(data.priceGuarantee.toString()),
+                    priceDay = data.priceDay,
+                    priceWeek = data.priceWeek,
+                    priceMonth = data.priceMonth,
+                    priceThreeMonth = data.priceThreeMonth,
+                    priceSixMonth = data.priceSixMonth,
+                    priceYear = data.priceYear
+                )
             }
         }
     }
