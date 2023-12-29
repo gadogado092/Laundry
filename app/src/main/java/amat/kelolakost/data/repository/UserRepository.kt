@@ -17,6 +17,14 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insert(user)
     }
 
+    fun getDetail(): Flow<User> {
+        return userDao.getDetail()
+    }
+
+    suspend fun updateUser(user: User) {
+        userDao.update(user)
+    }
+
     companion object {
         @Volatile
         private var instance: UserRepository? = null

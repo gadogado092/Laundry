@@ -2,7 +2,7 @@
     <string name="app_name">Kelola Kost</string>
     <string name="number_cs">+6285241527504</string>
     <string name="url_tutorial_app">https://www.youtube.com/</string>
-    <string name="message_cs">Hai Customer Service Kelola Lapanga, saya ingin bertanya tentang aplikasi.</string>
+    <string name="message_cs">Hai Customer Service Kelola Lapangan, saya ingin bertanya tentang aplikasi.</string>
 
     <string name="title_new_user">Selamat Datang</string>
     <string name="title_unit">Unit</string>
@@ -39,6 +39,7 @@
     <string name="title_add_unit_type">Tambah Tipe Unit/Kamar</string>
     <string name="title_update_unit_type">Update Tipe Unit/Kamar</string>
     <string name="title_update_kost">Update Kost</string>
+    <string name="title_update_profil">Update Profil</string>
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">"Tambah data berhasil"</string>

@@ -10,6 +10,7 @@ import amat.kelolakost.ui.screen.other.OtherScreen
 import amat.kelolakost.ui.screen.tenant.TenantScreen
 import amat.kelolakost.ui.screen.unit.UnitScreen
 import amat.kelolakost.ui.screen.unit_type.UnitTypeScreen
+import amat.kelolakost.ui.screen.user.UpdateUserActivity
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.GreyLight2
@@ -135,7 +136,8 @@ fun MainScreen(
                         navController.navigate(Screen.UnitType.route)
                     },
                     navigateToProfile = {
-
+                        val intent = Intent(context, UpdateUserActivity::class.java)
+                        context.startActivity(intent)
                     },
                     onClickTutorial = {
                         try {

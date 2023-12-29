@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,4 +17,10 @@ interface UserDao {
 
     @Query("SELECT * FROM User")
     suspend fun getUser(): List<User>
+
+    @Update
+    suspend fun update(user: User)
+
+    @Query("SELECT * FROM User LIMIT 1")
+    fun getDetail(): Flow<User>
 }
