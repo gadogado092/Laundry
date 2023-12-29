@@ -123,10 +123,13 @@ fun MainScreen(
                     onClickExtend = {
 
                     },
-                    navigateToTenant = {
+                    navigateToBooking = {
 
                     },
-                    navigateToBooking = {
+                    navigateCreditTenant = {
+
+                    },
+                    navigateToDebtCredit = {
 
                     },
                     navigateToKost = {

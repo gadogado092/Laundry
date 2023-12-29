@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,10 +43,11 @@ fun OtherScreen(
     modifier: Modifier = Modifier,
     onClickExtend: () -> Unit,
     navigateToBooking: () -> Unit,
-    navigateToTenant: () -> Unit,
+    navigateCreditTenant: () -> Unit,
     navigateToKost: () -> Unit,
     navigateToUnitType: () -> Unit,
     navigateToProfile: () -> Unit,
+    navigateToDebtCredit: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit,
 ) {
@@ -103,11 +105,20 @@ fun OtherScreen(
         )
         OtherMenuItem(
             Icons.Default.ListAlt,
-            stringResource(id = R.string.title_debt_tenant),
-            stringResource(id = R.string.subtitle_debt_tenant),
+            stringResource(id = R.string.title_credit_tenant),
+            stringResource(id = R.string.subtitle_credit_tenant),
             modifier = Modifier
                 .clickable {
-                    navigateToTenant()
+                    navigateCreditTenant()
+                },
+        )
+        OtherMenuItem(
+            Icons.Default.Reorder,
+            stringResource(id = R.string.title_debt_credit_tenant),
+            stringResource(id = R.string.subtitle_debt_credit_tenant),
+            modifier = Modifier
+                .clickable {
+                    navigateToDebtCredit()
                 },
         )
         OtherMenuItem(

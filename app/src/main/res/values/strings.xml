@@ -22,8 +22,10 @@
 
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
-    <string name="title_debt_tenant">Hutang Tenant/Penyewa</string>
-    <string name="subtitle_debt_tenant">lihat data hutang penyewa</string>
+    <string name="title_credit_tenant">Piutang Tenant/Penyewa</string>
+    <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
+    <string name="title_debt_credit_tenant">Hutang Piutang</string>
+    <string name="subtitle_debt_credit_tenant">Kelola data hutang dan piutang</string>
     <string name="title_kost">Kost</string>
     <string name="subtitle_other_kost">List kost</string>
     <string name="title_type_unit">Tipe Unit/Kamar</string>
