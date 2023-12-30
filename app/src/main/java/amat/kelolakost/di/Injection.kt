@@ -2,6 +2,7 @@ package amat.kelolakost.di
 
 import amat.kelolakost.data.KelolaKostRoomDatabase
 import amat.kelolakost.data.repository.KostRepository
+import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.data.repository.UnitStatusRepository
 import amat.kelolakost.data.repository.UnitTypeRepository
@@ -36,6 +37,12 @@ object Injection {
     fun provideUnitRepository(context: Context): UnitRepository {
         return UnitRepository.getInstance(
             KelolaKostRoomDatabase.getDatabase(context).unitDao()
+        )
+    }
+
+    fun provideTenantRepository(context: Context): TenantRepository {
+        return TenantRepository.getInstance(
+            KelolaKostRoomDatabase.getDatabase(context).tenantDao()
         )
     }
 }

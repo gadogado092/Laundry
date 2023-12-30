@@ -2,11 +2,17 @@ package amat.kelolakost.ui.screen.user
 
 import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.Kost
+import amat.kelolakost.data.Tenant
+import amat.kelolakost.data.Unit
 import amat.kelolakost.data.UnitStatus
+import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.KostRepository
+import amat.kelolakost.data.repository.TenantRepository
+import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.data.repository.UnitStatusRepository
+import amat.kelolakost.data.repository.UnitTypeRepository
 import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.generateDateTimeNow
 import amat.kelolakost.isEmailValid
@@ -23,7 +29,10 @@ import java.util.UUID
 class NewUserViewModel(
     private val userRepository: UserRepository,
     private val kostRepository: KostRepository,
-    private val unitStatusRepository: UnitStatusRepository
+    private val unitStatusRepository: UnitStatusRepository,
+    private val unitTypeRepository: UnitTypeRepository,
+    private val tenantRepository: TenantRepository,
+    private val unitRepository: UnitRepository
 ) :
     ViewModel() {
 
@@ -179,21 +188,79 @@ class NewUserViewModel(
     }
 
     private suspend fun insertNewUser(user: User, kost: Kost) {
-        userRepository.insertUser(user)
-        kostRepository.insertKost(kost)
-        val listStatus = listOf(
-            UnitStatus(1, "Terisi"),
-            UnitStatus(2, "Kosong"),
-            UnitStatus(3, "Pembersihan"),
-            UnitStatus(4, "Perbaikan")
-        )
-        unitStatusRepository.insert(listStatus)
-        /* TODO
-            insertKost("0")
-            insertTypeRoom("0", "Kosong")
-            insertTenant("0", "Kosong")
-            insertRoom(0, "Kosong")*/
-        _startToMain.value = true
+        //insert data kosong
+        try {
+            val kostDummy =
+                Kost(
+                    id = "0",
+                    name = "Tanpa Kost",
+                    address = "",
+                    note = "",
+                    createAt = "2000-10-20",
+                    isDelete = false
+                )
+            kostRepository.insertKost(kostDummy)
+
+            val unitTypeDummy = UnitType(
+                id = "0",
+                name = "Tanpa Tipe Kamar/Unit",
+                note = "",
+                priceDay = 0,
+                priceWeek = 0,
+                priceMonth = 0,
+                priceThreeMonth = 0,
+                priceSixMonth = 0,
+                priceYear = 0,
+                priceGuarantee = 0,
+                isDelete = false
+            )
+            unitTypeRepository.insertUnitType(unitTypeDummy)
+
+            val tenantDummy = Tenant(
+                id = "0",
+                name = "Tanpa Penyewa",
+                numberPhone = "",
+                email = "",
+                gender = false,
+                address = "",
+                note = "",
+                limitCheckOut = "",
+                additionalCost = 0,
+                noteAdditionalCost = 0,
+                guaranteeCost = 0,
+                unitId = "0",
+                isDelete = false
+            )
+            tenantRepository.insertTenant(tenantDummy)
+
+            val unitDummy = Unit(
+                id = "0",
+                name = "Tanpa Unit",
+                note = "",
+                noteMaintenance = "",
+                unitTypeId = "0",
+                unitStatusId = 2,
+                tenantId = "0",
+                kostId = "0",
+                isDelete = false
+            )
+            unitRepository.insertUnit(unitDummy)
+
+            userRepository.insertUser(user)
+            kostRepository.insertKost(kost)
+            val listStatus = listOf(
+                UnitStatus(1, "Terisi"),
+                UnitStatus(2, "Kosong"),
+                UnitStatus(3, "Pembersihan"),
+                UnitStatus(4, "Perbaikan")
+            )
+            unitStatusRepository.insert(listStatus)
+
+            _startToMain.value = true
+        } catch (e: Exception) {
+            _startToMain.value = false
+        }
+
     }
 
 }
@@ -201,14 +268,24 @@ class NewUserViewModel(
 class NewUserViewModelFactory(
     private val userRepository: UserRepository,
     private val kostRepository: KostRepository,
-    private val unitStatusRepository: UnitStatusRepository
+    private val unitStatusRepository: UnitStatusRepository,
+    private val unitTypeRepository: UnitTypeRepository,
+    private val tenantRepository: TenantRepository,
+    private val unitRepository: UnitRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewUserViewModel::class.java)) {
-            return NewUserViewModel(userRepository, kostRepository, unitStatusRepository) as T
+            return NewUserViewModel(
+                userRepository,
+                kostRepository,
+                unitStatusRepository,
+                unitTypeRepository,
+                tenantRepository,
+                unitRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

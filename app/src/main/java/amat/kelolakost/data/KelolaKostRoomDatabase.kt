@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        User::class, Kost::class, UnitStatus::class, UnitType::class, Unit::class
+        User::class, Kost::class, UnitStatus::class, UnitType::class, Unit::class, Tenant::class
     ],
     version = 1
 )
@@ -17,6 +17,7 @@ abstract class KelolaKostRoomDatabase : RoomDatabase() {
     abstract fun unitStatusDao(): UnitStatusDao
     abstract fun unitTypeDao(): UnitTypeDao
     abstract fun unitDao(): UnitDao
+    abstract fun tenantDao(): TenantDao
 
     companion object {
         @Volatile
