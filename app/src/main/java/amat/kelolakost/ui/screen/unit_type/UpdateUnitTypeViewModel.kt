@@ -142,13 +142,13 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
                             id = data.id,
                             name = data.name,
                             note = data.note,
-                            priceDay = data.priceDay.toString(),
-                            priceWeek = data.priceWeek.toString(),
-                            priceMonth = data.priceMonth.toString(),
-                            priceThreeMonth = data.priceThreeMonth.toString(),
-                            priceSixMonth = data.priceSixMonth.toString(),
-                            priceYear = data.priceYear.toString(),
-                            priceGuarantee = data.priceGuarantee.toString()
+                            priceDay = currencyFormatterString(data.priceDay.toString()),
+                            priceWeek = currencyFormatterString(data.priceWeek.toString()),
+                            priceMonth = currencyFormatterString(data.priceMonth.toString()),
+                            priceThreeMonth = currencyFormatterString(data.priceThreeMonth.toString()),
+                            priceSixMonth = currencyFormatterString(data.priceSixMonth.toString()),
+                            priceYear = currencyFormatterString(data.priceYear.toString()),
+                            priceGuarantee = currencyFormatterString(data.priceGuarantee.toString())
                         )
                 }
         }

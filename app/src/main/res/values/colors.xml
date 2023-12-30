@@ -28,4 +28,9 @@
     <color name="background_member">#E5B80B</color>
     <color name="font_regular">#2E2E2E</color>
     <color name="font_member">#323E3E</color>
+
+    <color name="green_dark">#075E54</color>
+    <color name="teal_green">#128C7E</color>
+    <color name="light_green">#25D366</color>
+
 </resources>

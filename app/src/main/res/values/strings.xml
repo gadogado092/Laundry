@@ -20,6 +20,8 @@
     <string name="delete">"DELETE"</string>
     <string name="save">"SIMPAN"</string>
 
+    <string name="location_unit">"Lokasi Kamar/Unit"</string>
+
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
     <string name="title_credit_tenant">Piutang Tenant/Penyewa</string>
@@ -38,6 +40,7 @@
     <string name="subtitle_profile">Lihat profil dan pengaturan</string>
 
     <string name="title_add_kost">Tambah Kost</string>
+    <string name="title_add_unit">Tambah Kamar/Unit</string>
     <string name="title_add_unit_type">Tambah Tipe Unit/Kamar</string>
     <string name="title_update_unit_type">Update Tipe Unit/Kamar</string>
     <string name="title_update_kost">Update Kost</string>
@@ -55,4 +58,6 @@
     <string name="subtitle_price_six_month">"6 Bulan"</string>
     <string name="subtitle_price_year">"1 Tahun"</string>
     <string name="subtitle_price_guarantee">"Uang Deposit/Jaminan"</string>
+    <string name="price_guarantee">Uang Deposit/Jaminan %1$s</string>
+    <string name="add">Tambah</string>
 </resources>

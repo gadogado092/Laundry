@@ -9,6 +9,10 @@ class KostRepository(private val kostDao: KostDao) {
         return kostDao.getAllKost()
     }
 
+    suspend fun getAllKostOrder(): List<Kost> {
+        return kostDao.getAllKostOrder()
+    }
+
     fun getDetail(id: String): Flow<Kost> {
         return kostDao.getDetail(id)
     }

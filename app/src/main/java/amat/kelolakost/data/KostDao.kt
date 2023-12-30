@@ -15,6 +15,9 @@ interface KostDao {
     @Query("SELECT * FROM Kost WHERE isDelete=0")
     fun getAllKost(): Flow<List<Kost>>
 
+    @Query("SELECT * FROM Kost WHERE isDelete=0 ORDER BY name ASC")
+    suspend fun getAllKostOrder(): List<Kost>
+
     @Query("SELECT * FROM Kost WHERE isDelete=0")
     suspend fun getKost(): List<Kost>
 

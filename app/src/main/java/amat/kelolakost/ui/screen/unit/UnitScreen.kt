@@ -8,21 +8,31 @@ import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.FilterButton
 import amat.kelolakost.ui.component.FilterItem
+import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
+import android.content.Intent
 import android.widget.TextView
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,7 +64,30 @@ fun UnitScreen(
 
             ContentKost(viewModel)
         }
-        Text(text = "UnitScreen")
+        Box(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Text(text = "UnitScreen")
+
+            FloatingActionButton(
+                onClick = {
+                    val intent = Intent(context, AddUnitActivity::class.java)
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+                backgroundColor = GreenDark
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    "",
+                    modifier = Modifier.size(30.dp),
+                    tint = Color.White,
+                )
+            }
+        }
+
     }
 }
 
@@ -121,27 +154,6 @@ fun ContentKost(viewModel: UnitViewModel) {
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun ContentStatus(viewModel: UnitViewModel) {
-    val statusSelected = viewModel.statusSelected.collectAsState(initial = FilterEntity("", ""))
-    viewModel.listStatus.collectAsState(initial = mutableListOf()).value.let { data ->
-        val listStatus: List<FilterEntity> = data
-        LazyRow(contentPadding = PaddingValues(vertical = 4.dp)) {
-            items(listStatus, key = { it.value }) { item ->
-                FilterItem(
-                    title = item.title,
-                    isSelected = item.value == statusSelected.value.value,
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp, vertical = 4.dp)
-                        .clickable {
-                            viewModel.updateStatusSelected(item.title, item.value)
-                        }
-                )
             }
         }
     }

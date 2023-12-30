@@ -188,6 +188,11 @@ class NewUserViewModel(
             UnitStatus(4, "Perbaikan")
         )
         unitStatusRepository.insert(listStatus)
+        /* TODO
+            insertKost("0")
+            insertTypeRoom("0", "Kosong")
+            insertTenant("0", "Kosong")
+            insertRoom(0, "Kosong")*/
         _startToMain.value = true
     }
 
