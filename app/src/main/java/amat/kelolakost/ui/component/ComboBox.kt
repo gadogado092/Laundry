@@ -29,6 +29,7 @@ fun ComboBox(
     value: String,
     isError: Boolean = false,
     errorMessage: String = "",
+    singleLine: Boolean = false,
     onClick: () -> Unit
 ) {
     Column(modifier) {
@@ -47,7 +48,7 @@ fun ComboBox(
             onValueChange = {},
             enabled = false,
             textStyle = TextStyle(color = FontBlack),
-            singleLine = true,
+            singleLine = singleLine,
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = TealGreen,

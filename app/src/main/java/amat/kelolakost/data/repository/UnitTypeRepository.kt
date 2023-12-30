@@ -18,6 +18,9 @@ class UnitTypeRepository(private val unitTypeDao: UnitTypeDao) {
 //        return kostDao.getKost()
 //    }
 //
+    suspend fun getAllUnitTypeOrder(): List<UnitType> {
+        return unitTypeDao.getAllUnitTypeOrder()
+    }
     suspend fun insertUnitType(unitType: UnitType) {
         unitTypeDao.insert(unitType)
     }

@@ -2,11 +2,13 @@ package amat.kelolakost.ui.screen.unit
 
 import amat.kelolakost.R
 import amat.kelolakost.data.Kost
+import amat.kelolakost.data.UnitType
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.screen.kost.AddKostActivity
+import amat.kelolakost.ui.screen.unit_type.AddUnitTypeActivity
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -77,7 +79,8 @@ fun AddUnitScreen(
         viewModel(
             factory = AddKostViewModelFactory(
                 Injection.provideUnitRepository(context),
-                Injection.provideKostRepository(context)
+                Injection.provideKostRepository(context),
+                Injection.provideUnitTypeRepository(context)
             )
         )
 
@@ -119,6 +122,36 @@ fun AddUnitScreen(
 
             is UiState.Success -> {
                 showBottomSheetKost(
+                    addUnitViewModel = addUnitViewModel,
+                    context = context,
+                    uiState.data
+                )
+            }
+        }
+    }
+
+    addUnitViewModel.stateListUnitType.collectAsState(initial = UiState.Error("")).value.let { uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                if (uiState.errorMessage.isNotEmpty()) {
+                    Toast.makeText(
+                        context,
+                        uiState.errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            UiState.Loading -> {
+                Toast.makeText(
+                    context,
+                    "Loading Data Tipe Unit",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is UiState.Success -> {
+                showBottomSheetUnitType(
                     addUnitViewModel = addUnitViewModel,
                     context = context,
                     uiState.data
@@ -189,11 +222,13 @@ fun AddUnitScreen(
                 addUnitViewModel.getKost()
             }
             ComboBox(
-                title = "Tipe Kamar/Unit",
-                value = "Pilih Tipe Kamar/Lapangan",
+                title = stringResource(id = R.string.title_type_unit),
+                value = addUnitViewModel.unitUi.collectAsState().value.unitTypeName,
+                isError = addUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.isError,
+                errorMessage = addUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.errorMessage,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-
+                addUnitViewModel.getUnitType()
             }
             Button(
                 onClick = {
@@ -228,6 +263,42 @@ fun showBottomSheetKost(addUnitViewModel: AddUnitViewModel, context: Context, da
 
     val adapter = KostAdapter {
         addUnitViewModel.setKostSelected(it.id, it.name)
+        bottomSheetDialog.dismiss()
+    }
+
+    with(recyclerView) {
+        this?.setHasFixedSize(true)
+        this?.layoutManager =
+            LinearLayoutManager(context)
+        this?.adapter = adapter
+    }
+
+    adapter.setData(data)
+    bottomSheetDialog.show()
+}
+
+fun showBottomSheetUnitType(
+    addUnitViewModel: AddUnitViewModel,
+    context: Context,
+    data: List<UnitType>
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
+    val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
+    val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
+
+    title?.setText(R.string.title_type_unit)
+    buttonAdd?.setText(R.string.add)
+
+    buttonAdd?.setOnClickListener {
+        val intent = Intent(context, AddUnitTypeActivity::class.java)
+        context.startActivity(intent)
+        bottomSheetDialog.dismiss()
+    }
+
+    val adapter = UnitTypeAdapter {
+        addUnitViewModel.setUnitTypeSelected(it.id, it.name)
         bottomSheetDialog.dismiss()
     }
 
