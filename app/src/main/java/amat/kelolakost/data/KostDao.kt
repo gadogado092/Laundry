@@ -12,7 +12,7 @@ interface KostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(kost: Kost)
 
-    @Query("SELECT * FROM Kost WHERE isDelete=0 AND id!=0")
+    @Query("SELECT * FROM Kost WHERE isDelete=0 AND id!=0 ORDER BY name ASC")
     fun getAllKost(): Flow<List<Kost>>
 
     @Query("SELECT * FROM Kost WHERE isDelete=0 AND id!=0 ORDER BY name ASC")

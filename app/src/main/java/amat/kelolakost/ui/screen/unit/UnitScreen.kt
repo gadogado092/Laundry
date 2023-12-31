@@ -5,12 +5,14 @@ import amat.kelolakost.R
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.entity.FilterEntity
 import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.FilterButton
 import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.TextView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +49,19 @@ fun UnitScreen(
 ) {
     val viewModel: UnitViewModel =
         viewModel(factory = UnitViewModelFactory(Injection.provideKostRepository(context)))
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                Log.d("saya","on resume")
+//                viewModel.getAllKost()
+            }
+
+            else -> {}
+        }
+
+    }
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

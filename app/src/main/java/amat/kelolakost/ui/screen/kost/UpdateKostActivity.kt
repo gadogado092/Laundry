@@ -181,6 +181,7 @@ fun FormUpdate(updateKostViewModel: UpdateKostViewModel) {
         )
         MyOutlinedTextField(
             label = "Alamat Kost/Kontrakan/Penginapan",
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             value = updateKostViewModel.kost.collectAsState().value.address,
             onValueChange = {
                 updateKostViewModel.setKostAddress(it)
@@ -192,6 +193,7 @@ fun FormUpdate(updateKostViewModel: UpdateKostViewModel) {
         )
         MyOutlinedTextField(
             label = "Keterangan Tambahan",
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             value = updateKostViewModel.kost.collectAsState().value.note,
             onValueChange = {
                 updateKostViewModel.setNote(it)

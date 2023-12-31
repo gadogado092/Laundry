@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -103,6 +104,7 @@ fun NewUserScreen() {
 
             MyOutlinedTextField(
                 label = "Nama Pemilik",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 value = userViewModel.user.collectAsState().value.name,
                 onValueChange = {
                     userViewModel.setName(it)
@@ -172,6 +174,7 @@ fun NewUserScreen() {
             }
             MyOutlinedTextField(
                 label = "Nama Kost/Kontrakan/Penginapan",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 value = userViewModel.kost.collectAsState().value.name,
                 onValueChange = {
                     userViewModel.setKostName(it)
@@ -184,6 +187,7 @@ fun NewUserScreen() {
 
             MyOutlinedTextField(
                 label = "Alamat Kost/Kontrakan/Penginapan",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 value = userViewModel.kost.collectAsState().value.address,
                 onValueChange = {
                     userViewModel.setKostAddress(it)
@@ -195,6 +199,7 @@ fun NewUserScreen() {
             )
             MyOutlinedTextField(
                 label = "Keterangan Tambahan",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 value = userViewModel.kost.collectAsState().value.note,
                 onValueChange = {
                     userViewModel.setNote(it)

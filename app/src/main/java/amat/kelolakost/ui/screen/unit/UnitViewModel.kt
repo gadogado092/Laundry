@@ -4,6 +4,7 @@ import amat.kelolakost.data.Kost
 import amat.kelolakost.data.entity.FilterEntity
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.ui.common.UiState
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -32,11 +33,13 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
         get() = _kostSelected
 
     init {
+        Log.d("saya", "init")
         initStatus()
-        getAllKostInit()
+        getAllKost()
     }
 
     private fun initStatus() {
+        Log.d("saya", "initstatus")
         val listStatus = listOf(
             FilterEntity("Semua", "0"),
             FilterEntity("Terisi", "1"),
@@ -51,10 +54,11 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
 
     fun updateStatusSelected(title: String, value: String) {
         _statusSelected.value = FilterEntity(title, value)
-//        getRoom()
+        getUnit()
     }
 
-    private fun getAllKostInit() {
+    fun getAllKost() {
+        Log.d("saya", "get all kost")
         viewModelScope.launch {
             _stateListKost.value = UiState.Loading
 //            val data = kostRepository.getKost()
@@ -65,14 +69,37 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
                 }
                 .collect { data ->
                     _stateListKost.value = UiState.Success(data)
-                    updateKostSelected(data[0])
+
+                    if (_kostSelected.value.id == "") {
+                        updateKostSelected(data[0])
+                    }
+
                 }
         }
 
+//        viewModelScope.launch {
+//            _stateListKost.value = UiState.Loading
+//            try {
+//                val data = kostRepository.getAllKostOrder()
+//                _stateListKost.value = UiState.Success(data)
+//                updateKostSelected(data[0])
+//            } catch (e: Exception) {
+//                _stateListKost.value = UiState.Error(e.message.toString())
+//            }
+//        }
+
+    }
+
+    fun getUnit() {
+        Log.d(
+            "saya",
+            "get unit, kost = ${kostSelected.value.name}, status = ${statusSelected.value.title}"
+        )
     }
 
     fun updateKostSelected(kost: Kost) {
         _kostSelected.value = kost
+        getUnit()
     }
 
 }
