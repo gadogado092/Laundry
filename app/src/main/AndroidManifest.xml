@@ -72,6 +72,11 @@
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.tenant.AddTenantActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

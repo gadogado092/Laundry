@@ -16,7 +16,7 @@ data class Tenant(
     val note: String,
     val limitCheckOut: String,
     val additionalCost: Int,
-    val noteAdditionalCost: Int,
+    val noteAdditionalCost: String,
     val guaranteeCost: Int,
     val unitId: String,
     val isDelete: Boolean

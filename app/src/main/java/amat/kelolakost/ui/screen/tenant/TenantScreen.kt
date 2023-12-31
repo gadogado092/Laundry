@@ -8,9 +8,7 @@ import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.TenantItem
-import amat.kelolakost.ui.screen.unit_type.AddUnitTypeActivity
 import amat.kelolakost.ui.screen.unit_type.UpdateUnitTypeActivity
-import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -25,11 +23,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,40 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun TenantScreen(
     context: Context,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val tenantViewModel: TenantViewModel =
         viewModel(factory = TenantViewModelFactory(Injection.provideTenantRepository(context)))
 
     Column {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(id = R.string.title_type_unit),
-                    color = FontWhite,
-                    fontSize = 22.sp
-                )
-            },
-            backgroundColor = GreenDark,
-            navigationIcon = {
-                IconButton(
-                    onClick = navigateBack
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                }
-            }
-        )
         Box(
             modifier = modifier.fillMaxSize()
         ) {
@@ -100,7 +72,7 @@ fun TenantScreen(
 
             FloatingActionButton(
                 onClick = {
-                    val intent = Intent(context, AddUnitTypeActivity::class.java)
+                    val intent = Intent(context, AddTenantActivity::class.java)
                     context.startActivity(intent)
                 },
                 modifier = Modifier

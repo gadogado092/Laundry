@@ -226,7 +226,7 @@ class NewUserViewModel(
                 note = "",
                 limitCheckOut = "",
                 additionalCost = 0,
-                noteAdditionalCost = 0,
+                noteAdditionalCost = "",
                 guaranteeCost = 0,
                 unitId = "0",
                 isDelete = false

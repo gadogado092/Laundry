@@ -42,6 +42,8 @@
     <string name="title_add_kost">Tambah Kost</string>
     <string name="title_add_unit">Tambah Kamar/Unit</string>
     <string name="title_add_unit_type">Tambah Tipe Unit/Kamar</string>
+    <string name="title_add_tenant">Tambah Penyewa</string>
+    <string name="title_update_tenant">Update Penyewa</string>
     <string name="title_update_unit_type">Update Tipe Unit/Kamar</string>
     <string name="title_update_kost">Update Kost</string>
     <string name="title_update_profil">Update Profil</string>
