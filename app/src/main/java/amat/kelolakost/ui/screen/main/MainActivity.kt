@@ -108,7 +108,9 @@ fun MainScreen(
                 UnitScreen(context = context)
             }
             composable(Screen.Tenant.route) {
-                TenantScreen(context = context)
+                TenantScreen(context = context, navigateBack = {
+                    navController.navigateUp()
+                })
             }
             composable(Screen.CashFlow.route) {
                 CashFlowScreen(context = context)

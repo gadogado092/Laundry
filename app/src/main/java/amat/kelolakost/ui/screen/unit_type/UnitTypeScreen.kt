@@ -44,7 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun UnitTypeScreen(
     context: Context,
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     val unitTypeViewModel: UnitTypeViewModel =
         viewModel(factory = UnitTypeViewModelFactory(Injection.provideUnitTypeRepository(context)))

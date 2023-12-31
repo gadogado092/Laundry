@@ -2,11 +2,12 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.TenantDao
+import kotlinx.coroutines.flow.Flow
 
 class TenantRepository(private val tenantDao: TenantDao) {
-//    fun getAllUnitType(): Flow<List<UnitType>> {
-//        return unitTypeDao.getAllUnitType()
-//    }
+    fun getAllUnitType(): Flow<List<Tenant>> {
+        return tenantDao.getAllTenant()
+    }
 //
 //    fun getDetail(id: String): Flow<UnitType> {
 //        return unitTypeDao.getDetail(id)
