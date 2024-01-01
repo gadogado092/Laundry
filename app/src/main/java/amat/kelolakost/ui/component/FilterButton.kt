@@ -3,6 +3,7 @@ package amat.kelolakost.ui.component
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,12 +27,17 @@ fun FilterButton(
         modifier = modifier,
         border = BorderStroke(0.4.dp, TealGreen),
     ) {
-        Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
+        Row(
+            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = title,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = 4.dp)
+                    .padding(horizontal = 2.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Image(
                 imageVector = Icons.Default.ExpandMore,

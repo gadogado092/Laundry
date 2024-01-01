@@ -3,12 +3,16 @@ package amat.kelolakost.ui.screen.unit
 import amat.kelolakost.FilterAdapter
 import amat.kelolakost.R
 import amat.kelolakost.data.Kost
+import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.entity.FilterEntity
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
+import amat.kelolakost.ui.component.CenterLayout
+import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.FilterButton
 import amat.kelolakost.ui.component.FilterItem
+import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -23,6 +27,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
@@ -35,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -48,14 +55,19 @@ fun UnitScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel: UnitViewModel =
-        viewModel(factory = UnitViewModelFactory(Injection.provideKostRepository(context)))
+        viewModel(
+            factory = UnitViewModelFactory(
+                Injection.provideKostRepository(context),
+                Injection.provideUnitRepository(context)
+            )
+        )
 
     OnLifecycleEvent { owner, event ->
         // do stuff on event
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                Log.d("saya","on resume")
-//                viewModel.getAllKost()
+                Log.d("saya", "on resume")
+                viewModel.getUnit()
             }
 
             else -> {}
@@ -72,6 +84,7 @@ fun UnitScreen(
                 )
             ).value.let { value ->
                 FilterButton(title = value.title, modifier = Modifier
+                    .width(135.dp)
                     .padding(8.dp)
                     .clickable {
                         showBottomSheetSelectStatus(context, viewModel)
@@ -83,7 +96,28 @@ fun UnitScreen(
         Box(
             modifier = modifier.fillMaxSize()
         ) {
-            Text(text = "UnitScreen")
+
+            viewModel.stateListUnit.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        ErrorLayout(errorMessage = uiState.errorMessage) {
+                            viewModel.getUnit()
+                        }
+                    }
+
+                    UiState.Loading -> {
+                        LoadingLayout()
+                    }
+
+                    is UiState.Success -> {
+                        ListUnitView(listData = uiState.data, onItemClick = {
+//                            val intent = Intent(context, UpdateTenantActivity::class.java)
+//                            intent.putExtra("id", it)
+//                            context.startActivity(intent)
+                        })
+                    }
+                }
+            }
 
             FloatingActionButton(
                 onClick = {
@@ -104,6 +138,34 @@ fun UnitScreen(
             }
         }
 
+    }
+}
+
+@Composable
+fun ListUnitView(
+    listData: List<UnitHome>,
+    onItemClick: (String) -> Unit,
+) {
+    if (listData.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        "Unit/Kamar"
+                    )
+                )
+            }
+        )
+    } else {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 64.dp)
+        ) {
+            items(listData) { data ->
+                Text(text = data.name)
+                Text(text = data.kostName)
+            }
+        }
     }
 }
 

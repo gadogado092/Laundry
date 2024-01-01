@@ -2,11 +2,16 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Unit
 import amat.kelolakost.data.UnitDao
+import amat.kelolakost.data.UnitHome
 
 class UnitRepository(private val unitDao: UnitDao) {
-//    fun getAllUnitType(): Flow<List<UnitType>> {
-//        return unitTypeDao.getAllUnitType()
-//    }
+    suspend fun getUnitHome(unitStatusId: String, kostId: String): List<UnitHome> {
+        if (unitStatusId == "0") {
+            return unitDao.getAllUnitHome(kostId = kostId)
+        } else {
+            return unitDao.getUnitHome(unitStatusId = unitStatusId, kostId = kostId)
+        }
+    }
 //
 //    fun getDetail(id: String): Flow<UnitType> {
 //        return unitTypeDao.getDetail(id)

@@ -142,7 +142,7 @@ fun ListTenantView(
                 Text(
                     text = stringResource(
                         id = R.string.note_empty_data,
-                        "Lapangan"
+                        "Penyewa"
                     )
                 )
             }

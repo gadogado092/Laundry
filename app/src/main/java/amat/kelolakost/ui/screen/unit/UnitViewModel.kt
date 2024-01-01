@@ -1,8 +1,10 @@
 package amat.kelolakost.ui.screen.unit
 
 import amat.kelolakost.data.Kost
+import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.entity.FilterEntity
 import amat.kelolakost.data.repository.KostRepository
+import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.ui.common.UiState
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -13,7 +15,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
+class UnitViewModel(
+    private val kostRepository: KostRepository,
+    private val unitRepository: UnitRepository
+) : ViewModel() {
 
     private val _listStatus = MutableStateFlow<List<FilterEntity>>(mutableListOf())
     val listStatus: StateFlow<List<FilterEntity>>
@@ -31,6 +36,11 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
     private val _kostSelected = MutableStateFlow(Kost("", "", "", "", "", false))
     val kostSelected: StateFlow<Kost>
         get() = _kostSelected
+
+    private val _stateListUnit: MutableStateFlow<UiState<List<UnitHome>>> =
+        MutableStateFlow(UiState.Loading)
+    val stateListUnit: StateFlow<UiState<List<UnitHome>>>
+        get() = _stateListUnit
 
     init {
         Log.d("saya", "init")
@@ -52,11 +62,6 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
         _statusSelected.value = listStatus[1]
     }
 
-    fun updateStatusSelected(title: String, value: String) {
-        _statusSelected.value = FilterEntity(title, value)
-        getUnit()
-    }
-
     fun getAllKost() {
         Log.d("saya", "get all kost")
         viewModelScope.launch {
@@ -71,7 +76,7 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
                     _stateListKost.value = UiState.Success(data)
 
                     if (_kostSelected.value.id == "") {
-                        updateKostSelected(data[0])
+                        _kostSelected.value = data[0]
                     }
 
                 }
@@ -90,27 +95,43 @@ class UnitViewModel(private val kostRepository: KostRepository) : ViewModel() {
 
     }
 
-    fun getUnit() {
-        Log.d(
-            "saya",
-            "get unit, kost = ${kostSelected.value.name}, status = ${statusSelected.value.title}"
-        )
-    }
-
     fun updateKostSelected(kost: Kost) {
         _kostSelected.value = kost
         getUnit()
     }
 
+    fun updateStatusSelected(title: String, value: String) {
+        _statusSelected.value = FilterEntity(title, value)
+        getUnit()
+    }
+
+    fun getUnit() {
+        _stateListUnit.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                val data = unitRepository.getUnitHome(
+                    unitStatusId = _statusSelected.value.value,
+                    kostId = _kostSelected.value.id
+                )
+                _stateListUnit.value = UiState.Success(data)
+            } catch (e: Exception) {
+                _stateListUnit.value = UiState.Error("Error ${e.message.toString()}")
+            }
+        }
+    }
+
 }
 
-class UnitViewModelFactory(private val kostRepository: KostRepository) :
+class UnitViewModelFactory(
+    private val kostRepository: KostRepository,
+    private val unitRepository: UnitRepository
+) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(UnitViewModel::class.java)) {
-            return UnitViewModel(kostRepository) as T
+            return UnitViewModel(kostRepository, unitRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

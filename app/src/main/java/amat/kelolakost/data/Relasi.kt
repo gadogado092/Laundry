@@ -4,12 +4,12 @@ data class UnitHome(
     val id: String,
     val name: String,
     val noteMaintenance: String,
+    val unitStatusId: Int,
+
     val kostName: String,
 
     val tenantName: String,
     val limitCheckOut: String,
-
-    val unitStatusId: String,
 
     val unitTypeName: String,
     val priceDay: Int,
