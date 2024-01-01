@@ -9,8 +9,6 @@ import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
-import amat.kelolakost.ui.theme.GreyLight
-import amat.kelolakost.ui.theme.GreyLight3
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.app.Activity
 import android.content.Context
@@ -20,13 +18,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -210,19 +206,19 @@ fun FormUpdate(updateKostViewModel: UpdateKostViewModel) {
                 .padding(top = 8.dp)
         )
         {
-            Button(
-                modifier = Modifier
-                    .weight(1F),
-                onClick = {
-                    //TODO check relasi sebelum delete
-                },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = GreyLight
-                )
-            ) {
-                Text(text = stringResource(id = R.string.delete), color = GreyLight3)
-            }
-            Spacer(modifier = Modifier.width(16.dp))
+//            Button(
+//                modifier = Modifier
+//                    .weight(1F),
+//                onClick = {
+//                    //TODO check relasi sebelum delete
+//                },
+//                colors = ButtonDefaults.buttonColors(
+//                    backgroundColor = GreyLight
+//                )
+//            ) {
+//                Text(text = stringResource(id = R.string.delete), color = GreyLight3)
+//            }
+//            Spacer(modifier = Modifier.width(16.dp))
             Button(
                 modifier = Modifier
                     .weight(1F),

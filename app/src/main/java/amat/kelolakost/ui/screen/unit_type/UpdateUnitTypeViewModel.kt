@@ -148,7 +148,8 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
                             priceThreeMonth = currencyFormatterString(data.priceThreeMonth.toString()),
                             priceSixMonth = currencyFormatterString(data.priceSixMonth.toString()),
                             priceYear = currencyFormatterString(data.priceYear.toString()),
-                            priceGuarantee = currencyFormatterString(data.priceGuarantee.toString())
+                            priceGuarantee = currencyFormatterString(data.priceGuarantee.toString()),
+                            isDelete = data.isDelete
                         )
                 }
         }
@@ -204,7 +205,7 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
                     priceThreeMonth = cleanCurrencyFormatter(_unitTypeUi.value.priceThreeMonth),
                     priceSixMonth = cleanCurrencyFormatter(_unitTypeUi.value.priceSixMonth),
                     priceYear = cleanCurrencyFormatter(_unitTypeUi.value.priceYear),
-                    isDelete = false
+                    isDelete = _unitTypeUi.value.isDelete
                 )
                 updateUnitType(unitType)
             }

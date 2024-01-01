@@ -82,9 +82,9 @@ fun TenantScreen(
 
                     is UiState.Success -> {
                         ListTenantView(listData = uiState.data, onItemClick = {
-//                            val intent = Intent(context, UpdateUnitTypeActivity::class.java)
-//                            intent.putExtra("id", it)
-//                            context.startActivity(intent)
+                            val intent = Intent(context, UpdateTenantActivity::class.java)
+                            intent.putExtra("id", it)
+                            context.startActivity(intent)
                         })
                     }
                 }

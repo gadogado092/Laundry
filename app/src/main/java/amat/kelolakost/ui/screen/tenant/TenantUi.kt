@@ -7,5 +7,11 @@ data class TenantUi(
     val numberPhone: String = "",
     val gender: Boolean = false,
     val address: String = "",
-    val note: String = ""
+    val note: String = "",
+    val limitCheckOut: String = "",
+    val unitId: String = "0",
+    val guaranteeCost: Int = 0,
+    val additionalCost: Int = 0,
+    val noteAdditionalCost: String = "",
+    val isDelete: Boolean = false
 )

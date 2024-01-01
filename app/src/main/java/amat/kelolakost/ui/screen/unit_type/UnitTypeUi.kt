@@ -11,4 +11,5 @@ data class UnitTypeUi(
     val priceSixMonth: String = "",
     val priceYear: String = "",
     val priceGuarantee: String = "",
+    val isDelete: Boolean = false
 )

@@ -4,6 +4,7 @@ import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.TenantHome
 import amat.kelolakost.data.TenantDao
 import android.util.Log
+import kotlinx.coroutines.flow.Flow
 
 class TenantRepository(private val tenantDao: TenantDao) {
     suspend fun getAllTenantHome(status: String = ""): List<TenantHome> {
@@ -22,18 +23,18 @@ class TenantRepository(private val tenantDao: TenantDao) {
             }
         }
     }
-//
-//    fun getDetail(id: String): Flow<UnitType> {
-//        return unitTypeDao.getDetail(id)
-//    }
+
+    fun getDetail(id: String): Flow<Tenant> {
+        return tenantDao.getDetail(id)
+    }
 
     suspend fun insertTenant(tenant: Tenant) {
         tenantDao.insert(tenant)
     }
 
-//    suspend fun updateUnitType(unitType: UnitType) {
-//        unitTypeDao.update(unitType)
-//    }
+    suspend fun updateTenant(tenant: Tenant) {
+        tenantDao.update(tenant)
+    }
 
     companion object {
         @Volatile

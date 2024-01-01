@@ -45,6 +45,9 @@ interface TenantDao {
     )
     suspend fun getAllTenantHome(): List<TenantHome>
 
+    @Query("SELECT * FROM Tenant WHERE id = :id")
+    fun getDetail(id: String): Flow<Tenant>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(tenant: Tenant)
 

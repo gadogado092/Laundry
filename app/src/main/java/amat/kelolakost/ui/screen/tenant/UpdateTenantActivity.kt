@@ -2,8 +2,8 @@ package amat.kelolakost.ui.screen.tenant
 
 import amat.kelolakost.R
 import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.component.MyOutlinedTextField
-import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -46,15 +46,24 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-class AddTenantActivity : ComponentActivity() {
+class UpdateTenantActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        val id = intent.getStringExtra("id")
+
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                AddTenantScreen(context)
+                if (id != null) {
+                    UpdateTenantScreen(context, id)
+                } else {
+                    UpdateTenantScreen(context, "")
+                }
             }
         }
 
@@ -67,26 +76,42 @@ class AddTenantActivity : ComponentActivity() {
 }
 
 @Composable
-fun AddTenantScreen(
+fun UpdateTenantScreen(
     context: Context,
+    id: String,
     modifier: Modifier = Modifier
 ) {
-    val addTenantViewModel: AddTenantViewModel =
-        viewModel(factory = AddTenantViewModelFactory(Injection.provideTenantRepository(context)))
+    val updateTenantViewModel: UpdateTenantViewModel =
+        viewModel(factory = UpdateTenantViewModelFactory(Injection.provideTenantRepository(context)))
 
-    if (!addTenantViewModel.isInsertSuccess.collectAsState().value.isError) {
-        Toast.makeText(context, stringResource(id = R.string.success_add_data), Toast.LENGTH_SHORT)
+    if (!updateTenantViewModel.isUpdateSuccess.collectAsState().value.isError) {
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.success_update_data),
+            Toast.LENGTH_SHORT
+        )
             .show()
         val activity = (context as? Activity)
         activity?.finish()
     } else {
-        if (addTenantViewModel.isInsertSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+        if (updateTenantViewModel.isUpdateSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
             Toast.makeText(
                 context,
-                addTenantViewModel.isInsertSuccess.collectAsState().value.errorMessage,
+                updateTenantViewModel.isUpdateSuccess.collectAsState().value.errorMessage,
                 Toast.LENGTH_SHORT
             )
                 .show()
+        }
+    }
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                updateTenantViewModel.getDetail(id)
+            }
+
+            else -> {}
         }
     }
 
@@ -94,7 +119,7 @@ fun AddTenantScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.title_add_tenant),
+                    text = stringResource(id = R.string.title_update_tenant),
                     color = FontWhite,
                     fontSize = 22.sp
                 )
@@ -124,38 +149,38 @@ fun AddTenantScreen(
             MyOutlinedTextField(
                 label = "Nama Penyewa",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                value = addTenantViewModel.tenantUi.collectAsState().value.name,
+                value = updateTenantViewModel.tenantUi.collectAsState().value.name,
                 onValueChange = {
-                    addTenantViewModel.setName(it)
+                    updateTenantViewModel.setName(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
-                isError = addTenantViewModel.isNameValid.collectAsState().value.isError,
-                errorMessage = addTenantViewModel.isNameValid.collectAsState().value.errorMessage
+                isError = updateTenantViewModel.isNameValid.collectAsState().value.isError,
+                errorMessage = updateTenantViewModel.isNameValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Nomor Handphone",
-                value = addTenantViewModel.tenantUi.collectAsState().value.numberPhone,
+                value = updateTenantViewModel.tenantUi.collectAsState().value.numberPhone,
                 onValueChange = {
-                    addTenantViewModel.setNumberPhone(it)
+                    updateTenantViewModel.setNumberPhone(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                isError = addTenantViewModel.isNumberPhoneValid.collectAsState().value.isError,
-                errorMessage = addTenantViewModel.isNumberPhoneValid.collectAsState().value.errorMessage
+                isError = updateTenantViewModel.isNumberPhoneValid.collectAsState().value.isError,
+                errorMessage = updateTenantViewModel.isNumberPhoneValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Alamat Email",
-                value = addTenantViewModel.tenantUi.collectAsState().value.email,
+                value = updateTenantViewModel.tenantUi.collectAsState().value.email,
                 onValueChange = {
-                    addTenantViewModel.setEmail(it)
+                    updateTenantViewModel.setEmail(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                isError = addTenantViewModel.isEmailValid.collectAsState().value.isError,
-                errorMessage = addTenantViewModel.isEmailValid.collectAsState().value.errorMessage
+                isError = updateTenantViewModel.isEmailValid.collectAsState().value.isError,
+                errorMessage = updateTenantViewModel.isEmailValid.collectAsState().value.errorMessage
             )
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Jenis Kelamin")
@@ -164,13 +189,13 @@ fun AddTenantScreen(
                         modifier = Modifier
                             .weight(1F)
                             .clickable {
-                                addTenantViewModel.setGender(false)
+                                updateTenantViewModel.setGender(false)
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (!addTenantViewModel.tenantUi.collectAsState().value.gender),
-                            onClick = { addTenantViewModel.setGender(false) }
+                            selected = (!updateTenantViewModel.tenantUi.collectAsState().value.gender),
+                            onClick = { updateTenantViewModel.setGender(false) }
                         )
                         Text(text = "Pria")
                     }
@@ -178,13 +203,13 @@ fun AddTenantScreen(
                         modifier = Modifier
                             .weight(1F)
                             .clickable {
-                                addTenantViewModel.setGender(true)
+                                updateTenantViewModel.setGender(true)
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (addTenantViewModel.tenantUi.collectAsState().value.gender),
-                            onClick = { addTenantViewModel.setGender(true) }
+                            selected = (updateTenantViewModel.tenantUi.collectAsState().value.gender),
+                            onClick = { updateTenantViewModel.setGender(true) }
                         )
                         Text(text = "Wanita")
                     }
@@ -193,42 +218,37 @@ fun AddTenantScreen(
             MyOutlinedTextField(
                 label = "Alamat",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                value = addTenantViewModel.tenantUi.collectAsState().value.address,
+                value = updateTenantViewModel.tenantUi.collectAsState().value.address,
                 onValueChange = {
-                    addTenantViewModel.setAddress(it)
+                    updateTenantViewModel.setAddress(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
-                isError = addTenantViewModel.isAddressValid.collectAsState().value.isError,
-                errorMessage = addTenantViewModel.isAddressValid.collectAsState().value.errorMessage
+                isError = updateTenantViewModel.isAddressValid.collectAsState().value.isError,
+                errorMessage = updateTenantViewModel.isAddressValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Keterangan Tambahan",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                value = addTenantViewModel.tenantUi.collectAsState().value.note,
+                value = updateTenantViewModel.tenantUi.collectAsState().value.note,
                 onValueChange = {
-                    addTenantViewModel.setNote(it)
+                    updateTenantViewModel.setNote(it)
                 },
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth(),
                 singleLine = false
             )
-            Text(
-                modifier = Modifier.padding(top = 8.dp),
-                fontSize = 12.sp,
-                text = "status penyewa saat ditambahkan adalah check-out", color = FontBlack
-            )
             Button(
                 onClick = {
-                    addTenantViewModel.prosesInsert()
+                    updateTenantViewModel.prosesUpdate()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(vertical = 16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
-                Text(text = stringResource(id = R.string.save), color = FontWhite)
+                Text(text = stringResource(id = R.string.update), color = FontWhite)
             }
         }
     }
