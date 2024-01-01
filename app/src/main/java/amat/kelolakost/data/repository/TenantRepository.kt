@@ -1,12 +1,26 @@
 package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Tenant
+import amat.kelolakost.data.TenantHome
 import amat.kelolakost.data.TenantDao
-import kotlinx.coroutines.flow.Flow
+import android.util.Log
 
 class TenantRepository(private val tenantDao: TenantDao) {
-    fun getAllUnitType(): Flow<List<Tenant>> {
-        return tenantDao.getAllTenant()
+    suspend fun getAllTenantHome(status: String = ""): List<TenantHome> {
+        Log.d("saya", "getAllTenantHome $status")
+        return when (status) {
+            "1" -> {
+                tenantDao.getAllTenantHomeCheckIn()
+            }
+
+            "0" -> {
+                tenantDao.getAllTenantHomeCheckOut()
+            }
+
+            else -> {
+                tenantDao.getAllTenantHome()
+            }
+        }
     }
 //
 //    fun getDetail(id: String): Flow<UnitType> {

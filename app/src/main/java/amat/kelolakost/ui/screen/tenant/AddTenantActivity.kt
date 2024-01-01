@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.tenant
 import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.component.MyOutlinedTextField
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -213,14 +214,18 @@ fun AddTenantScreen(
                     .fillMaxWidth(),
                 singleLine = false
             )
-
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                fontSize = 12.sp,
+                text = "status penyewa saat ditambahkan adalah check-out", color = FontBlack
+            )
             Button(
                 onClick = {
                     addTenantViewModel.prosesInsert()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(bottom = 16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
                 Text(text = stringResource(id = R.string.save), color = FontWhite)

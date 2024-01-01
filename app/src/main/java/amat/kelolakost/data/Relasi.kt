@@ -19,3 +19,14 @@ data class UnitHome(
     val priceSixMonth: Int,
     val priceYear: Int
 )
+
+data class TenantHome(
+    val id: String,
+    val name: String,
+    val numberPhone: String,
+    val limitCheckOut: String,
+
+    val unitId: String,
+    val unitName: String,
+    val kostName: String,
+)

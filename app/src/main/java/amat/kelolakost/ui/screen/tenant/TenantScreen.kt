@@ -1,14 +1,15 @@
 package amat.kelolakost.ui.screen.tenant
 
 import amat.kelolakost.R
-import amat.kelolakost.data.Tenant
+import amat.kelolakost.data.TenantHome
 import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.ErrorLayout
+import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.TenantItem
-import amat.kelolakost.ui.screen.unit_type.UpdateUnitTypeActivity
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -16,10 +17,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -33,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
@@ -43,7 +48,22 @@ fun TenantScreen(
     val tenantViewModel: TenantViewModel =
         viewModel(factory = TenantViewModelFactory(Injection.provideTenantRepository(context)))
 
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                tenantViewModel.getAllTenant()
+            }
+
+            else -> {}
+        }
+
+    }
+
     Column {
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            ContentStatus(viewModel = tenantViewModel)
+        }
         Box(
             modifier = modifier.fillMaxSize()
         ) {
@@ -52,7 +72,7 @@ fun TenantScreen(
                 when (uiState) {
                     is UiState.Error -> {
                         ErrorLayout(errorMessage = uiState.errorMessage) {
-                            tenantViewModel.getAllTenantInit()
+                            tenantViewModel.getAllTenant()
                         }
                     }
 
@@ -62,9 +82,9 @@ fun TenantScreen(
 
                     is UiState.Success -> {
                         ListTenantView(listData = uiState.data, onItemClick = {
-                            val intent = Intent(context, UpdateUnitTypeActivity::class.java)
-                            intent.putExtra("id", it)
-                            context.startActivity(intent)
+//                            val intent = Intent(context, UpdateUnitTypeActivity::class.java)
+//                            intent.putExtra("id", it)
+//                            context.startActivity(intent)
                         })
                     }
                 }
@@ -92,8 +112,28 @@ fun TenantScreen(
 }
 
 @Composable
+fun ContentStatus(viewModel: TenantViewModel) {
+    val statusSelected = viewModel.statusSelected.collectAsState()
+    viewModel.listStatus.collectAsState().value.let { value ->
+        LazyRow(contentPadding = PaddingValues(vertical = 4.dp)) {
+            items(value, key = { it.value }) { item ->
+                FilterItem(
+                    title = item.title,
+                    isSelected = item.title == statusSelected.value.title,
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                        .clickable {
+                            viewModel.updateStatusSelected(item.title, item.value)
+                        }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ListTenantView(
-    listData: List<Tenant>,
+    listData: List<TenantHome>,
     onItemClick: (String) -> Unit,
 ) {
     if (listData.isEmpty()) {
@@ -117,10 +157,20 @@ fun ListTenantView(
                         onItemClick(data.id)
                     },
                     name = data.name,
-                    nameKost = "Name Kost",
+                    unitName = data.unitName,
+                    kostName = data.kostName,
+                    numberPhone = data.numberPhone,
+                    unitId = data.unitId,
                     limitCheckOut = data.limitCheckOut,
-                    numberPhone = "",
-                    nameUnit = "Name Unit"
+                    onClickSms = {
+
+                    },
+                    onClickPhone = {
+
+                    },
+                    onClickWa = {
+
+                    },
                 )
             }
         }
