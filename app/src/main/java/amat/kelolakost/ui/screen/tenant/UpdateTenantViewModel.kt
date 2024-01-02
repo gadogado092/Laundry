@@ -193,9 +193,10 @@ class UpdateTenantViewModel(private val tenantRepository: TenantRepository) : Vi
     private suspend fun updateTenant(tenant: Tenant) {
         try {
             tenantRepository.updateTenant(tenant)
-            _isUpdateSuccess.value = ValidationResult(false)
+            _isUpdateSuccess.value = ValidationResult(false, "Tambah Data Berhasil")
         } catch (e: Exception) {
-            _isUpdateSuccess.value = ValidationResult(true, "Gagagl Insert " + e.message.toString())
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Tambah Data Gagal " + e.message.toString())
         }
     }
 }

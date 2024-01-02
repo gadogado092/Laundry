@@ -112,9 +112,9 @@ fun UnitScreen(
 
                     is UiState.Success -> {
                         ListUnitView(listData = uiState.data, onItemClick = {
-//                            val intent = Intent(context, UpdateTenantActivity::class.java)
-//                            intent.putExtra("id", it)
-//                            context.startActivity(intent)
+                            val intent = Intent(context, UpdateUnitActivity::class.java)
+                            intent.putExtra("id", it)
+                            context.startActivity(intent)
                         })
                     }
                 }

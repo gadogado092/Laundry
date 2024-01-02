@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.MyOutlinedTextField
@@ -47,18 +48,27 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class AddUnitActivity : ComponentActivity() {
+class UpdateUnitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        val id = intent.getStringExtra("id")
+
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                AddUnitScreen(context)
+                if (id != null) {
+                    UpdateUnitScreen(context, id)
+                } else {
+                    UpdateUnitScreen(context, "")
+                }
             }
         }
 
@@ -71,36 +81,48 @@ class AddUnitActivity : ComponentActivity() {
 }
 
 @Composable
-fun AddUnitScreen(
+fun UpdateUnitScreen(
     context: Context,
+    id: String,
     modifier: Modifier = Modifier
 ) {
-    val addUnitViewModel: AddUnitViewModel =
+    val updateUnitViewModel: UpdateUnitViewModel =
         viewModel(
-            factory = AddUnitViewModelFactory(
+            factory = UpdateUnitViewModelFactory(
                 Injection.provideUnitRepository(context),
                 Injection.provideKostRepository(context),
                 Injection.provideUnitTypeRepository(context)
             )
         )
 
-    if (!addUnitViewModel.isInsertSuccess.collectAsState().value.isError) {
-        Toast.makeText(context, stringResource(id = R.string.success_add_data), Toast.LENGTH_SHORT)
+    if (!updateUnitViewModel.isUpdateSuccess.collectAsState().value.isError) {
+        Toast.makeText(context, stringResource(id = R.string.success_update_data), Toast.LENGTH_SHORT)
             .show()
         val activity = (context as? Activity)
         activity?.finish()
     } else {
-        if (addUnitViewModel.isInsertSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+        if (updateUnitViewModel.isUpdateSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
             Toast.makeText(
                 context,
-                addUnitViewModel.isInsertSuccess.collectAsState().value.errorMessage,
+                updateUnitViewModel.isUpdateSuccess.collectAsState().value.errorMessage,
                 Toast.LENGTH_SHORT
             )
                 .show()
         }
     }
 
-    addUnitViewModel.stateListKost.collectAsState(initial = UiState.Error("")).value.let { uiState ->
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                updateUnitViewModel.getDetail(id)
+            }
+
+            else -> {}
+        }
+    }
+
+    updateUnitViewModel.stateListKost.collectAsState(initial = UiState.Error("")).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {
                 if (uiState.errorMessage.isNotEmpty()) {
@@ -122,7 +144,7 @@ fun AddUnitScreen(
 
             is UiState.Success -> {
                 showBottomSheetKost(
-                    addUnitViewModel = addUnitViewModel,
+                    updateUnitViewModel = updateUnitViewModel,
                     context = context,
                     uiState.data
                 )
@@ -130,7 +152,7 @@ fun AddUnitScreen(
         }
     }
 
-    addUnitViewModel.stateListUnitType.collectAsState(initial = UiState.Error("")).value.let { uiState ->
+    updateUnitViewModel.stateListUnitType.collectAsState(initial = UiState.Error("")).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {
                 if (uiState.errorMessage.isNotEmpty()) {
@@ -152,7 +174,7 @@ fun AddUnitScreen(
 
             is UiState.Success -> {
                 showBottomSheetUnitType(
-                    addUnitViewModel = addUnitViewModel,
+                    updateUnitViewModel = updateUnitViewModel,
                     context = context,
                     uiState.data
                 )
@@ -164,7 +186,7 @@ fun AddUnitScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.title_add_unit),
+                    text = stringResource(id = R.string.title_update_unit),
                     color = FontWhite,
                     fontSize = 22.sp
                 )
@@ -193,20 +215,20 @@ fun AddUnitScreen(
         ) {
             MyOutlinedTextField(
                 label = "Nama Kamar/Unit",
-                value = addUnitViewModel.unitUi.collectAsState().value.name,
+                value = updateUnitViewModel.unitUi.collectAsState().value.name,
                 onValueChange = {
-                    addUnitViewModel.setUnitName(it)
+                    updateUnitViewModel.setUnitName(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
-                isError = addUnitViewModel.isUnitNameValid.collectAsState().value.isError,
-                errorMessage = addUnitViewModel.isUnitNameValid.collectAsState().value.errorMessage
+                isError = updateUnitViewModel.isUnitNameValid.collectAsState().value.isError,
+                errorMessage = updateUnitViewModel.isUnitNameValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Keterangan Tambahan",
-                value = addUnitViewModel.unitUi.collectAsState().value.note,
+                value = updateUnitViewModel.unitUi.collectAsState().value.note,
                 onValueChange = {
-                    addUnitViewModel.setNote(it)
+                    updateUnitViewModel.setNote(it)
                 },
                 modifier = Modifier
                     .height(120.dp)
@@ -215,37 +237,41 @@ fun AddUnitScreen(
             )
             ComboBox(
                 title = stringResource(id = R.string.location_unit),
-                value = addUnitViewModel.unitUi.collectAsState().value.kostName,
-                isError = addUnitViewModel.isKostSelectedValid.collectAsState().value.isError,
-                errorMessage = addUnitViewModel.isKostSelectedValid.collectAsState().value.errorMessage
+                value = updateUnitViewModel.unitUi.collectAsState().value.kostName,
+                isError = updateUnitViewModel.isKostSelectedValid.collectAsState().value.isError,
+                errorMessage = updateUnitViewModel.isKostSelectedValid.collectAsState().value.errorMessage
             ) {
-                addUnitViewModel.getKost()
+                updateUnitViewModel.getKost()
             }
             ComboBox(
                 title = stringResource(id = R.string.title_type_unit),
-                value = addUnitViewModel.unitUi.collectAsState().value.unitTypeName,
-                isError = addUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.isError,
-                errorMessage = addUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.errorMessage,
+                value = updateUnitViewModel.unitUi.collectAsState().value.unitTypeName,
+                isError = updateUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.isError,
+                errorMessage = updateUnitViewModel.isUnitTypeSelectedValid.collectAsState().value.errorMessage,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                addUnitViewModel.getUnitType()
+                updateUnitViewModel.getUnitType()
             }
             Button(
                 onClick = {
-                    addUnitViewModel.prosesInsert()
+                    updateUnitViewModel.prosesUpdate()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
-                Text(text = stringResource(id = R.string.save), color = FontWhite)
+                Text(text = stringResource(id = R.string.update), color = FontWhite)
             }
         }
     }
 }
 
-fun showBottomSheetKost(addUnitViewModel: AddUnitViewModel, context: Context, data: List<Kost>) {
+fun showBottomSheetKost(
+    updateUnitViewModel: UpdateUnitViewModel,
+    context: Context,
+    data: List<Kost>
+) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
@@ -262,7 +288,7 @@ fun showBottomSheetKost(addUnitViewModel: AddUnitViewModel, context: Context, da
     }
 
     val adapter = KostAdapter {
-        addUnitViewModel.setKostSelected(it.id, it.name)
+        updateUnitViewModel.setKostSelected(it.id, it.name)
         bottomSheetDialog.dismiss()
     }
 
@@ -278,7 +304,7 @@ fun showBottomSheetKost(addUnitViewModel: AddUnitViewModel, context: Context, da
 }
 
 fun showBottomSheetUnitType(
-    addUnitViewModel: AddUnitViewModel,
+    updateUnitViewModel: UpdateUnitViewModel,
     context: Context,
     data: List<UnitType>
 ) {
@@ -298,7 +324,7 @@ fun showBottomSheetUnitType(
     }
 
     val adapter = UnitTypeAdapter {
-        addUnitViewModel.setUnitTypeSelected(it.id, it.name)
+        updateUnitViewModel.setUnitTypeSelected(it.id, it.name)
         bottomSheetDialog.dismiss()
     }
 

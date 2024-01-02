@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UnitDao {
@@ -41,5 +42,16 @@ interface UnitDao {
                 "ORDER BY Unit.name ASC"
     )
     suspend fun getAllUnitHome(kostId: String): List<UnitHome>
+
+    @Query(
+        "SELECT Unit.id AS id, Unit.name AS name, Unit.note AS note, Unit.noteMaintenance AS noteMaintenance, Unit.unitStatusId AS unitStatusId, Unit.kostId AS kostId, Unit.unitTypeId AS unitTypeId, Unit.tenantId AS tenantId, Unit.isDelete AS isDelete, " +
+                "Kost.name AS kostName, " +
+                "UnitType.name AS unitTypeName " +
+                "FROM Unit " +
+                "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
+                "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
+                "WHERE Unit.id=:id"
+    )
+    fun getDetail(id: String): Flow<UnitDetail>
 
 }

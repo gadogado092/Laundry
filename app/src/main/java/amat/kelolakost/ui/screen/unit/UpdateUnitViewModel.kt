@@ -2,6 +2,7 @@ package amat.kelolakost.ui.screen.unit
 
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Unit
+import amat.kelolakost.data.UnitDetail
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.KostRepository
@@ -13,14 +14,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class AddUnitViewModel(
+class UpdateUnitViewModel(
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
     private val unitTypeRepository: UnitTypeRepository
 ) : ViewModel() {
+
+    private val _stateUnitUi: MutableStateFlow<UiState<UnitDetail>> =
+        MutableStateFlow(UiState.Loading)
+    val stateUnitUi: StateFlow<UiState<UnitDetail>>
+        get() = _stateUnitUi
+
     private val _unitUi: MutableStateFlow<UnitUi> =
         MutableStateFlow(
             UnitUi(
@@ -58,16 +65,43 @@ class AddUnitViewModel(
     val stateListUnitType: StateFlow<UiState<List<UnitType>>>
         get() = _stateListUnitType
 
-    private val _isInsertSuccess: MutableStateFlow<ValidationResult> =
+    private val _isUpdateSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
-    val isInsertSuccess: StateFlow<ValidationResult>
-        get() = _isInsertSuccess
+    val isUpdateSuccess: StateFlow<ValidationResult>
+        get() = _isUpdateSuccess
+
+    fun getDetail(id: String) {
+        viewModelScope.launch {
+            _stateUnitUi.value = UiState.Loading
+            unitRepository.getDetail(id)
+                .catch {
+                    _stateUnitUi.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    _stateUnitUi.value = UiState.Success(data)
+                    _unitUi.value = UnitUi(
+                        id = data.id,
+                        name = data.name,
+                        note = data.note,
+                        kostId = data.kostId,
+                        kostName = data.kostName,
+                        unitTypeId = data.unitTypeId,
+                        unitTypeName = data.unitTypeName,
+                        noteMaintenance = data.noteMaintenance,
+                        unitStatusId = data.unitStatusId,
+                        tenantId = data.tenantId,
+                        isDelete = data.isDelete
+                    )
+                }
+
+        }
+    }
 
     fun setUnitName(value: String) {
         _stateListUnitType.value = UiState.Error("")
         _stateListKost.value = UiState.Error("")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitUi.value = _unitUi.value.copy(name = value)
         if (_unitUi.value.name.trim().isEmpty()) {
             _isUnitNameValid.value = ValidationResult(true, "Nama Unit Tidak Boleh Kosong")
@@ -78,14 +112,14 @@ class AddUnitViewModel(
 
     fun setKostSelected(id: String, name: String) {
         _isKostSelectedValid.value = ValidationResult(true, "")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitUi.value = _unitUi.value.copy(kostId = id, kostName = name)
         _stateListKost.value = UiState.Error("")
     }
 
     fun setUnitTypeSelected(id: String, name: String) {
         _isUnitTypeSelectedValid.value = ValidationResult(true, "")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitUi.value = _unitUi.value.copy(unitTypeId = id, unitTypeName = name)
         _stateListUnitType.value = UiState.Error("")
     }
@@ -93,14 +127,14 @@ class AddUnitViewModel(
     fun setNote(value: String) {
         _stateListUnitType.value = UiState.Error("")
         _stateListKost.value = UiState.Error("")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         _unitUi.value = _unitUi.value.copy(note = value)
     }
 
     fun getKost() {
         _stateListKost.value = UiState.Error("")
         _stateListUnitType.value = UiState.Error("")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         viewModelScope.launch {
             _stateListKost.value = UiState.Loading
             try {
@@ -115,7 +149,7 @@ class AddUnitViewModel(
     fun getUnitType() {
         _stateListKost.value = UiState.Error("")
         _stateListUnitType.value = UiState.Error("")
-        _isInsertSuccess.value = ValidationResult(true, "")
+        _isUpdateSuccess.value = ValidationResult(true, "")
         viewModelScope.launch {
             _stateListUnitType.value = UiState.Loading
             try {
@@ -127,24 +161,24 @@ class AddUnitViewModel(
         }
     }
 
-    fun prosesInsert() {
+    fun prosesUpdate() {
         _stateListKost.value = UiState.Error("")
         _stateListUnitType.value = UiState.Error("")
 
         if (_unitUi.value.name.trim().isEmpty()) {
             _isUnitNameValid.value = ValidationResult(true, "Nama Unit Tidak Boleh Kosong")
-            _isInsertSuccess.value = ValidationResult(true, "Nama Unit Tidak Boleh Kosong")
+            _isUpdateSuccess.value = ValidationResult(true, "Nama Unit Tidak Boleh Kosong")
             return
         }
 
         if (_unitUi.value.kostId == "0") {
-            _isInsertSuccess.value = ValidationResult(true, "Silahkan Pilih Kost Bro")
+            _isUpdateSuccess.value = ValidationResult(true, "Silahkan Pilih Kost Bro")
             _isKostSelectedValid.value = ValidationResult(true, "Silahkan Pilih Kost Bro")
             return
         }
         if (_unitUi.value.unitTypeId == "0") {
             _isUnitTypeSelectedValid.value = ValidationResult(true, "Pilih Tipe Kamar/Unit Gan")
-            _isInsertSuccess.value = ValidationResult(true, "Pilih Tipe Kamar/Unit Gan")
+            _isUpdateSuccess.value = ValidationResult(true, "Pilih Tipe Kamar/Unit Gan")
             return
         }
 
@@ -153,37 +187,36 @@ class AddUnitViewModel(
             && _unitUi.value.unitTypeId != "0"
         ) {
             viewModelScope.launch {
-                val id = UUID.randomUUID()
 
                 val unit = Unit(
-                    id = id.toString(),
+                    id = unitUi.value.id,
                     name = unitUi.value.name,
                     note = unitUi.value.note,
-                    noteMaintenance = "",
+                    noteMaintenance = unitUi.value.noteMaintenance,
                     unitTypeId = unitUi.value.unitTypeId,
-                    unitStatusId = 2,
-                    tenantId = "0",
+                    unitStatusId = unitUi.value.unitStatusId,
+                    tenantId = unitUi.value.tenantId,
                     kostId = unitUi.value.kostId,
-                    isDelete = false
+                    isDelete = unitUi.value.isDelete
                 )
-                insertUnit(unit)
+                updateUnit(unit)
             }
         }
     }
 
-    private suspend fun insertUnit(unit: Unit) {
+    private suspend fun updateUnit(unit: Unit) {
         try {
-            unitRepository.insertUnit(unit)
-            _isInsertSuccess.value = ValidationResult(false, "Tambah Data Berhasil")
+            unitRepository.updateUnit(unit)
+            _isUpdateSuccess.value = ValidationResult(false, "Update Data Berhasil")
         } catch (e: Exception) {
-            _isInsertSuccess.value =
-                ValidationResult(true, "Tambah Data Gagal " + e.message.toString())
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Update Data Gagal " + e.message.toString())
         }
 
     }
 }
 
-class AddUnitViewModelFactory(
+class UpdateUnitViewModelFactory(
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
     private val unitTypeRepository: UnitTypeRepository
@@ -192,8 +225,8 @@ class AddUnitViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddUnitViewModel::class.java)) {
-            return AddUnitViewModel(unitRepository, kostRepository, unitTypeRepository) as T
+        if (modelClass.isAssignableFrom(UpdateUnitViewModel::class.java)) {
+            return UpdateUnitViewModel(unitRepository, kostRepository, unitTypeRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

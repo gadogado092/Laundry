@@ -20,6 +20,22 @@ data class UnitHome(
     val priceYear: Int
 )
 
+data class UnitDetail(
+    val id: String,
+    val name: String,
+    val note: String,
+    val noteMaintenance: String,
+    val unitStatusId: Int,
+
+    val kostId: String,
+    val kostName: String,
+
+    val unitTypeId: String,
+    val unitTypeName: String,
+    val tenantId: String,
+    val isDelete: Boolean,
+)
+
 data class TenantHome(
     val id: String,
     val name: String,

@@ -2,7 +2,9 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Unit
 import amat.kelolakost.data.UnitDao
+import amat.kelolakost.data.UnitDetail
 import amat.kelolakost.data.UnitHome
+import kotlinx.coroutines.flow.Flow
 
 class UnitRepository(private val unitDao: UnitDao) {
     suspend fun getUnitHome(unitStatusId: String, kostId: String): List<UnitHome> {
@@ -12,18 +14,18 @@ class UnitRepository(private val unitDao: UnitDao) {
             return unitDao.getUnitHome(unitStatusId = unitStatusId, kostId = kostId)
         }
     }
-//
-//    fun getDetail(id: String): Flow<UnitType> {
-//        return unitTypeDao.getDetail(id)
-//    }
+
+    fun getDetail(id: String): Flow<UnitDetail> {
+        return unitDao.getDetail(id)
+    }
 
     suspend fun insertUnit(unit: Unit) {
         unitDao.insert(unit)
     }
 
-//    suspend fun updateUnitType(unitType: UnitType) {
-//        unitTypeDao.update(unitType)
-//    }
+    suspend fun updateUnit(unit: Unit) {
+        unitDao.update(unit)
+    }
 
     companion object {
         @Volatile

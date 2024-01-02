@@ -8,4 +8,8 @@ data class UnitUi(
     val kostName: String = "",
     val unitTypeId: String = "",
     val unitTypeName: String = "",
+    val noteMaintenance: String = "",
+    val unitStatusId: Int = 2,
+    val tenantId: String = "",
+    val isDelete:Boolean = false
 )
