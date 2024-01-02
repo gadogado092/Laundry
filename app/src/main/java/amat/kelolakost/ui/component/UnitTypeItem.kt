@@ -5,19 +5,12 @@ import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Adjust
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -55,46 +48,28 @@ fun UnitTypeItem(
                 color = FontBlack
             )
             if (priceDay != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceDay.toString())}/Hari")
+                Price(value = "${currencyFormatterStringViewZero(priceDay.toString())}/Hari")
             }
             if (priceWeek != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceWeek.toString())}/Minggu")
+                Price(value = "${currencyFormatterStringViewZero(priceWeek.toString())}/Minggu")
             }
             if (priceMonth != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceMonth.toString())}/Bulan")
+                Price(value = "${currencyFormatterStringViewZero(priceMonth.toString())}/Bulan")
             }
             if (priceThreeMonth != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceThreeMonth.toString())}/3 Bulan")
+                Price(value = "${currencyFormatterStringViewZero(priceThreeMonth.toString())}/3 Bulan")
             }
             if (priceSixMonth != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceSixMonth.toString())}/6 Bulan")
+                Price(value = "${currencyFormatterStringViewZero(priceSixMonth.toString())}/6 Bulan")
             }
             if (priceYear != 0) {
-                GeneratePrice(value = "${currencyFormatterStringViewZero(priceYear.toString())}/Tahun")
+                Price(value = "${currencyFormatterStringViewZero(priceYear.toString())}/Tahun")
             }
         }
         Divider(
             color = GreyLight,
             thickness = 2.dp,
             modifier = Modifier.padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun GeneratePrice(value: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            imageVector = Icons.Default.Adjust,
-            contentDescription = "",
-            Modifier
-                .padding(end = 4.dp)
-                .size(16.dp),
-            tint = Color.Gray
-        )
-        Text(
-            text = value, style = TextStyle(fontSize = 14.sp),
-            color = FontBlack
         )
     }
 }

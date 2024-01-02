@@ -13,6 +13,7 @@ import amat.kelolakost.ui.component.TenantItem
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -81,7 +82,7 @@ fun TenantScreen(
                     }
 
                     is UiState.Success -> {
-                        ListTenantView(listData = uiState.data, onItemClick = {
+                        ListTenantView(context = context, listData = uiState.data, onItemClick = {
                             val intent = Intent(context, UpdateTenantActivity::class.java)
                             intent.putExtra("id", it)
                             context.startActivity(intent)
@@ -133,8 +134,9 @@ fun ContentStatus(viewModel: TenantViewModel) {
 
 @Composable
 fun ListTenantView(
+    context: Context,
     listData: List<TenantHome>,
-    onItemClick: (String) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -163,13 +165,15 @@ fun ListTenantView(
                     unitId = data.unitId,
                     limitCheckOut = data.limitCheckOut,
                     onClickSms = {
-
+                        //TODO
                     },
                     onClickPhone = {
-
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:${data.numberPhone}")
+                        context.startActivity(intent)
                     },
                     onClickWa = {
-
+                        //TODO
                     },
                 )
             }

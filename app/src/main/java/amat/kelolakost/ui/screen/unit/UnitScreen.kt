@@ -13,6 +13,7 @@ import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.FilterButton
 import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
+import amat.kelolakost.ui.component.UnitItem
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -162,8 +163,37 @@ fun ListUnitView(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
             items(listData) { data ->
-                Text(text = data.name)
-                Text(text = data.kostName)
+                UnitItem(
+                    modifier = Modifier.clickable {
+                        onItemClick(data.id)
+                    },
+                    name = data.name,
+                    tenantName = data.tenantName,
+                    limitCheckOut = "lewat 5 hari - 30 Okt",
+                    unitStatusId = data.unitStatusId,
+                    unitTypeName = data.unitTypeName,
+                    priceDay = data.priceDay,
+                    priceWeek = data.priceWeek,
+                    priceMonth = data.priceMonth,
+                    priceThreeMonth = data.priceThreeMonth,
+                    priceSixMonth = data.priceSixMonth,
+                    priceYear = data.priceYear,
+                    onClickCheckIn = {
+
+                    },
+                    onClickExtend = {
+
+                    },
+                    onClickCheckOut = {
+
+                    },
+                    onClickMoveUnit = {
+
+                    },
+                    onClickFinishRenovation = {
+
+                    }
+                )
             }
         }
     }

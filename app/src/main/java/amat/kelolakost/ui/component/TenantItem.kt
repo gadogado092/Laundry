@@ -48,7 +48,7 @@ fun TenantItem(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(modifier = modifier.padding(horizontal = 8.dp, vertical = 8.dp)) {
+        Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
             Text(
                 text = name,
                 style = TextStyle(
@@ -74,7 +74,11 @@ fun TenantItem(
             }
 
             Row(
-                verticalAlignment = Alignment.Top
+                verticalAlignment = if (unitId != "0") {
+                    Alignment.Top
+                } else {
+                    Alignment.CenterVertically
+                }
             ) {
                 SubTenant(Icons.Default.PhoneIphone, numberPhone, modifier = Modifier.weight(1F))
                 IconTenant(
@@ -97,58 +101,6 @@ fun TenantItem(
                         .align(Bottom)
                 )
             }
-//            Row(modifier = Modifier.padding(top = 8.dp)) {
-//                Text(
-//                    text = name,
-//                    style = TextStyle(
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.Medium,
-//                        color = FontBlack,
-//                    ),
-//                    modifier = Modifier
-//                        .weight(1F)
-//                        .align(Alignment.CenterVertically),
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//                IconTenant(
-//                    modifier = Modifier.clickable {
-//                        onClickAction()
-//                    },
-//                    id = if (unitId != "0") R.drawable.ic_baseline_autorenew_24 else R.drawable.check_in
-//                )
-//            }
-//            Row(modifier = Modifier.fillMaxWidth()) {
-//                Column(modifier = Modifier.weight(1F)) {
-//                    Text(
-//                        text = numberPhone, style = TextStyle(color = FontBlack), maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis
-//                    )
-//                    Text(
-//                        text = info, style = TextStyle(color = colorTextInfo), maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis
-//                    )
-//                }
-//                IconTenant(
-//                    id = R.drawable.ic_wa,
-//                    modifier = Modifier
-//                        .clickable {
-//                            onClickWa()
-//                        }
-//                        .align(Bottom)
-//                )
-//                IconTenant(id = R.drawable.ic_outline_call_24, modifier = Modifier
-//                    .clickable {
-//                        onClickPhone()
-//                    }
-//                    .align(Bottom))
-//                IconTenant(
-//                    id = R.drawable.ic_twotone_sms_24,
-//                    modifier = Modifier
-//                        .clickable { onClickSms() }
-//                        .align(Bottom)
-//                )
-//            }
         }
         Divider(
             color = GreyLight,
@@ -183,7 +135,7 @@ fun SubTenant(
 fun IconTenant(@DrawableRes id: Int, modifier: Modifier = Modifier) {
     Image(
         modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .size(20.dp),
         painter = painterResource(id = id),
         contentDescription = "",
