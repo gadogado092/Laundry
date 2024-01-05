@@ -11,5 +11,10 @@ data class UnitUi(
     val noteMaintenance: String = "",
     val unitStatusId: Int = 2,
     val tenantId: String = "",
-    val isDelete:Boolean = false
+    val isDelete: Boolean = false
+)
+
+data class PriceDuration(
+    val price: String = "",
+    val duration: String = "",
 )

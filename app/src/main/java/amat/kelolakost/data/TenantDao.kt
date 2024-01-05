@@ -12,6 +12,9 @@ interface TenantDao {
     @Query("SELECT * FROM Tenant WHERE isDelete=0 AND id!=0")
     fun getAllTenant(): Flow<List<Tenant>>
 
+    @Query("SELECT * FROM Tenant WHERE isDelete=0 AND id!=0 AND unitId=0")
+    suspend fun getTenantCheckOut(): List<Tenant>
+
     @Query(
         "SELECT Tenant.id AS id, Tenant.name AS name, Tenant.numberPhone AS numberPhone, Tenant.limitCheckOut AS limitCheckOut, " +
                 "Unit.id AS unitId, Unit.name AS unitName, " +

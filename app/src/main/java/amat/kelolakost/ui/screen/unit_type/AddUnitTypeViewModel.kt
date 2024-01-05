@@ -41,7 +41,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceGuarantee(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceGuarantee = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceGuarantee = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceGuarantee = "")
         } else {
@@ -52,7 +52,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceDay(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceDay = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceDay = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceDay = "")
         } else {
@@ -63,7 +63,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceWeek(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceWeek = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceWeek = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceWeek = "")
         } else {
@@ -74,7 +74,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceMonth(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceMonth = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceMonth = "")
         } else {
@@ -85,7 +85,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceThreeMonth(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceThreeMonth = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceThreeMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceThreeMonth = "")
         } else {
@@ -96,7 +96,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceSixMonth(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceSixMonth = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceSixMonth = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceSixMonth = "")
         } else {
@@ -107,7 +107,7 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
 
     fun setPriceYear(value: String) {
         _isInsertSuccess.value = ValidationResult(true, "")
-        _unitTypeUi.value = _unitTypeUi.value.copy(priceYear = value)
+//        _unitTypeUi.value = _unitTypeUi.value.copy(priceYear = value)
         if (value.trim().isEmpty() || value.trim() == "0") {
             _unitTypeUi.value = _unitTypeUi.value.copy(priceYear = "")
         } else {
@@ -129,12 +129,18 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
             return
         }
 
-        if (_unitTypeUi.value.priceDay.trim().isEmpty()
-            && _unitTypeUi.value.priceWeek.trim().isEmpty()
-            && _unitTypeUi.value.priceMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceThreeMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceSixMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceYear.trim().isEmpty()
+        if ((_unitTypeUi.value.priceDay.trim()
+                .isEmpty() || _unitTypeUi.value.priceDay.trim() == "0")
+            && (_unitTypeUi.value.priceWeek.trim()
+                .isEmpty() || _unitTypeUi.value.priceWeek.trim() == "0")
+            && (_unitTypeUi.value.priceMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceMonth.trim() == "0")
+            && (_unitTypeUi.value.priceThreeMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceThreeMonth.trim() == "0")
+            && (_unitTypeUi.value.priceSixMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceSixMonth.trim() == "0")
+            && (_unitTypeUi.value.priceYear.trim()
+                .isEmpty() || _unitTypeUi.value.priceYear.trim() == "0")
         ) {
             _isInsertSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
             return

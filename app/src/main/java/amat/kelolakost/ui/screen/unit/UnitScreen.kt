@@ -14,6 +14,7 @@ import amat.kelolakost.ui.component.FilterButton
 import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.UnitItem
+import amat.kelolakost.ui.screen.check_in.CheckInActivity
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -115,6 +116,16 @@ fun UnitScreen(
                             val intent = Intent(context, UpdateUnitActivity::class.java)
                             intent.putExtra("id", it)
                             context.startActivity(intent)
+                        }, onClickCheckIn = { id, name, price, duration, priceGuarantee ->
+                            val intent = Intent(context, CheckInActivity::class.java)
+                            intent.putExtra("unitId", id)
+                            intent.putExtra("unitName", name)
+                            intent.putExtra("kostId", viewModel.kostSelected.value.id)
+                            intent.putExtra("kostName", viewModel.kostSelected.value.name)
+                            intent.putExtra("price", price)
+                            intent.putExtra("duration", duration)
+                            intent.putExtra("priceGuarantee", priceGuarantee)
+                            context.startActivity(intent)
                         })
                     }
                 }
@@ -123,6 +134,8 @@ fun UnitScreen(
             FloatingActionButton(
                 onClick = {
                     val intent = Intent(context, AddUnitActivity::class.java)
+                    intent.putExtra("kostId", viewModel.kostSelected.value.id)
+                    intent.putExtra("kostName", viewModel.kostSelected.value.name)
                     context.startActivity(intent)
                 },
                 modifier = Modifier
@@ -146,6 +159,7 @@ fun UnitScreen(
 fun ListUnitView(
     listData: List<UnitHome>,
     onItemClick: (String) -> Unit,
+    onClickCheckIn: (String, String, String, String, String) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -159,6 +173,7 @@ fun ListUnitView(
             }
         )
     } else {
+        //TODO set limitCheckout and the color
         LazyColumn(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
@@ -167,6 +182,7 @@ fun ListUnitView(
                     modifier = Modifier.clickable {
                         onItemClick(data.id)
                     },
+                    id = data.id,
                     name = data.name,
                     tenantName = data.tenantName,
                     limitCheckOut = "lewat 5 hari - 30 Okt",
@@ -178,9 +194,8 @@ fun ListUnitView(
                     priceThreeMonth = data.priceThreeMonth,
                     priceSixMonth = data.priceSixMonth,
                     priceYear = data.priceYear,
-                    onClickCheckIn = {
-
-                    },
+                    priceGuarantee = data.priceGuarantee,
+                    onClickCheckIn = onClickCheckIn,
                     onClickExtend = {
 
                     },

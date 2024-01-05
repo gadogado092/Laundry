@@ -1,18 +1,18 @@
-package amat.kelolakost.ui.screen.unit
+package amat.kelolakost
 
-import amat.kelolakost.data.Kost
-import amat.kelolakost.databinding.ItemKostBinding
+import amat.kelolakost.data.Tenant
+import amat.kelolakost.databinding.ItemTenantBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class KostAdapter(
-    private val onItemClicked: (Kost) -> Unit
+class TenantAdapter(
+    private val onItemClicked: (Tenant) -> Unit
 ) :
-    RecyclerView.Adapter<KostAdapter.ViewHolder>() {
-    private var listData = ArrayList<Kost>()
+    RecyclerView.Adapter<TenantAdapter.ViewHolder>() {
+    private var listData = ArrayList<Tenant>()
 
-    fun setData(newList: List<Kost>?) {
+    fun setData(newList: List<Tenant>?) {
         this.listData.clear()
         notifyDataSetChanged()
         if (newList == null) return
@@ -24,7 +24,7 @@ class KostAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val itemsBinding = ItemKostBinding.inflate(
+        val itemsBinding = ItemTenantBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -44,12 +44,12 @@ class KostAdapter(
         return listData.size
     }
 
-    class ViewHolder(private val binding: ItemKostBinding) :
+    class ViewHolder(private val binding: ItemTenantBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Kost) {
+        fun bind(item: Tenant) {
             with(binding) {
                 textName.text = item.name
-                textAddress.text = item.address
+                textNumberPhone.text = item.numberPhone
             }
         }
 

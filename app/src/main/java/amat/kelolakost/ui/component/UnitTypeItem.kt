@@ -39,7 +39,7 @@ fun UnitTypeItem(
                 color = FontBlack
             )
             Text(
-                text = note, style = TextStyle(fontSize = 14.sp),
+                text = note.ifEmpty { "-" }, style = TextStyle(fontSize = 14.sp),
                 color = FontBlack
             )
             Text(

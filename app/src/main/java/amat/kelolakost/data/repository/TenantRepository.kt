@@ -28,6 +28,10 @@ class TenantRepository(private val tenantDao: TenantDao) {
         return tenantDao.getDetail(id)
     }
 
+    suspend fun getTenantCheckOut(): List<Tenant>{
+        return tenantDao.getTenantCheckOut()
+    }
+
     suspend fun insertTenant(tenant: Tenant) {
         tenantDao.insert(tenant)
     }

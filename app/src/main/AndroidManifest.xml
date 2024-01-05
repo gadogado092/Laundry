@@ -87,6 +87,11 @@
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.check_in.CheckInActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

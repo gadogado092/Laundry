@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun TenantItem(
+    id: String,
     name: String,
     numberPhone: String,
     limitCheckOut: String,
@@ -44,6 +45,7 @@ fun TenantItem(
     onClickWa: () -> Unit,
     onClickPhone: () -> Unit,
     onClickSms: () -> Unit,
+    onClickCheckIn: (String, String) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -98,6 +100,12 @@ fun TenantItem(
                     id = R.drawable.ic_twotone_sms_24,
                     modifier = Modifier
                         .clickable { onClickSms() }
+                        .align(Bottom)
+                )
+                IconTenant(
+                    id = R.drawable.check_in,
+                    modifier = Modifier
+                        .clickable { onClickCheckIn(id, name) }
                         .align(Bottom)
                 )
             }

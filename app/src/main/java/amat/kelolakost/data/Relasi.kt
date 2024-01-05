@@ -17,7 +17,8 @@ data class UnitHome(
     val priceMonth: Int,
     val priceThreeMonth: Int,
     val priceSixMonth: Int,
-    val priceYear: Int
+    val priceYear: Int,
+    val priceGuarantee: Int
 )
 
 data class UnitDetail(
@@ -45,4 +46,17 @@ data class TenantHome(
     val unitId: String,
     val unitName: String,
     val kostName: String,
+)
+
+data class UnitAdapter(
+    val id: String,
+    val name: String,
+
+    val unitTypeName: String,
+    val priceDay: Int,
+    val priceWeek: Int,
+    val priceMonth: Int,
+    val priceThreeMonth: Int,
+    val priceSixMonth: Int,
+    val priceYear: Int
 )

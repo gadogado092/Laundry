@@ -2,6 +2,7 @@ package amat.kelolakost.ui.screen.unit_type
 
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
+import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.UnitTypeRepository
@@ -142,13 +143,13 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
                             id = data.id,
                             name = data.name,
                             note = data.note,
-                            priceDay = currencyFormatterString(data.priceDay.toString()),
-                            priceWeek = currencyFormatterString(data.priceWeek.toString()),
-                            priceMonth = currencyFormatterString(data.priceMonth.toString()),
-                            priceThreeMonth = currencyFormatterString(data.priceThreeMonth.toString()),
-                            priceSixMonth = currencyFormatterString(data.priceSixMonth.toString()),
-                            priceYear = currencyFormatterString(data.priceYear.toString()),
-                            priceGuarantee = currencyFormatterString(data.priceGuarantee.toString()),
+                            priceDay = currencyFormatterStringViewZero(data.priceDay.toString()),
+                            priceWeek = currencyFormatterStringViewZero(data.priceWeek.toString()),
+                            priceMonth = currencyFormatterStringViewZero(data.priceMonth.toString()),
+                            priceThreeMonth = currencyFormatterStringViewZero(data.priceThreeMonth.toString()),
+                            priceSixMonth = currencyFormatterStringViewZero(data.priceSixMonth.toString()),
+                            priceYear = currencyFormatterStringViewZero(data.priceYear.toString()),
+                            priceGuarantee = currencyFormatterStringViewZero(data.priceGuarantee.toString()),
                             isDelete = data.isDelete
                         )
                 }
@@ -163,30 +164,18 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
             return
         }
 
-        if (_unitTypeUi.value.priceDay.trim().isEmpty()
-            && _unitTypeUi.value.priceWeek.trim().isEmpty()
-            && _unitTypeUi.value.priceMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceThreeMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceSixMonth.trim().isEmpty()
-            && _unitTypeUi.value.priceYear.trim().isEmpty()
-
-            && _unitTypeUi.value.priceDay.trim() == "0"
-            && _unitTypeUi.value.priceWeek.trim() == "0"
-            && _unitTypeUi.value.priceMonth.trim() == "0"
-            && _unitTypeUi.value.priceThreeMonth.trim() == "0"
-            && _unitTypeUi.value.priceSixMonth.trim() == "0"
-            && _unitTypeUi.value.priceYear.trim() == "0"
-        ) {
-            _isUpdateSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
-            return
-        }
-
-        if (_unitTypeUi.value.priceDay.trim() == "0"
-            && _unitTypeUi.value.priceWeek.trim() == "0"
-            && _unitTypeUi.value.priceMonth.trim() == "0"
-            && _unitTypeUi.value.priceThreeMonth.trim() == "0"
-            && _unitTypeUi.value.priceSixMonth.trim() == "0"
-            && _unitTypeUi.value.priceYear.trim() == "0"
+        if ((_unitTypeUi.value.priceDay.trim()
+                .isEmpty() || _unitTypeUi.value.priceDay.trim() == "0")
+            && (_unitTypeUi.value.priceWeek.trim()
+                .isEmpty() || _unitTypeUi.value.priceWeek.trim() == "0")
+            && (_unitTypeUi.value.priceMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceMonth.trim() == "0")
+            && (_unitTypeUi.value.priceThreeMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceThreeMonth.trim() == "0")
+            && (_unitTypeUi.value.priceSixMonth.trim()
+                .isEmpty() || _unitTypeUi.value.priceSixMonth.trim() == "0")
+            && (_unitTypeUi.value.priceYear.trim()
+                .isEmpty() || _unitTypeUi.value.priceYear.trim() == "0")
         ) {
             _isUpdateSuccess.value = ValidationResult(true, "Masukkan minimal 1 Harga")
             return

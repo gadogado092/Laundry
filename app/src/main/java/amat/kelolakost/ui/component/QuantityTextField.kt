@@ -1,64 +1,56 @@
 package amat.kelolakost.ui.component
 
-import amat.kelolakost.ui.theme.ErrorColor
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
-import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ComboBox(
+fun QuantityTextField(
     modifier: Modifier = Modifier,
-    title: String = "",
     value: String,
-    isError: Boolean = false,
     errorMessage: String = "",
-    singleLine: Boolean = false,
-    onClick: () -> Unit
+    onAddClick: () -> Unit,
+    onMinClick: () -> Unit,
 ) {
-    Column(modifier) {
-        if (title.isNotEmpty()) {
-            Text(
-                text = title,
-                style = TextStyle(color = FontBlack)
-            )
-        }
+    Column(modifier = modifier) {
         OutlinedTextField(
             value = value,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 2.dp)
-                .clickable {
-                    onClick()
-                },
             onValueChange = {},
+            singleLine = true,
             enabled = false,
-            textStyle = TextStyle(color = FontBlack),
-            singleLine = singleLine,
-            isError = isError,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = TealGreen,
-                errorBorderColor = ErrorColor
-            ),
+            textStyle = TextStyle(color = FontBlack, textAlign = TextAlign.Center),
+            leadingIcon = {
+                Image(
+                    modifier = Modifier.clickable {
+                        onMinClick()
+                    },
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(GreenDark)
+                )
+            },
             trailingIcon = {
                 Image(
-                    imageVector = Icons.Default.ArrowDropDown,
+                    modifier = Modifier.clickable {
+                        onAddClick()
+                    },
+                    imageVector = Icons.Default.Add,
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(GreenDark)
                 )

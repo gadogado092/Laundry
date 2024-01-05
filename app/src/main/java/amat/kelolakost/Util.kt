@@ -32,6 +32,13 @@ fun generateDateTimeNow(): String {
 }
 
 @SuppressLint("SimpleDateFormat")
+fun generateDateNow(): String {
+    val c = Calendar.getInstance()
+    val fmtOut = SimpleDateFormat("yyyy-MM-dd")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
 fun addDateLimitApp(dateString: String, type: String, valueAdd: Int): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd")
     val c = Calendar.getInstance()
@@ -41,13 +48,36 @@ fun addDateLimitApp(dateString: String, type: String, valueAdd: Int): String {
         "Hari" -> c.add(Calendar.DAY_OF_MONTH, valueAdd)
         "Minggu" -> c.add(Calendar.DAY_OF_MONTH, valueAdd * 7)
         "Bulan" -> c.add(Calendar.MONTH, valueAdd)
-        "3 Bulan" -> c.add(Calendar.MONTH, valueAdd)
-        "6 Bulan" -> c.add(Calendar.MONTH, valueAdd)
+        "3 Bulan" -> c.add(Calendar.MONTH, valueAdd * 3)
+        "6 Bulan" -> c.add(Calendar.MONTH, valueAdd * 6)
         "Tahun" -> c.add(Calendar.YEAR, valueAdd)
     }
 
     val fmtOut = SimpleDateFormat("yyyy-MM-dd")
     return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun generateTextDuration(type: String, valueAdd: Int): String {
+    var data = ""
+    when (type) {
+        "Hari" -> {
+            data = "$valueAdd Hari"
+        }
+
+        "Minggu" -> {
+            data = "$valueAdd Minggu"
+        }
+
+        "Bulan" -> data = "$valueAdd Bulan"
+        "3 Bulan" -> {
+            data = "${valueAdd * 3} Bulan"
+        }
+
+        "6 Bulan" -> data = "${valueAdd * 6} Bulan"
+        "Tahun" -> data = "$valueAdd Tahun"
+    }
+    return data
 }
 
 @SuppressLint("SimpleDateFormat")
@@ -129,4 +159,44 @@ fun sendWhatsApp(c: Context, phone: String, message: String, typeWa: String = "S
         /*e.printStackTrace()*/
         Log.d("myLog", e.message.toString())
     }
+}
+
+@SuppressLint("SimpleDateFormat")
+fun convertDateToDay(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+    val fmtOut = SimpleDateFormat("dd")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun convertDateToMonth(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+
+    val fmtOut = SimpleDateFormat("M")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun convertDateToYear(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+    val fmtOut = SimpleDateFormat("yyyy")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateDialogToUniversalFormat(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-M-dd")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("yyyy-MM-dd")
+    return fmtOut.format(date as Date)
 }

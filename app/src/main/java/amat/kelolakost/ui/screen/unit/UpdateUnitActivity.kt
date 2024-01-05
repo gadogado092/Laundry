@@ -1,6 +1,8 @@
 package amat.kelolakost.ui.screen.unit
 
+import amat.kelolakost.KostAdapter
 import amat.kelolakost.R
+import amat.kelolakost.UnitTypeAdapter
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.di.Injection

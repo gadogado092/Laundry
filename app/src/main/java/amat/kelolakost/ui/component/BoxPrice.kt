@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BoxRectangle(
+fun BoxPrice(
     modifier: Modifier = Modifier,
     title: String,
-    fontSize: TextUnit = 12.sp,
+    fontSize: TextUnit = 12.sp
 ) {
     Card(
         modifier = modifier,
@@ -28,7 +28,7 @@ fun BoxRectangle(
             Text(
                 text = title,
                 modifier = Modifier
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 style = TextStyle(
                     color = Color.White,
                 ),

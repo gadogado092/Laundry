@@ -21,6 +21,9 @@
     <string name="save">"SIMPAN"</string>
 
     <string name="location_unit">"Lokasi Kamar/Unit"</string>
+    <string name="subtitle_tenant">"Penyewa/Tenant"</string>
+    <string name="subtitle_unit">"Kamar/Unit"</string>
+    <string name="process">"PROSES</string>
 
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
@@ -41,6 +44,9 @@
 
     <string name="title_add_kost">Tambah Kost</string>
     <string name="title_add_unit">Tambah Kamar/Unit</string>
+    <string name="title_check_in">Check In</string>
+    <string name="title_check_out">Check Out</string>
+    <string name="title_move_unit">Pindah Kamar/Unit</string>
     <string name="title_update_unit">Update Kamar/Unit</string>
     <string name="title_add_unit_type">Tambah Tipe Unit/Kamar</string>
     <string name="title_add_tenant">Tambah Penyewa</string>
@@ -51,6 +57,7 @@
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">"Tambah data berhasil"</string>
+    <string name="success_check_in">"Check In berhasil"</string>
     <string name="success_update_data">"Update data berhasil"</string>
     <string name="error_input_data">"Ada kesalahan input"</string>
     <string name="subtitle_price_unit">"Biaya/Harga Sewa Kamar"</string>
@@ -61,6 +68,13 @@
     <string name="subtitle_price_six_month">"6 Bulan"</string>
     <string name="subtitle_price_year">"1 Tahun"</string>
     <string name="subtitle_price_guarantee">"Uang Deposit/Jaminan"</string>
-    <string name="price_guarantee">Uang Deposit/Jaminan %1$s</string>
+    <string name="price_guarantee">Uang Deposit/Jaminan</string>
+    <string name="price_and_duration">Biaya/Harga dan Durasi</string>
+    <string name="total_rental_price">Total Biaya Sewa</string>
+    <string name="total_payment">Total Pembayaran</string>
+    <string name="payment_method">Metode Pembayaran</string>
+    <string name="date_check_in">Tanggal Masuk</string>
+    <string name="date_check_out">Tanggal Keluar</string>
+    <string name="debt_tenant">Hutang Penyewa</string>
     <string name="add">Tambah</string>
 </resources>

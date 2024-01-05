@@ -1,9 +1,12 @@
 package amat.kelolakost.ui.screen.unit
 
+import amat.kelolakost.KostAdapter
 import amat.kelolakost.R
+import amat.kelolakost.UnitTypeAdapter
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.MyOutlinedTextField
@@ -47,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,10 +59,26 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class AddUnitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        val kostId = intent.getStringExtra("kostId")
+        val kostName = intent.getStringExtra("kostName")
+
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                AddUnitScreen(context)
+
+                var kostIdScreen = ""
+                var kostNameScreen = ""
+                if (kostName != null && kostId != null) {
+                    kostIdScreen = kostId
+                    kostNameScreen = kostName
+                }
+                AddUnitScreen(
+                    context = context,
+                    kostId = kostIdScreen,
+                    kostName = kostNameScreen
+                )
             }
         }
 
@@ -72,8 +92,10 @@ class AddUnitActivity : ComponentActivity() {
 
 @Composable
 fun AddUnitScreen(
+    modifier: Modifier = Modifier,
     context: Context,
-    modifier: Modifier = Modifier
+    kostId: String = "",
+    kostName: String = ""
 ) {
     val addUnitViewModel: AddUnitViewModel =
         viewModel(
@@ -97,6 +119,20 @@ fun AddUnitScreen(
                 Toast.LENGTH_SHORT
             )
                 .show()
+        }
+    }
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                if (kostId != "" && kostName != "") {
+                    addUnitViewModel.setKostSelected(kostId, kostName)
+                }
+
+            }
+
+            else -> {}
         }
     }
 

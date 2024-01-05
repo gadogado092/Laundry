@@ -1,20 +1,19 @@
-package amat.kelolakost.ui.screen.unit
+package amat.kelolakost.ui.screen.check_in
 
-import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
-import amat.kelolakost.data.UnitType
-import amat.kelolakost.databinding.ItemUnitTypeBinding
+import amat.kelolakost.databinding.ItemPriceDurationBinding
+import amat.kelolakost.ui.screen.unit.PriceDuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class UnitTypeAdapter(
-    private val onItemClicked: (UnitType) -> Unit
+class PriceDurationAdapter(
+    private val onItemClicked: (PriceDuration) -> Unit
 ) :
-    RecyclerView.Adapter<UnitTypeAdapter.ViewHolder>() {
-    private var listData = ArrayList<UnitType>()
+    RecyclerView.Adapter<PriceDurationAdapter.ViewHolder>() {
+    private var listData = ArrayList<PriceDuration>()
 
-    fun setData(newList: List<UnitType>?) {
+    fun setData(newList: List<PriceDuration>?) {
         this.listData.clear()
         notifyDataSetChanged()
         if (newList == null) return
@@ -26,7 +25,7 @@ class UnitTypeAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val itemsBinding = ItemUnitTypeBinding.inflate(
+        val itemsBinding = ItemPriceDurationBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -46,15 +45,12 @@ class UnitTypeAdapter(
         return listData.size
     }
 
-    class ViewHolder(private val binding: ItemUnitTypeBinding) :
+    class ViewHolder(private val binding: ItemPriceDurationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: UnitType) {
+        fun bind(item: PriceDuration) {
             with(binding) {
-                textName.text = item.name
-                textPriceGuarantee.text = itemView.context.getString(
-                    R.string.price_guarantee,
-                    currencyFormatterStringViewZero(item.priceGuarantee.toString())
-                )
+                textPriceDuration.text =
+                    "${currencyFormatterStringViewZero(item.price)}/${item.duration}"
             }
         }
 

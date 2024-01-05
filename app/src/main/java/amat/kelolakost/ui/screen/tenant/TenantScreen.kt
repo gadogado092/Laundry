@@ -10,6 +10,7 @@ import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.TenantItem
+import amat.kelolakost.ui.screen.check_in.CheckInActivity
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
 import android.content.Intent
@@ -82,11 +83,18 @@ fun TenantScreen(
                     }
 
                     is UiState.Success -> {
-                        ListTenantView(context = context, listData = uiState.data, onItemClick = {
-                            val intent = Intent(context, UpdateTenantActivity::class.java)
-                            intent.putExtra("id", it)
-                            context.startActivity(intent)
-                        })
+                        ListTenantView(context = context, listData = uiState.data,
+                            onItemClick = {
+                                val intent = Intent(context, UpdateTenantActivity::class.java)
+                                intent.putExtra("id", it)
+                                context.startActivity(intent)
+                            },
+                            onClickCheckIn = { id, name ->
+                                val intent = Intent(context, CheckInActivity::class.java)
+                                intent.putExtra("tenantId", id)
+                                intent.putExtra("tenantName", name)
+                                context.startActivity(intent)
+                            })
                     }
                 }
             }
@@ -136,7 +144,8 @@ fun ContentStatus(viewModel: TenantViewModel) {
 fun ListTenantView(
     context: Context,
     listData: List<TenantHome>,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onClickCheckIn: (String, String) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -158,6 +167,7 @@ fun ListTenantView(
                     modifier = Modifier.clickable {
                         onItemClick(data.id)
                     },
+                    id = data.id,
                     name = data.name,
                     unitName = data.unitName,
                     kostName = data.kostName,
@@ -175,6 +185,7 @@ fun ListTenantView(
                     onClickWa = {
                         //TODO
                     },
+                    onClickCheckIn = onClickCheckIn
                 )
             }
         }

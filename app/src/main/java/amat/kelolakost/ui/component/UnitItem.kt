@@ -2,6 +2,7 @@ package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.ui.screen.unit.PriceDuration
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun UnitItem(
     modifier: Modifier = Modifier,
+    id: String,
     name: String,
     tenantName: String,
     limitCheckOut: String,
@@ -39,8 +41,9 @@ fun UnitItem(
     priceThreeMonth: Int,
     priceSixMonth: Int,
     priceYear: Int,
+    priceGuarantee: Int,
     colorLimitCheckOut: Color = FontBlack,
-    onClickCheckIn: () -> Unit,
+    onClickCheckIn: (String, String, String, String, String) -> Unit,
     onClickExtend: () -> Unit,
     onClickCheckOut: () -> Unit,
     onClickMoveUnit: () -> Unit,
@@ -105,12 +108,23 @@ fun UnitItem(
             }
 
             BuildIcon(
+                unitId = id,
+                unitName = name,
                 unitStatusId = unitStatusId,
                 onClickCheckIn = onClickCheckIn,
                 onClickExtend = onClickExtend,
                 onClickCheckOut = onClickCheckOut,
                 onClickMoveUnit = onClickMoveUnit,
-                onClickFinishRenovation = onClickFinishRenovation
+                onClickFinishRenovation = onClickFinishRenovation,
+                priceGuarantee = priceGuarantee.toString(),
+                priceDuration = getPriceDuration(
+                    priceDay = priceDay,
+                    priceWeek = priceWeek,
+                    priceMonth = priceMonth,
+                    priceThreeMonth = priceThreeMonth,
+                    priceSixMonth = priceSixMonth,
+                    priceYear = priceYear
+                )
             )
 
         }
@@ -170,8 +184,12 @@ fun BuildPrice(
 
 @Composable
 fun BuildIcon(
+    unitId: String,
+    unitName: String,
     unitStatusId: Int,
-    onClickCheckIn: () -> Unit,
+    priceDuration: PriceDuration,
+    priceGuarantee: String,
+    onClickCheckIn: (String, String, String, String, String) -> Unit,
     onClickExtend: () -> Unit,
     onClickCheckOut: () -> Unit,
     onClickMoveUnit: () -> Unit,
@@ -181,7 +199,13 @@ fun BuildIcon(
         when (unitStatusId) {
             2 -> {
                 IconUnit(id = R.drawable.check_in, Modifier.clickable {
-                    onClickCheckIn()
+                    onClickCheckIn(
+                        unitId,
+                        unitName,
+                        priceDuration.price,
+                        priceDuration.duration,
+                        priceGuarantee
+                    )
                 })
             }
 
@@ -244,4 +268,34 @@ fun SubUnit(
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+fun getPriceDuration(
+    priceDay: Int,
+    priceWeek: Int,
+    priceMonth: Int,
+    priceThreeMonth: Int,
+    priceSixMonth: Int,
+    priceYear: Int
+): PriceDuration {
+    if (priceDay != 0) {
+        return PriceDuration(priceDay.toString(), "Hari")
+    }
+    if (priceWeek != 0) {
+        return PriceDuration(priceWeek.toString(), "Minggu")
+    }
+    if (priceMonth != 0) {
+        return PriceDuration(priceMonth.toString(), "Bulan")
+    }
+    if (priceThreeMonth != 0) {
+        return PriceDuration(priceThreeMonth.toString(), "3 Bulan")
+    }
+    if (priceSixMonth != 0) {
+        return PriceDuration(priceSixMonth.toString(), "6 Bulan")
+    }
+    if (priceYear != 0) {
+        return PriceDuration(priceYear.toString(), "Tahun")
+    }
+
+    return PriceDuration("", "")
 }
