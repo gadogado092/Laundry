@@ -9,6 +9,7 @@ import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.screen.kost.AddKostActivity
 import amat.kelolakost.KostAdapter
 import amat.kelolakost.TenantAdapter
+import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.convertDateToDay
 import amat.kelolakost.convertDateToMonth
 import amat.kelolakost.convertDateToYear
@@ -23,10 +24,10 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
-import amat.kelolakost.ui.screen.unit.PriceDuration
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
+import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import amat.kelolakost.ui.theme.TealGreen
 import android.app.Activity
@@ -34,6 +35,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
@@ -53,6 +55,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.RadioButton
@@ -196,16 +199,16 @@ fun CheckInScreen(
                 if (kostId != "" && kostName != "") {
                     checkInViewModel.setKostSelected(kostId, kostName)
                 }
-                if (unitId != "" && unitName != "") {
-                    checkInViewModel.setUnitSelected(unitId, unitName)
+                if (unitId != "" && unitName != "" && priceGuarantee != "") {
+                    checkInViewModel.setUnitSelected(
+                        unitId,
+                        unitName,
+                        cleanCurrencyFormatter(priceGuarantee)
+                    )
                 }
 
                 if (price != "" && duration != "") {
                     checkInViewModel.setPriceDurationSelected(price, duration)
-                }
-
-                if (priceGuarantee != "") {
-                    checkInViewModel.setPriceGuarantee(priceGuarantee)
                 }
 
             }
@@ -457,7 +460,8 @@ fun CheckInScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.subtitle_price_guarantee),
-                    style = TextStyle(color = FontBlack)
+                    style = TextStyle(color = FontBlack),
+                    fontSize = 16.sp
                 )
                 BoxRectangle(
                     title = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.priceGuarantee.toString()),
@@ -467,7 +471,8 @@ fun CheckInScreen(
 
             Text(
                 text = stringResource(id = R.string.price_and_duration),
-                style = TextStyle(color = FontBlack)
+                style = TextStyle(color = FontBlack),
+                fontSize = 16.sp
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -518,8 +523,13 @@ fun CheckInScreen(
                 )
             }
 
-            Column(
+            Divider(
                 modifier = Modifier.padding(vertical = 16.dp),
+                color = GreyLight,
+                thickness = 2.dp
+            )
+
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -531,7 +541,7 @@ fun CheckInScreen(
                         modifier = Modifier.padding(end = 2.dp),
                         text = stringResource(id = R.string.total_payment),
                         style = TextStyle(color = FontBlack),
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     )
                     Text(
                         text = generateTextDuration(
@@ -539,7 +549,7 @@ fun CheckInScreen(
                             checkInViewModel.checkInUi.collectAsState().value.qty
                         ),
                         style = TextStyle(color = FontBlack),
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     )
                 }
                 BoxPrice(
@@ -547,6 +557,12 @@ fun CheckInScreen(
                     fontSize = 20.sp
                 )
             }
+
+            Divider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = GreyLight,
+                thickness = 2.dp
+            )
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -606,7 +622,9 @@ fun CheckInScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier
                             .fillMaxWidth(),
-                        currencyValue = checkInViewModel.checkInUi.collectAsState().value.downPayment
+                        currencyValue = checkInViewModel.checkInUi.collectAsState().value.downPayment,
+                        isError = checkInViewModel.isDownPaymentValid.collectAsState().value.isError,
+                        errorMessage = checkInViewModel.isDownPaymentValid.collectAsState().value.errorMessage
                     )
                     Row(
                         modifier = Modifier
@@ -634,7 +652,7 @@ fun CheckInScreen(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = checkInViewModel.checkInUi.collectAsState().value.totalPayment,
+                    text = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.totalPayment),
                     style = TextStyle(color = FontBlack, fontWeight = FontWeight.Medium),
                     fontSize = 16.sp
                 )
@@ -749,7 +767,7 @@ fun showBottomSheetUnit(
     }
 
     val adapter = amat.kelolakost.UnitAdapter {
-        checkInViewModel.setUnitSelected(it.id, it.name)
+        checkInViewModel.setUnitSelected(it.id, it.name, it.priceGuarantee)
         bottomSheetDialog.dismiss()
         checkInViewModel.getPriceDuration()
     }
@@ -777,7 +795,7 @@ fun showBottomSheetPriceDuration(
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.setText("Pilih Harga dan Durasi")
-    buttonAdd?.setText(R.string.add)
+    buttonAdd?.visibility = View.INVISIBLE
 
     val adapter = PriceDurationAdapter {
         checkInViewModel.setPriceDurationSelected(it.price, it.duration)

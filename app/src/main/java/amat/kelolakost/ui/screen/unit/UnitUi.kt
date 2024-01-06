@@ -13,8 +13,3 @@ data class UnitUi(
     val tenantId: String = "",
     val isDelete: Boolean = false
 )
-
-data class PriceDuration(
-    val price: String = "",
-    val duration: String = "",
-)

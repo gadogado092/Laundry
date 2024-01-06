@@ -2,7 +2,7 @@ package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
-import amat.kelolakost.ui.screen.unit.PriceDuration
+import amat.kelolakost.ui.screen.check_in.PriceDuration
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen

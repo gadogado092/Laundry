@@ -58,5 +58,6 @@ data class UnitAdapter(
     val priceMonth: Int,
     val priceThreeMonth: Int,
     val priceSixMonth: Int,
-    val priceYear: Int
+    val priceYear: Int,
+    val priceGuarantee: Int,
 )

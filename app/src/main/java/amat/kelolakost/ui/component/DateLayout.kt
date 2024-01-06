@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun DateLayout(
@@ -31,7 +32,8 @@ fun DateLayout(
         Text(
             modifier = Modifier.padding(bottom = 2.dp),
             text = title,
-            style = TextStyle(color = FontBlack)
+            style = TextStyle(color = FontBlack),
+            fontSize = 16.sp
         )
         Card(
             modifier = Modifier.fillMaxWidth(),

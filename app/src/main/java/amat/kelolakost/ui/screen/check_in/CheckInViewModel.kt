@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.screen.check_in
 
 import amat.kelolakost.addDateLimitApp
+import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
@@ -18,8 +19,8 @@ import kotlinx.coroutines.launch
 import amat.kelolakost.data.UnitAdapter
 import amat.kelolakost.dateDialogToUniversalFormat
 import amat.kelolakost.generateDateNow
-import amat.kelolakost.ui.screen.unit.PriceDuration
 import android.util.Log
+import java.math.BigInteger
 
 class CheckInViewModel(
     private val tenantRepository: TenantRepository,
@@ -60,6 +61,11 @@ class CheckInViewModel(
     val isDurationSelectedValid: StateFlow<ValidationResult>
         get() = _isDurationSelectedValid
 
+    private val _isDownPaymentValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+    val isDownPaymentValid: StateFlow<ValidationResult>
+        get() = _isDownPaymentValid
+
     private val _isCheckInSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
@@ -87,7 +93,7 @@ class CheckInViewModel(
         get() = _stateListPriceDuration
 
     init {
-        Log.d("saya","init")
+        Log.d("saya", "init")
         _checkInUi.value = checkInUi.value.copy(checkInDate = generateDateNow())
     }
 
@@ -105,15 +111,16 @@ class CheckInViewModel(
         _stateListKost.value = UiState.Error("")
     }
 
-    fun setUnitSelected(id: String, name: String) {
+    fun setUnitSelected(id: String, name: String, priceGuarantee: Int) {
         _isUnitSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
-        _checkInUi.value = _checkInUi.value.copy(unitId = id, unitName = name)
+        _checkInUi.value =
+            _checkInUi.value.copy(unitId = id, unitName = name, priceGuarantee = priceGuarantee)
         _stateListUnit.value = UiState.Error("")
     }
 
     fun setPriceDurationSelected(price: String, duration: String) {
-        _isUnitSelectedValid.value = ValidationResult(true, "")
+        _isDurationSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
         _checkInUi.value = _checkInUi.value.copy(price = price.toInt(), duration = duration)
         _stateListPriceDuration.value = UiState.Error("")
@@ -121,15 +128,12 @@ class CheckInViewModel(
         refreshDataUI()
     }
 
-    fun setPriceGuarantee(value: String) {
-        _checkInUi.value = _checkInUi.value.copy(priceGuarantee = value.toInt())
-    }
-
     fun setExtraPrice(value: String) {
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
         val valueFormat = currencyFormatterString(value)
         _checkInUi.value = _checkInUi.value.copy(extraPrice = valueFormat)
+        refreshDataUI()
     }
 
     fun setNoteExtraPrice(value: String) {
@@ -143,6 +147,7 @@ class CheckInViewModel(
         _isCheckInSuccess.value = ValidationResult(true, "")
         val valueFormat = currencyFormatterString(value)
         _checkInUi.value = _checkInUi.value.copy(discount = valueFormat)
+        refreshDataUI()
     }
 
     fun addQuantity(value: String = "1") {
@@ -164,13 +169,25 @@ class CheckInViewModel(
     fun setPaymentMethod(value: Boolean) {
         clearError()
         _checkInUi.value = _checkInUi.value.copy(isFullPayment = value)
+        setDownPayment("0")
     }
 
     fun setDownPayment(value: String) {
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
+        _isDownPaymentValid.value = ValidationResult(true, "")
         val valueFormat = currencyFormatterString(value)
         _checkInUi.value = _checkInUi.value.copy(downPayment = valueFormat)
+
+        if (checkInUi.value.downPayment.trim()
+                .isEmpty() || checkInUi.value.downPayment.trim() == "0"
+        ) {
+            _isDownPaymentValid.value = ValidationResult(true, "Masukkan Uang Muka")
+        } else {
+            _isDownPaymentValid.value = ValidationResult(false, "")
+        }
+
+        refreshDataUI()
     }
 
     fun setCheckInDate(value: String) {
@@ -221,7 +238,10 @@ class CheckInViewModel(
         viewModelScope.launch {
             _stateListUnit.value = UiState.Loading
             try {
-                val data = unitRepository.getUnit("2")
+                val data = unitRepository.getUnitByKost(
+                    kostId = checkInUi.value.kostId,
+                    unitStatusId = "2"
+                )
                 _stateListUnit.value = UiState.Success(data)
             } catch (e: Exception) {
                 _stateListUnit.value = UiState.Error(e.message.toString())
@@ -281,13 +301,33 @@ class CheckInViewModel(
                 )
             )
         }
+        val extraPrice = cleanCurrencyFormatter(checkInUi.value.extraPrice)
+        val discount = cleanCurrencyFormatter(checkInUi.value.discount)
+        val qty = checkInUi.value.qty
+        val price = checkInUi.value.price
+        val priceGuarantee = checkInUi.value.priceGuarantee
 
+        //HITUNG TOTAL BIAYA
+        val total: BigInteger =
+            (qty.toBigInteger() * price.toBigInteger()) + extraPrice.toBigInteger() + priceGuarantee.toBigInteger() - discount.toBigInteger()
+
+        _checkInUi.value = checkInUi.value.copy(totalPrice = total.toString())
+
+        if (checkInUi.value.isFullPayment) {
+            _checkInUi.value = checkInUi.value.copy(totalPayment = total.toString())
+        } else {
+            val downPayment = cleanCurrencyFormatter(checkInUi.value.downPayment)
+            val debtTenant: BigInteger = total - downPayment.toBigInteger()
+
+            _checkInUi.value = checkInUi.value.copy(
+                totalPayment = downPayment.toString(),
+                debtTenant = debtTenant.toString()
+            )
+        }
     }
 
     fun processCheckIn() {
-        _stateListTenant.value = UiState.Error("")
-        _stateListKost.value = UiState.Error("")
-        _stateListUnit.value = UiState.Error("")
+        clearError()
 
         //check Tenant Selected
         if (checkInUi.value.tenantId == "0") {
@@ -303,12 +343,36 @@ class CheckInViewModel(
             return
         }
 
-        //check Kost Selected
+        //check Unit Selected
         if (checkInUi.value.unitId == "0") {
             _isUnitSelectedValid.value = ValidationResult(true, "Pilih Unit/Kamar Bro")
             _isCheckInSuccess.value = ValidationResult(true, "Pilih Unit/Kamar Bro")
             return
         }
+
+        //check Price Selected
+        if (checkInUi.value.price == 0) {
+            _isDurationSelectedValid.value = ValidationResult(true, "Pilih Harga dan Durasi")
+            _isCheckInSuccess.value = ValidationResult(true, "Pilih Harga dan Durasi")
+            return
+        }
+
+        //check bayar cicil
+        if (!checkInUi.value.isFullPayment) {
+            if (checkInUi.value.downPayment.trim()
+                    .isEmpty() || checkInUi.value.downPayment.trim() == "0"
+            ) {
+                _isDownPaymentValid.value = ValidationResult(true, "Masukkan Uang Muka")
+                _isCheckInSuccess.value = ValidationResult(true, "Masukkan Uang Muka")
+                return
+            }
+
+            if (checkInUi.value.debtTenant.toBigInteger() < 1.toBigInteger()){
+                _isCheckInSuccess.value = ValidationResult(true, "Pilih Metode Pembayaran LUNAS")
+                return
+            }
+        }
+
     }
 
     private fun clearError() {

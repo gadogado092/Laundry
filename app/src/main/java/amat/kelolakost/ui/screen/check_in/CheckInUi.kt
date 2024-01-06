@@ -28,3 +28,9 @@ data class CheckInUi(
 
     val totalPayment: String = "0"
 )
+
+data class PriceDuration(
+    val price: String = "",
+    val duration: String = ""
+)
+
