@@ -169,8 +169,13 @@ class AddUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository) :
     }
 
     private suspend fun insertUnitType(unitType: UnitType) {
-        unitTypeRepository.insertUnitType(unitType)
-        _isInsertSuccess.value = ValidationResult(false)
+        try {
+            unitTypeRepository.insertUnitType(unitType)
+            _isInsertSuccess.value = ValidationResult(false)
+        } catch (e: Exception) {
+            _isInsertSuccess.value = ValidationResult(true, e.message.toString())
+        }
+
     }
 }
 

@@ -76,7 +76,7 @@ class UnitViewModel(
                     _stateListKost.value = UiState.Success(data)
 
                     if (_kostSelected.value.id == "") {
-                        _kostSelected.value = data[0]
+                        updateKostSelected(data[0])
                     }
 
                 }

@@ -3,6 +3,9 @@ package amat.kelolakost.ui.screen.check_in
 import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
+import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.CashFlow
+import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.entity.ValidationResult
@@ -17,15 +20,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import amat.kelolakost.data.UnitAdapter
+import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.dateDialogToUniversalFormat
+import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.generateDateNow
+import amat.kelolakost.generateTextDuration
 import android.util.Log
 import java.math.BigInteger
+import java.util.UUID
 
 class CheckInViewModel(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
-    private val kostRepository: KostRepository
+    private val kostRepository: KostRepository,
+    private val cashFlowRepository: CashFlowRepository
 ) : ViewModel() {
 
     private val _checkInUi: MutableStateFlow<CheckInUi> =
@@ -100,6 +108,7 @@ class CheckInViewModel(
     init {
         Log.d("saya", "init")
         _checkInUi.value = checkInUi.value.copy(checkInDate = generateDateNow())
+        _checkInUi.value = checkInUi.value.copy(createAt = generateDateNow())
     }
 
     fun setTenantSelected(id: String, name: String) {
@@ -116,11 +125,11 @@ class CheckInViewModel(
         _stateListKost.value = UiState.Error("")
     }
 
-    fun setUnitSelected(id: String, name: String, priceGuarantee: Int) {
+    fun setUnitSelected(id: String, name: String, guaranteeCost: Int) {
         _isUnitSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
         _checkInUi.value =
-            _checkInUi.value.copy(unitId = id, unitName = name, priceGuarantee = priceGuarantee)
+            _checkInUi.value.copy(unitId = id, unitName = name, guaranteeCost = guaranteeCost)
         _stateListUnit.value = UiState.Error("")
     }
 
@@ -137,14 +146,15 @@ class CheckInViewModel(
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
         val valueFormat = currencyFormatterString(value)
-        _checkInUi.value = _checkInUi.value.copy(extraPrice = valueFormat)
+        _checkInUi.value = _checkInUi.value.copy(additionalCost = valueFormat)
         refreshDataUI()
 
-        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
             _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
-            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value =
+                ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
             return
-        }else{
+        } else {
             _isNoteExtraPriceValid.value = ValidationResult(false, "")
         }
     }
@@ -152,12 +162,13 @@ class CheckInViewModel(
     fun setNoteExtraPrice(value: String) {
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
-        _checkInUi.value = _checkInUi.value.copy(noteExtraPrice = value)
-        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+        _checkInUi.value = _checkInUi.value.copy(noteAdditionalCost = value)
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
             _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
-            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value =
+                ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
             return
-        }else{
+        } else {
             _isNoteExtraPriceValid.value = ValidationResult(false, "")
         }
     }
@@ -213,6 +224,12 @@ class CheckInViewModel(
     fun setCheckInDate(value: String) {
         clearError()
         _checkInUi.value = checkInUi.value.copy(checkInDate = dateDialogToUniversalFormat(value))
+        refreshDataUI()
+    }
+
+    fun setPaymentDate(value: String) {
+        clearError()
+        _checkInUi.value = checkInUi.value.copy(createAt = dateDialogToUniversalFormat(value))
         refreshDataUI()
     }
 
@@ -321,11 +338,11 @@ class CheckInViewModel(
                 )
             )
         }
-        val extraPrice = cleanCurrencyFormatter(checkInUi.value.extraPrice)
+        val extraPrice = cleanCurrencyFormatter(checkInUi.value.additionalCost)
         val discount = cleanCurrencyFormatter(checkInUi.value.discount)
         val qty = checkInUi.value.qty
         val price = checkInUi.value.price
-        val priceGuarantee = checkInUi.value.priceGuarantee
+        val priceGuarantee = checkInUi.value.guaranteeCost
 
         //HITUNG TOTAL BIAYA
         val total: BigInteger =
@@ -378,9 +395,10 @@ class CheckInViewModel(
         }
 
         //check if extra price insert
-        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
             _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
-            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value =
+                ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
             return
         }
 
@@ -405,12 +423,139 @@ class CheckInViewModel(
 
     }
 
-    fun insertCheckIn() {
-        //eksekusi pakai transaction
-        //TODO update tenant
-        //TODO update unit
-        //TODO insert credit tenant if not full payment
-        //TODO insert cashflow
+    private fun insertCheckIn() {
+        try {
+            viewModelScope.launch {
+                val cashFlowid = UUID.randomUUID()
+
+                var creditTenant = CreditTenant(
+                    id = "0",
+                    note = "",
+                    tenantId = checkInUi.value.tenantId,
+                    status = 0,
+                    remainingDebt = cleanCurrencyFormatter(checkInUi.value.debtTenant),
+                    kostId = checkInUi.value.kostId,
+                    unitId = checkInUi.value.unitId,
+                    createAt = checkInUi.value.createAt,
+                    isDelete = false
+                )
+
+                var cashFlow = CashFlow(
+                    id = cashFlowid.toString(),
+                    note = "",
+                    nominal = cleanCurrencyFormatter(checkInUi.value.totalPayment).toString(),
+                    type = 0,
+                    creditTenantId = "0",
+                    creditId = "0",
+                    debitId = "0",
+                    unitId = checkInUi.value.unitId,
+                    tenantId = checkInUi.value.tenantId,
+                    kostId = checkInUi.value.kostId,
+                    createAt = checkInUi.value.createAt,
+                    isDelete = false
+                )
+
+                val qty = checkInUi.value.qty
+                val price = checkInUi.value.price
+                val totalPriceUnit = qty.toBigInteger() * price.toBigInteger()
+                val durationText =
+                    generateTextDuration(checkInUi.value.duration, checkInUi.value.qty)
+                val checkInText = dateToDisplayMidFormat(checkInUi.value.checkInDate)
+                val checkOutText = dateToDisplayMidFormat(checkInUi.value.checkOutDate)
+
+                if (checkInUi.value.isFullPayment) {
+
+                    var noteCashFlow =
+                        "Pembayaran Lunas untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
+                                "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
+                                    currencyFormatterStringViewZero(
+                                        totalPriceUnit.toString()
+                                    )
+                                }"
+
+                    if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
+                        noteCashFlow += " + Biaya Tambahan ${checkInUi.value.additionalCost} (${checkInUi.value.noteAdditionalCost})"
+                    }
+
+                    if (cleanCurrencyFormatter(checkInUi.value.discount) != 0) {
+                        noteCashFlow += " - Diskon ${checkInUi.value.discount}"
+                    }
+
+                    if (checkInUi.value.guaranteeCost != 0) {
+                        noteCashFlow += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                    }
+
+                    cashFlow = cashFlow.copy(note = noteCashFlow)
+
+                } else {
+                    val creditTenantId = UUID.randomUUID().toString()
+                    cashFlow = cashFlow.copy(creditTenantId = creditTenantId)
+
+                    var noteCashFlow =
+                        "Pembayaran Uang Muka/DP untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
+                                "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
+                                    currencyFormatterStringViewZero(
+                                        totalPriceUnit.toString()
+                                    )
+                                }"
+
+                    if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
+                        noteCashFlow += " + Biaya Tambahan ${checkInUi.value.additionalCost} (${checkInUi.value.noteAdditionalCost})"
+                    }
+
+                    if (cleanCurrencyFormatter(checkInUi.value.discount) != 0) {
+                        noteCashFlow += " - Diskon ${checkInUi.value.discount}"
+                    }
+
+                    if (checkInUi.value.guaranteeCost != 0) {
+                        noteCashFlow += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                    }
+
+                    noteCashFlow += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
+
+                    cashFlow = cashFlow.copy(note = noteCashFlow)
+
+                    //NOTE HUTANG
+                    var noteDebt =
+                        "Pembayaran Uang Muka/DP untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
+                                "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
+                                    currencyFormatterStringViewZero(
+                                        totalPriceUnit.toString()
+                                    )
+                                }"
+
+                    if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
+                        noteDebt += " + Biaya Tambahan ${checkInUi.value.additionalCost} (${checkInUi.value.noteAdditionalCost})"
+                    }
+
+                    if (cleanCurrencyFormatter(checkInUi.value.discount) != 0) {
+                        noteDebt += " - Diskon ${checkInUi.value.discount}"
+                    }
+
+                    if (checkInUi.value.guaranteeCost != 0) {
+                        noteDebt += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                    }
+
+                    noteDebt += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
+                    creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
+
+                }
+
+                cashFlowRepository.insertCheckIn(
+                    cashFlow = cashFlow,
+                    creditTenant = creditTenant,
+                    isFullPayment = checkInUi.value.isFullPayment,
+                    limitCheckOut = checkInUi.value.checkOutDate,
+                    additionalCost = cleanCurrencyFormatter(checkInUi.value.additionalCost),
+                    noteAdditionalCost = checkInUi.value.noteAdditionalCost,
+                    guaranteeCost = checkInUi.value.guaranteeCost
+                )
+            }
+            _isCheckInSuccess.value = ValidationResult(false)
+        } catch (e: Exception) {
+            _isCheckInSuccess.value = ValidationResult(true, e.message.toString())
+        }
+
     }
 
     private fun clearError() {
@@ -426,14 +571,20 @@ class CheckInViewModel(
 class CheckInViewModelFactory(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
-    private val kostRepository: KostRepository
+    private val kostRepository: KostRepository,
+    private val cashFlowRepository: CashFlowRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckInViewModel::class.java)) {
-            return CheckInViewModel(tenantRepository, unitRepository, kostRepository) as T
+            return CheckInViewModel(
+                tenantRepository,
+                unitRepository,
+                kostRepository,
+                cashFlowRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

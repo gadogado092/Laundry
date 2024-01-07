@@ -186,7 +186,8 @@ fun CheckInScreen(
             factory = CheckInViewModelFactory(
                 Injection.provideTenantRepository(context),
                 Injection.provideUnitRepository(context),
-                Injection.provideKostRepository(context)
+                Injection.provideKostRepository(context),
+                Injection.provideCashFlowRepository(context)
             )
         )
 
@@ -417,7 +418,7 @@ fun CheckInScreen(
             }
             MyOutlinedTextFieldCurrency(
                 label = "Biaya Tambahan",
-                value = checkInViewModel.checkInUi.collectAsState().value.extraPrice.replace(
+                value = checkInViewModel.checkInUi.collectAsState().value.additionalCost.replace(
                     ".",
                     ""
                 ),
@@ -427,12 +428,12 @@ fun CheckInScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth(),
-                currencyValue = checkInViewModel.checkInUi.collectAsState().value.extraPrice
+                currencyValue = checkInViewModel.checkInUi.collectAsState().value.additionalCost
             )
             MyOutlinedTextField(
                 label = "Keterangan Biaya Tambahan",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                value = checkInViewModel.checkInUi.collectAsState().value.noteExtraPrice,
+                value = checkInViewModel.checkInUi.collectAsState().value.noteAdditionalCost,
                 onValueChange = {
                     checkInViewModel.setNoteExtraPrice(it)
                 },
@@ -468,7 +469,7 @@ fun CheckInScreen(
                     fontSize = 16.sp
                 )
                 BoxRectangle(
-                    title = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.priceGuarantee.toString()),
+                    title = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.guaranteeCost.toString()),
                     fontSize = 14.sp
                 )
             }
@@ -566,6 +567,16 @@ fun CheckInScreen(
                 modifier = Modifier.padding(vertical = 16.dp),
                 color = GreyLight,
                 thickness = 2.dp
+            )
+
+            DateLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePickerPayment(context, checkInViewModel) },
+                title = "Tanggal Pembayaran",
+                value = if (checkInViewModel.checkInUi.collectAsState().value.createAt.isNotEmpty())
+                    dateToDisplayMidFormat(checkInViewModel.checkInUi.collectAsState().value.createAt) else "-",
+                isEnable = true
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -832,6 +843,21 @@ fun showDatePicker(context: Context, viewModel: CheckInViewModel) {
         { _: DatePicker, year: Int, month: Int, day: Int ->
             val dateSelected = "$year-${month + 1}-$day"
             viewModel.setCheckInDate(dateSelected)
+        }, mYear, mMonth, mDay
+    )
+    mDatePickerDialog.show()
+}
+
+fun showDatePickerPayment(context: Context, viewModel: CheckInViewModel) {
+    val mYear: Int = convertDateToYear(viewModel.checkInUi.value.checkInDate).toInt()
+    val mMonth: Int = convertDateToMonth(viewModel.checkInUi.value.checkInDate).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.checkInUi.value.checkInDate).toInt()
+
+    val mDatePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, day: Int ->
+            val dateSelected = "$year-${month + 1}-$day"
+            viewModel.setPaymentDate(dateSelected)
         }, mYear, mMonth, mDay
     )
     mDatePickerDialog.show()

@@ -185,7 +185,7 @@ fun ListUnitView(
                     id = data.id,
                     name = data.name,
                     tenantName = data.tenantName,
-                    limitCheckOut = "lewat 5 hari - 30 Okt",
+                    limitCheckOut = data.limitCheckOut,
                     unitStatusId = data.unitStatusId,
                     unitTypeName = data.unitTypeName,
                     priceDay = data.priceDay,

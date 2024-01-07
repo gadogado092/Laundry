@@ -13,10 +13,10 @@ data class CheckInUi(
     val qty: Int = 1,
     val duration: String = "",
 
-    val noteExtraPrice: String = "",
-    val extraPrice: String = "0",
+    val noteAdditionalCost: String = "",
+    val additionalCost: String = "0",
     val discount: String = "0",
-    val priceGuarantee: Int = 0,
+    val guaranteeCost: Int = 0,
     val checkInDate: String = "",
     val checkOutDate: String = "",
     val totalPrice: String = "0",
@@ -26,7 +26,9 @@ data class CheckInUi(
     val downPayment: String = "0",
     val debtTenant: String = "0",
 
-    val totalPayment: String = "0"
+    val totalPayment: String = "0",
+
+    val createAt: String = ""
 )
 
 data class PriceDuration(

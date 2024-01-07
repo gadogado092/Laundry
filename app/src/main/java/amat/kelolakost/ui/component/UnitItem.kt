@@ -222,14 +222,14 @@ fun BuildIcon(
             }
 
             1 -> {
+                IconUnit(id = R.drawable.check_out, Modifier.clickable {
+                    onClickCheckOut()
+                })
                 IconUnit(id = R.drawable.ic_baseline_autorenew_24, Modifier.clickable {
                     onClickMoveUnit()
                 })
                 IconUnit(id = R.drawable.add_duration, Modifier.clickable {
                     onClickExtend()
-                })
-                IconUnit(id = R.drawable.check_out, Modifier.clickable {
-                    onClickCheckOut()
                 })
             }
         }

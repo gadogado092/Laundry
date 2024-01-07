@@ -102,12 +102,14 @@ fun TenantItem(
                         .clickable { onClickSms() }
                         .align(Bottom)
                 )
-                IconTenant(
-                    id = R.drawable.check_in,
-                    modifier = Modifier
-                        .clickable { onClickCheckIn(id, name) }
-                        .align(Bottom)
-                )
+                if (unitId == "0") {
+                    IconTenant(
+                        id = R.drawable.check_in,
+                        modifier = Modifier
+                            .clickable { onClickCheckIn(id, name) }
+                            .align(Bottom)
+                    )
+                }
             }
         }
         Divider(
