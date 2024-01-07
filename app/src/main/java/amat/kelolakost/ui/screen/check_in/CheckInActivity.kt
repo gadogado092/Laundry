@@ -24,6 +24,8 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
+import amat.kelolakost.ui.screen.tenant.AddTenantActivity
+import amat.kelolakost.ui.screen.unit.AddUnitActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
@@ -434,6 +436,8 @@ fun CheckInScreen(
                 onValueChange = {
                     checkInViewModel.setNoteExtraPrice(it)
                 },
+                isError = checkInViewModel.isNoteExtraPriceValid.collectAsState().value.isError,
+                errorMessage = checkInViewModel.isNoteExtraPriceValid.collectAsState().value.errorMessage,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -538,18 +542,18 @@ fun CheckInScreen(
                         .padding(bottom = 8.dp)
                 ) {
                     Text(
-                        modifier = Modifier.padding(end = 2.dp),
+                        modifier = Modifier.padding(end = 3.dp),
                         text = stringResource(id = R.string.total_payment),
                         style = TextStyle(color = FontBlack),
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     )
                     Text(
                         text = generateTextDuration(
                             checkInViewModel.checkInUi.collectAsState().value.duration,
                             checkInViewModel.checkInUi.collectAsState().value.qty
                         ),
-                        style = TextStyle(color = FontBlack),
-                        fontSize = 16.sp
+                        style = TextStyle(color = TealGreen, fontWeight = FontWeight.Medium),
+                        fontSize = 18.sp
                     )
                 }
                 BoxPrice(
@@ -642,19 +646,24 @@ fun CheckInScreen(
                             fontSize = 14.sp
                         )
                     }
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp),
+                        color = GreyLight,
+                        thickness = 2.dp
+                    )
                 }
             }
 
-            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+            Row(modifier = Modifier.padding(vertical = 16.dp)) {
                 Text(
                     text = "Simpan Dana ",
-                    style = TextStyle(color = TealGreen),
-                    fontSize = 16.sp
+                    style = TextStyle(color = FontBlack),
+                    fontSize = 18.sp
                 )
                 Text(
                     text = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.totalPayment),
-                    style = TextStyle(color = FontBlack, fontWeight = FontWeight.Medium),
-                    fontSize = 16.sp
+                    style = TextStyle(color = TealGreen, fontWeight = FontWeight.Medium),
+                    fontSize = 18.sp
                 )
             }
 
@@ -688,7 +697,7 @@ fun showBottomSheetTenant(
     buttonAdd?.setText(R.string.add)
 
     buttonAdd?.setOnClickListener {
-        val intent = Intent(context, AddKostActivity::class.java)
+        val intent = Intent(context, AddTenantActivity::class.java)
         context.startActivity(intent)
         bottomSheetDialog.dismiss()
     }
@@ -761,7 +770,7 @@ fun showBottomSheetUnit(
     buttonAdd?.setText(R.string.add)
 
     buttonAdd?.setOnClickListener {
-        val intent = Intent(context, AddKostActivity::class.java)
+        val intent = Intent(context, AddUnitActivity::class.java)
         context.startActivity(intent)
         bottomSheetDialog.dismiss()
     }

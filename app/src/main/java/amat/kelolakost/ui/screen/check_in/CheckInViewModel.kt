@@ -66,6 +66,11 @@ class CheckInViewModel(
     val isDownPaymentValid: StateFlow<ValidationResult>
         get() = _isDownPaymentValid
 
+    private val _isNoteExtraPriceValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+    val isNoteExtraPriceValid: StateFlow<ValidationResult>
+        get() = _isNoteExtraPriceValid
+
     private val _isCheckInSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
@@ -134,12 +139,27 @@ class CheckInViewModel(
         val valueFormat = currencyFormatterString(value)
         _checkInUi.value = _checkInUi.value.copy(extraPrice = valueFormat)
         refreshDataUI()
+
+        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            return
+        }else{
+            _isNoteExtraPriceValid.value = ValidationResult(false, "")
+        }
     }
 
     fun setNoteExtraPrice(value: String) {
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
         _checkInUi.value = _checkInUi.value.copy(noteExtraPrice = value)
+        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            return
+        }else{
+            _isNoteExtraPriceValid.value = ValidationResult(false, "")
+        }
     }
 
     fun setDiscount(value: String) {
@@ -357,6 +377,13 @@ class CheckInViewModel(
             return
         }
 
+        //check if extra price insert
+        if (cleanCurrencyFormatter(checkInUi.value.extraPrice) != 0 && checkInUi.value.noteExtraPrice.isEmpty()) {
+            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            return
+        }
+
         //check bayar cicil
         if (!checkInUi.value.isFullPayment) {
             if (checkInUi.value.downPayment.trim()
@@ -367,12 +394,23 @@ class CheckInViewModel(
                 return
             }
 
-            if (checkInUi.value.debtTenant.toBigInteger() < 1.toBigInteger()){
-                _isCheckInSuccess.value = ValidationResult(true, "Pilih Metode Pembayaran LUNAS")
+            if (checkInUi.value.debtTenant.toBigInteger() < 1.toBigInteger()) {
+                _isCheckInSuccess.value =
+                    ValidationResult(true, "Pilih Metode Pembayaran LUNAS")
                 return
             }
         }
 
+        insertCheckIn()
+
+    }
+
+    fun insertCheckIn() {
+        //eksekusi pakai transaction
+        //TODO update tenant
+        //TODO update unit
+        //TODO insert credit tenant if not full payment
+        //TODO insert cashflow
     }
 
     private fun clearError() {

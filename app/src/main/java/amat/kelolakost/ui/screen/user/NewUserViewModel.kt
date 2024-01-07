@@ -1,6 +1,9 @@
 package amat.kelolakost.ui.screen.user
 
 import amat.kelolakost.addDateLimitApp
+import amat.kelolakost.data.Credit
+import amat.kelolakost.data.CreditTenant
+import amat.kelolakost.data.Debit
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.Unit
@@ -8,6 +11,9 @@ import amat.kelolakost.data.UnitStatus
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
+import amat.kelolakost.data.repository.CreditRepository
+import amat.kelolakost.data.repository.CreditTenantRepository
+import amat.kelolakost.data.repository.DebitRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
@@ -32,7 +38,10 @@ class NewUserViewModel(
     private val unitStatusRepository: UnitStatusRepository,
     private val unitTypeRepository: UnitTypeRepository,
     private val tenantRepository: TenantRepository,
-    private val unitRepository: UnitRepository
+    private val unitRepository: UnitRepository,
+    private val creditTenantRepository: CreditTenantRepository,
+    private val creditRepository: CreditRepository,
+    private val debitRepository: DebitRepository
 ) :
     ViewModel() {
 
@@ -246,6 +255,44 @@ class NewUserViewModel(
             )
             unitRepository.insertUnit(unitDummy)
 
+            //insert dummy creditTenant
+            val creditTenant = CreditTenant(
+                id = "0",
+                note = "Kosong",
+                tenantId = "0",
+                status = -1,
+                remainingDebt = 0,
+                kostId = "0",
+                unitId = "0",
+                createAt = "2000-10-20",
+                isDelete = false
+            )
+            creditTenantRepository.insert(creditTenant)
+
+            //insert dummy credit
+            val credit = Credit(
+                id = "0",
+                note = "Kosong",
+                status = -1,
+                remaining = 0,
+                customerCreditDebitId = "0",
+                createAt = "2000-10-20",
+                isDelete = false
+            )
+            creditRepository.insert(credit)
+
+            //insert dummy debit
+            val debit = Debit(
+                id = "0",
+                note = "Kosong",
+                status = -1,
+                remaining = 0,
+                customerCreditDebitId = "0",
+                createAt = "2000-10-20",
+                isDelete = false
+            )
+            debitRepository.insert(debit)
+
             userRepository.insertUser(user)
             kostRepository.insertKost(kost)
             val listStatus = listOf(
@@ -271,7 +318,10 @@ class NewUserViewModelFactory(
     private val unitStatusRepository: UnitStatusRepository,
     private val unitTypeRepository: UnitTypeRepository,
     private val tenantRepository: TenantRepository,
-    private val unitRepository: UnitRepository
+    private val unitRepository: UnitRepository,
+    private val creditTenantRepository: CreditTenantRepository,
+    private val creditRepository: CreditRepository,
+    private val debitRepository: DebitRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -284,7 +334,10 @@ class NewUserViewModelFactory(
                 unitStatusRepository,
                 unitTypeRepository,
                 tenantRepository,
-                unitRepository
+                unitRepository,
+                creditTenantRepository,
+                creditRepository,
+                debitRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
