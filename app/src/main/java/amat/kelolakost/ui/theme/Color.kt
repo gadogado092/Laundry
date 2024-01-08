@@ -23,3 +23,6 @@ val GreyLight2 = Color(0xE2DBDBDB)
 val GreyLight3 = Color(0xE2666666)
 val GreyLight4 = Color(0xFF3D3D3D)
 val FontBlackSoft = Color(0xFF5A5A5A)
+
+val ColorRed = Color(0xFFFF0000)
+val ColorYellow = Color(0xFFFFD600)

@@ -46,7 +46,7 @@ class NewUserViewModel(
     ViewModel() {
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "Standard", "", 25000, "", ""))
+        MutableStateFlow(User("", "", "", "", "Standard", "", "", "", "", "", 25000, "", ""))
     val user: StateFlow<User>
         get() = _user
 
@@ -142,6 +142,21 @@ class NewUserViewModel(
 
     fun setTypeWa(value: String) {
         _user.value = _user.value.copy(typeWa = value)
+    }
+    fun setBankName(value: String) {
+        _user.value = _user.value.copy(bankName = value)
+    }
+
+    fun setAccountNumber(value: String) {
+        _user.value = _user.value.copy(accountNumber = value)
+    }
+
+    fun setAccountOwnerName(value: String) {
+        _user.value = _user.value.copy(accountOwnerName = value)
+    }
+
+    fun setNoteBank(value: String) {
+        _user.value = _user.value.copy(note = value)
     }
 
     fun prosesRegistration() {

@@ -11,6 +11,11 @@ data class User(
     val numberPhone: String,
     val email: String,
     val typeWa: String,
+    //info penagihan
+    val bankName:String,
+    val accountNumber:String,
+    val accountOwnerName:String,
+    val note:String,
     //limit is date encode by Base64
     val limit: String,
     val cost: Int,

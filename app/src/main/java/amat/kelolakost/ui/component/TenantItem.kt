@@ -83,14 +83,6 @@ fun TenantItem(
                 }
             ) {
                 SubTenant(Icons.Default.PhoneIphone, numberPhone, modifier = Modifier.weight(1F))
-                IconTenant(
-                    id = R.drawable.ic_wa,
-                    modifier = Modifier
-                        .clickable {
-                            onClickWa()
-                        }
-                        .align(Bottom)
-                )
                 IconTenant(id = R.drawable.ic_outline_call_24, modifier = Modifier
                     .clickable {
                         onClickPhone()
@@ -100,6 +92,14 @@ fun TenantItem(
                     id = R.drawable.ic_twotone_sms_24,
                     modifier = Modifier
                         .clickable { onClickSms() }
+                        .align(Bottom)
+                )
+                IconTenant(
+                    id = R.drawable.ic_wa,
+                    modifier = Modifier
+                        .clickable {
+                            onClickWa()
+                        }
                         .align(Bottom)
                 )
                 if (unitId == "0") {

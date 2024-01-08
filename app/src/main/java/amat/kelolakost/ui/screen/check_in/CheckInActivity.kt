@@ -680,6 +680,7 @@ fun CheckInScreen(
 
             Button(
                 onClick = {
+                    //TODO show dialog konfirmasi
                     checkInViewModel.processCheckIn()
                 },
                 modifier = Modifier

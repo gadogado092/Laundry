@@ -5,7 +5,10 @@ import amat.kelolakost.R
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.entity.FilterEntity
+import amat.kelolakost.dateToDisplayDayMonth
 import amat.kelolakost.di.Injection
+import amat.kelolakost.generateLimitColor
+import amat.kelolakost.generateLimitText
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.CenterLayout
@@ -185,7 +188,12 @@ fun ListUnitView(
                     id = data.id,
                     name = data.name,
                     tenantName = data.tenantName,
-                    limitCheckOut = data.limitCheckOut,
+                    limitCheckOut = "${generateLimitText(data.limitCheckOut)}-${
+                        dateToDisplayDayMonth(
+                            data.limitCheckOut
+                        )
+                    }",
+                    colorLimitCheckOut = generateLimitColor(data.limitCheckOut),
                     unitStatusId = data.unitStatusId,
                     unitTypeName = data.unitTypeName,
                     priceDay = data.priceDay,

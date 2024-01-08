@@ -22,7 +22,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         get() = _stateInitUser
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "", "", 0, "", ""))
+        MutableStateFlow(User("", "", "", "", "", "", "", "", "", "", 0, "", ""))
     val user: StateFlow<User>
         get() = _user
 
@@ -82,6 +82,22 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         } else {
             _isUserEmailValid.value = ValidationResult(false, "")
         }
+    }
+
+    fun setBankName(value: String) {
+        _user.value = _user.value.copy(bankName = value)
+    }
+
+    fun setAccountNumber(value: String) {
+        _user.value = _user.value.copy(accountNumber = value)
+    }
+
+    fun setAccountOwnerName(value: String) {
+        _user.value = _user.value.copy(accountOwnerName = value)
+    }
+
+    fun setNoteBank(value: String) {
+        _user.value = _user.value.copy(note = value)
     }
 
     fun getDetail() {

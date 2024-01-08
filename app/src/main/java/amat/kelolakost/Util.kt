@@ -1,16 +1,21 @@
 package amat.kelolakost
 
+import amat.kelolakost.ui.theme.ColorRed
+import amat.kelolakost.ui.theme.ColorYellow
+import amat.kelolakost.ui.theme.FontBlack
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.util.Patterns
+import androidx.compose.ui.graphics.Color
 import java.net.URLEncoder
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 fun isEmailValid(emailAddress: String): Boolean {
@@ -86,6 +91,14 @@ fun dateToDisplayMidFormat(dateString: String): String {
     val date = fmt.parse(dateString)
 
     val fmtOut = SimpleDateFormat("dd MMM yyyy")
+    return fmtOut.format(date)
+}
+@SuppressLint("SimpleDateFormat")
+fun dateToDisplayDayMonth(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("dd MMM")
     return fmtOut.format(date)
 }
 
@@ -199,4 +212,49 @@ fun dateDialogToUniversalFormat(dateString: String): String {
 
     val fmtOut = SimpleDateFormat("yyyy-MM-dd")
     return fmtOut.format(date as Date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun generateLimitText(checkOutDate: String?): String {
+    try {
+        val myFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateNow = myFormat.format(Calendar.getInstance().time)
+        val dateNowParse = myFormat.parse(dateNow)
+
+        val date2 = checkOutDate?.let { myFormat.parse(it) }
+        val diff = date2!!.time - dateNowParse!!.time
+        val day = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toString()
+        return if (day.toInt() == 0) {
+            "Hari Terakhir"
+        } else if (day.toInt() in 1..3) {
+            "Sisa $day Hari"
+        } else if (day.toInt() < 0) {
+            "Lewat " + Math.abs(day.toInt()) + " Hari"
+        } else {
+            "Sisa $day Hari"
+        }
+    } catch (e: Exception) {
+        return "Batas $checkOutDate"
+    }
+}
+
+fun generateLimitColor(checkOutDate: String?): Color {
+    return try {
+        val myFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateNow = myFormat.format(Calendar.getInstance().time)
+        val dateNowParse = myFormat.parse(dateNow)
+
+        val date2 = checkOutDate?.let { myFormat.parse(it) }
+        val diff = date2!!.time - dateNowParse!!.time
+        val day = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toString()
+        if (day.toInt() in 1..3) {
+            ColorYellow
+        } else if (day.toInt() <= 0) {
+            ColorRed
+        } else {
+            FontBlack
+        }
+    } catch (e: Exception) {
+        FontBlack
+    }
 }

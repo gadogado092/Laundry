@@ -2,7 +2,11 @@ package amat.kelolakost.ui.screen.tenant
 
 import amat.kelolakost.R
 import amat.kelolakost.data.TenantHome
+import amat.kelolakost.dateToDisplayDayMonth
 import amat.kelolakost.di.Injection
+import amat.kelolakost.generateLimitColor
+import amat.kelolakost.generateLimitText
+import amat.kelolakost.sendWhatsApp
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.CenterLayout
@@ -11,10 +15,13 @@ import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.TenantItem
 import amat.kelolakost.ui.screen.check_in.CheckInActivity
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +48,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 @Composable
 fun TenantScreen(
@@ -48,7 +59,12 @@ fun TenantScreen(
     modifier: Modifier = Modifier
 ) {
     val tenantViewModel: TenantViewModel =
-        viewModel(factory = TenantViewModelFactory(Injection.provideTenantRepository(context)))
+        viewModel(
+            factory = TenantViewModelFactory(
+                Injection.provideTenantRepository(context),
+                Injection.provideUserRepository(context)
+            )
+        )
 
     OnLifecycleEvent { owner, event ->
         // do stuff on event
@@ -83,7 +99,9 @@ fun TenantScreen(
                     }
 
                     is UiState.Success -> {
-                        ListTenantView(context = context, listData = uiState.data,
+                        ListTenantView(context = context,
+                            listData = uiState.data,
+                            tenantViewModel = tenantViewModel,
                             onItemClick = {
                                 val intent = Intent(context, UpdateTenantActivity::class.java)
                                 intent.putExtra("id", it)
@@ -144,6 +162,7 @@ fun ContentStatus(viewModel: TenantViewModel) {
 fun ListTenantView(
     context: Context,
     listData: List<TenantHome>,
+    tenantViewModel: TenantViewModel,
     onItemClick: (String) -> Unit,
     onClickCheckIn: (String, String) -> Unit
 ) {
@@ -173,9 +192,16 @@ fun ListTenantView(
                     kostName = data.kostName,
                     numberPhone = data.numberPhone,
                     unitId = data.unitId,
-                    limitCheckOut = data.limitCheckOut,
+                    limitCheckOut = if (data.limitCheckOut.isNotEmpty()) "${generateLimitText(data.limitCheckOut)}-${
+                        dateToDisplayDayMonth(
+                            data.limitCheckOut
+                        )
+                    }" else "",
+                    colorLimitCheckOut = if (data.limitCheckOut.isNotEmpty()) generateLimitColor(
+                        data.limitCheckOut
+                    ) else FontBlack,
                     onClickSms = {
-                        //TODO
+                        sendSms(context, tenantViewModel, data)
                     },
                     onClickPhone = {
                         val intent = Intent(Intent.ACTION_DIAL)
@@ -183,11 +209,113 @@ fun ListTenantView(
                         context.startActivity(intent)
                     },
                     onClickWa = {
-                        //TODO
+                        sendWa(context, tenantViewModel, data)
                     },
                     onClickCheckIn = onClickCheckIn
                 )
             }
         }
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
+fun sendSms(context: Context, viewModel: TenantViewModel, tenant: TenantHome) {
+    try {
+        if (tenant.unitId != "0") {
+            val user = viewModel.user.value
+            val myFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateNow = myFormat.format(Calendar.getInstance().time)
+            val date1 = myFormat.parse(dateNow)
+            val date2 = myFormat.parse(tenant.limitCheckOut)
+            val diff = date2!!.time - date1!!.time
+            val day = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toString()
+            val body: String
+            var bankInfo = ""
+            var note = ""
+            if (user.bankName != "" && user.accountNumber != "" && user.accountOwnerName != "") {
+                bankInfo =
+                    "\nTransfer ke Rek ${user.bankName} ${user.accountNumber} (${user.accountOwnerName})"
+            }
+            if (user.note != "") {
+                note = "\n${user.note}"
+            }
+            if (day.toInt() == 0) {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda tinggal Hari ini - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            } else if (day.toInt() < 0) {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda lewat ${
+                        abs(
+                            day.toInt()
+                        )
+                    } Hari - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            } else {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda $day Hari lagi - Unit ${tenant.unitName}. Silahkan lakukan pembayaran sebelum jatuh tempo.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            }
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("smsto:${tenant.numberPhone}")
+                putExtra("sms_body", body)
+            }
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(intent)
+            }
+        } else {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("smsto:${tenant.numberPhone}")
+                putExtra("sms_body", "")
+            }
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(intent)
+            }
+        }
+    } catch (e: Exception) {
+        Toast.makeText(context, "Kirim SMS gagal", Toast.LENGTH_SHORT).show()
+        println("====" + e.message)
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
+fun sendWa(context: Context, viewModel: TenantViewModel, tenant: TenantHome) {
+    try {
+        if (tenant.unitId != "0") {
+            val user = viewModel.user.value
+            val myFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateNow = myFormat.format(Calendar.getInstance().time)
+            val date1 = myFormat.parse(dateNow)
+            val date2 = myFormat.parse(tenant.limitCheckOut)
+            val diff = date2!!.time - date1!!.time
+            val day = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toString()
+            val body: String
+            var bankInfo = ""
+            var note = ""
+            if (user.bankName != "" && user.accountNumber != "" && user.accountOwnerName != "") {
+                bankInfo =
+                    "\nTransfer ke Rek *${user.bankName} ${user.accountNumber}* (${user.accountOwnerName})"
+            }
+            if (user.note != "") {
+                note = "\n${user.note}"
+            }
+            if (day.toInt() == 0) {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda tinggal *Hari ini* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+
+            } else if (day.toInt() < 0) {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda lewat *${
+                        abs(
+                            day.toInt()
+                        )
+                    } Hari* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            } else {
+                body =
+                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda *$day Hari lagi* - Unit ${tenant.unitName}. Silahkan lakukan pembayaran sebelum jatuh tempo.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            }
+            sendWhatsApp(context, tenant.numberPhone, body)
+        } else {
+            sendWhatsApp(context, tenant.numberPhone, "")
+        }
+    } catch (e: Exception) {
+        Toast.makeText(context, "Kirim WA gagal ${e.message}", Toast.LENGTH_SHORT).show()
     }
 }
