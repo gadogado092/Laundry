@@ -24,6 +24,13 @@
     <string name="subtitle_tenant">"Penyewa/Tenant"</string>
     <string name="subtitle_unit">"Kamar/Unit"</string>
     <string name="process">"PROSES</string>
+    <string name="invoice">"Invoice Penagihan</string>
+    <string name="bill">"Bukti Pembayaran</string>
+    <string name="booking">"Booking Unit/Kamar</string>
+    <string name="extend_rent">"Perpanjang Sewa</string>
+    <string name="check_out">"Check Out</string>
+    <string name="move_unit">"Pindah Unit/Kamar</string>
+    <string name="ok">"OK</string>
 
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>

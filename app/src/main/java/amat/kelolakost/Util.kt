@@ -237,7 +237,7 @@ fun generateLimitText(checkOutDate: String?): String {
         return "Batas $checkOutDate"
     }
 }
-
+@SuppressLint("SimpleDateFormat")
 fun generateLimitColor(checkOutDate: String?): Color {
     return try {
         val myFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -256,5 +256,24 @@ fun generateLimitColor(checkOutDate: String?): Color {
         }
     } catch (e: Exception) {
         FontBlack
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
+fun getLimitDay(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val dateLimit = fmt.parse(dateString)
+    val currentDate = Date()
+    return try {
+        if (dateLimit != null) {
+            val diff: Long = dateLimit.time - currentDate.time
+            val diffInDays = TimeUnit.MILLISECONDS.toDays(diff)
+            diffInDays.toInt().toString()
+        } else {
+            ""
+        }
+
+    } catch (e: Exception) {
+        ""
     }
 }

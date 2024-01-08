@@ -24,6 +24,8 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
+import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.invoice.InvoiceActivity
 import amat.kelolakost.ui.screen.tenant.AddTenantActivity
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
 import amat.kelolakost.ui.theme.FontBlack
@@ -187,7 +189,8 @@ fun CheckInScreen(
                 Injection.provideTenantRepository(context),
                 Injection.provideUnitRepository(context),
                 Injection.provideKostRepository(context),
-                Injection.provideCashFlowRepository(context)
+                Injection.provideCashFlowRepository(context),
+                Injection.provideUserRepository(context)
             )
         )
 
@@ -347,6 +350,8 @@ fun CheckInScreen(
     if (!checkInViewModel.isCheckInSuccess.collectAsState().value.isError) {
         Toast.makeText(context, stringResource(id = R.string.success_check_in), Toast.LENGTH_SHORT)
             .show()
+        val intent = Intent(context, BillActivity::class.java)
+        context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()
     } else {
@@ -680,8 +685,11 @@ fun CheckInScreen(
 
             Button(
                 onClick = {
-                    //TODO show dialog konfirmasi
-                    checkInViewModel.processCheckIn()
+                    if (checkInViewModel.checkLimitApp()) {
+                        showBottomLimitApp(context)
+                    } else {
+                        showBottomConfirm(context, checkInViewModel)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -690,9 +698,68 @@ fun CheckInScreen(
             ) {
                 Text(text = stringResource(id = R.string.process), color = FontWhite)
             }
+
+            Button(
+                onClick = {
+                    val intent = Intent(context, InvoiceActivity::class.java)
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = GreyLight)
+            ) {
+                Text(text = stringResource(id = R.string.invoice), color = FontBlack)
+            }
         }
     }
 }
+
+private fun showBottomConfirm(
+    context: Context,
+    checkInViewModel: CheckInViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Proses Check-In penyewa ${checkInViewModel.checkInUi.value.tenantName} unit ${checkInViewModel.checkInUi.value.unitName}" +
+                "\nDari ${dateToDisplayMidFormat(checkInViewModel.checkInUi.value.checkInDate)} sampai ${
+                    dateToDisplayMidFormat(
+                        checkInViewModel.checkInUi.value.checkOutDate
+                    )
+                }?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        checkInViewModel.processCheckIn()
+    }
+    bottomSheetDialog.show()
+
+}
+
+private fun showBottomLimitApp(
+    context: Context
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    message?.text =
+        "Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya"
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+    }
+    bottomSheetDialog.show()
+
+}
+
 
 fun showBottomSheetTenant(
     checkInViewModel: CheckInViewModel,

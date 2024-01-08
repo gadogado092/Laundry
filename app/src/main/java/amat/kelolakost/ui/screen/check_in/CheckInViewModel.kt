@@ -20,12 +20,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import amat.kelolakost.data.UnitAdapter
+import amat.kelolakost.data.User
 import amat.kelolakost.data.repository.CashFlowRepository
+import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.dateDialogToUniversalFormat
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.generateDateNow
 import amat.kelolakost.generateTextDuration
+import amat.kelolakost.getLimitDay
 import android.util.Log
+import kotlinx.coroutines.flow.catch
 import java.math.BigInteger
 import java.util.UUID
 
@@ -33,8 +37,14 @@ class CheckInViewModel(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val cashFlowRepository: CashFlowRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
+
+    private val _user: MutableStateFlow<User> =
+        MutableStateFlow(User("", "", "", "", "", "", "", "", "", "", 0, "", ""))
+    val user: StateFlow<User>
+        get() = _user
 
     private val _checkInUi: MutableStateFlow<CheckInUi> =
         MutableStateFlow(
@@ -106,9 +116,22 @@ class CheckInViewModel(
         get() = _stateListPriceDuration
 
     init {
+        getUser()
         Log.d("saya", "init")
         _checkInUi.value = checkInUi.value.copy(checkInDate = generateDateNow())
         _checkInUi.value = checkInUi.value.copy(createAt = generateDateNow())
+    }
+
+    private fun getUser() {
+        viewModelScope.launch {
+            userRepository.getDetail()
+                .catch {
+
+                }
+                .collect { data ->
+                    _user.value = data
+                }
+        }
     }
 
     fun setTenantSelected(id: String, name: String) {
@@ -558,6 +581,15 @@ class CheckInViewModel(
 
     }
 
+    fun checkLimitApp(): Boolean {
+        return try {
+            val day = getLimitDay(user.value.limit)
+            day.toInt() < 0
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun clearError() {
         _stateListTenant.value = UiState.Error("")
         _stateListUnit.value = UiState.Error("")
@@ -572,7 +604,8 @@ class CheckInViewModelFactory(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val cashFlowRepository: CashFlowRepository,
+    private val userRepository: UserRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -583,7 +616,8 @@ class CheckInViewModelFactory(
                 tenantRepository,
                 unitRepository,
                 kostRepository,
-                cashFlowRepository
+                cashFlowRepository,
+                userRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

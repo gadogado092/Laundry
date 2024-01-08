@@ -73,7 +73,7 @@ class TenantViewModel(
         getAllTenant()
     }
 
-    fun getUser() {
+    private fun getUser() {
         viewModelScope.launch {
             userRepository.getDetail()
                 .catch {
