@@ -18,6 +18,7 @@ import amat.kelolakost.ui.component.FilterItem
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.UnitItem
 import amat.kelolakost.ui.screen.check_in.CheckInActivity
+import amat.kelolakost.ui.screen.check_out.CheckOutActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
@@ -130,7 +131,12 @@ fun UnitScreen(
                             intent.putExtra("duration", duration)
                             intent.putExtra("priceGuarantee", priceGuarantee)
                             context.startActivity(intent)
-                        })
+                        },
+                            onClickCheckOut = { id ->
+                                val intent = Intent(context, CheckOutActivity::class.java)
+                                intent.putExtra("unitId", id)
+                                context.startActivity(intent)
+                            })
                     }
                 }
             }
@@ -163,7 +169,8 @@ fun UnitScreen(
 fun ListUnitView(
     listData: List<UnitHome>,
     onItemClick: (String) -> Unit,
-    onClickCheckIn: (String, String, String, String, String) -> Unit
+    onClickCheckIn: (String, String, String, String, String) -> Unit,
+    onClickCheckOut: (String) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -177,7 +184,6 @@ fun ListUnitView(
             }
         )
     } else {
-        //TODO set limitCheckout and the color
         LazyColumn(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
@@ -189,6 +195,7 @@ fun ListUnitView(
                     id = data.id,
                     name = data.name,
                     tenantName = data.tenantName,
+                    noteMaintenance = data.noteMaintenance,
                     limitCheckOut = if (data.limitCheckOut.isNotEmpty()) "${generateLimitText(data.limitCheckOut)}-${
                         dateToDisplayDayMonth(
                             data.limitCheckOut
@@ -210,9 +217,7 @@ fun ListUnitView(
                     onClickExtend = {
 
                     },
-                    onClickCheckOut = {
-
-                    },
+                    onClickCheckOut = onClickCheckOut,
                     onClickMoveUnit = {
 
                     },

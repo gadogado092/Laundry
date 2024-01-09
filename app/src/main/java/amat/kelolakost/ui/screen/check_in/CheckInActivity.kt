@@ -688,7 +688,9 @@ fun CheckInScreen(
                     if (checkInViewModel.checkLimitApp()) {
                         showBottomLimitApp(context)
                     } else {
-                        showBottomConfirm(context, checkInViewModel)
+                        if (checkInViewModel.dataIsComplete()) {
+                            showBottomConfirm(context, checkInViewModel)
+                        }
                     }
                 },
                 modifier = Modifier
@@ -750,8 +752,7 @@ private fun showBottomLimitApp(
     val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
     val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
-    message?.text =
-        "Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya"
+    message?.text = context.getString(R.string.info_limit)
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
@@ -882,7 +883,7 @@ fun showBottomSheetPriceDuration(
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
-    title?.setText("Pilih Harga dan Durasi")
+    title?.text = context.getText(R.string.subtitle_select_price)
     buttonAdd?.visibility = View.INVISIBLE
 
     val adapter = PriceDurationAdapter {

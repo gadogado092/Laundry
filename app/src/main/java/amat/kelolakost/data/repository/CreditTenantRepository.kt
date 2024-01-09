@@ -17,6 +17,10 @@ class CreditTenantRepository(private val creditTenantDao: CreditTenantDao) {
         creditTenantDao.update(creditTenant)
     }
 
+    suspend fun getTotalDebt(tenantId: String): Int {
+        return creditTenantDao.getTotalDebt(tenantId)
+    }
+
     companion object {
         @Volatile
         private var instance: CreditTenantRepository? = null

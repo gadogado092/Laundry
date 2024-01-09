@@ -6,8 +6,10 @@ data class UnitHome(
     val noteMaintenance: String,
     val unitStatusId: Int,
 
+    val kostId: String,
     val kostName: String,
 
+    val tenantId: String,
     val tenantName: String,
     val limitCheckOut: String,
 

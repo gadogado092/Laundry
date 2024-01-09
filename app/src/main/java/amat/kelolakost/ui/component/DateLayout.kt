@@ -4,6 +4,7 @@ import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,17 +25,20 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun DateLayout(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String = "",
     value: String,
+    contentHorizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     isEnable: Boolean = false
 ) {
     Column(modifier = modifier) {
-        Text(
-            modifier = Modifier.padding(bottom = 2.dp),
-            text = title,
-            style = TextStyle(color = FontBlack),
-            fontSize = 16.sp
-        )
+        if (title.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(bottom = 2.dp),
+                text = title,
+                style = TextStyle(color = FontBlack),
+                fontSize = 16.sp
+            )
+        }
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
@@ -43,7 +47,10 @@ fun DateLayout(
                 Color.Gray
             ),
             content = {
-                Row(modifier = Modifier.padding(8.dp)) {
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    horizontalArrangement = contentHorizontalArrangement
+                ) {
                     Image(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "",

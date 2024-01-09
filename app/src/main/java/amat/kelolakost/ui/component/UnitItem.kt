@@ -31,6 +31,7 @@ fun UnitItem(
     modifier: Modifier = Modifier,
     id: String,
     name: String,
+    noteMaintenance: String,
     tenantName: String,
     limitCheckOut: String,
     unitStatusId: Int,
@@ -45,7 +46,7 @@ fun UnitItem(
     colorLimitCheckOut: Color = FontBlack,
     onClickCheckIn: (String, String, String, String, String) -> Unit,
     onClickExtend: () -> Unit,
-    onClickCheckOut: () -> Unit,
+    onClickCheckOut: (String) -> Unit,
     onClickMoveUnit: () -> Unit,
     onClickFinishRenovation: () -> Unit
 ) {
@@ -102,9 +103,16 @@ fun UnitItem(
             }
 
             if (unitStatusId == 3 || unitStatusId == 4) {
-                Text(
-                    text = "Note Todo",
-                )
+                if (unitStatusId == 3) {
+                    Text(
+                        text = "Pembersihan\n$noteMaintenance",
+                    )
+                } else {
+                    Text(
+                        text = "Perbaikan\n$noteMaintenance",
+                    )
+                }
+
             }
 
             BuildIcon(
@@ -191,7 +199,7 @@ fun BuildIcon(
     priceGuarantee: String,
     onClickCheckIn: (String, String, String, String, String) -> Unit,
     onClickExtend: () -> Unit,
-    onClickCheckOut: () -> Unit,
+    onClickCheckOut: (String) -> Unit,
     onClickMoveUnit: () -> Unit,
     onClickFinishRenovation: () -> Unit
 ) {
@@ -223,7 +231,7 @@ fun BuildIcon(
 
             1 -> {
                 IconUnit(id = R.drawable.check_out, Modifier.clickable {
-                    onClickCheckOut()
+                    onClickCheckOut(unitId)
                 })
                 IconUnit(id = R.drawable.ic_baseline_autorenew_24, Modifier.clickable {
                     onClickMoveUnit()

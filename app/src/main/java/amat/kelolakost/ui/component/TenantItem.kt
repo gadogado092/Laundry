@@ -67,6 +67,7 @@ fun TenantItem(
                         SubTenant(Icons.Default.House, kostName)
                     }
                     Text(
+                        modifier = Modifier.padding(end = 8.dp),
                         text = limitCheckOut,
                         style = TextStyle(color = colorLimitCheckOut),
                         maxLines = 1,

@@ -65,6 +65,7 @@
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">"Tambah data berhasil"</string>
     <string name="success_check_in">"Check In berhasil"</string>
+    <string name="success_check_out">"Check Out berhasil"</string>
     <string name="success_update_data">"Update data berhasil"</string>
     <string name="error_input_data">"Ada kesalahan input"</string>
     <string name="subtitle_price_unit">"Biaya/Harga Sewa Kamar"</string>
@@ -75,6 +76,7 @@
     <string name="subtitle_price_six_month">"6 Bulan"</string>
     <string name="subtitle_price_year">"1 Tahun"</string>
     <string name="subtitle_price_guarantee">"Uang Deposit/Jaminan"</string>
+    <string name="subtitle_price_guarantee_back">"Pengembalian Uang Deposit/Jaminan"</string>
     <string name="price_guarantee">Uang Deposit/Jaminan</string>
     <string name="price_and_duration">Biaya/Harga dan Durasi</string>
     <string name="total_rental_price">Total Biaya Sewa</string>
@@ -84,4 +86,6 @@
     <string name="date_check_out">Tanggal Keluar</string>
     <string name="debt_tenant">Hutang Penyewa</string>
     <string name="add">Tambah</string>
+    <string name="subtitle_select_price">"Pilih Harga dan Durasi"</string>
+    <string name="info_limit">Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya</string>
 </resources>

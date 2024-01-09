@@ -18,4 +18,7 @@ interface CreditTenantDao {
     @Update
     suspend fun update(creditTenant: CreditTenant)
 
+    @Query("SELECT SUM(remainingDebt) FROM CreditTenant WHERE tenantId=:tenantId")
+    suspend fun getTotalDebt(tenantId: String) : Int
+
 }

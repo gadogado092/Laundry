@@ -16,6 +16,10 @@ class UnitRepository(private val unitDao: UnitDao) {
         }
     }
 
+    suspend fun getDetailUnit(unitId: String): UnitHome {
+        return unitDao.getDetailUnit(unitId)
+    }
+
     fun getDetail(id: String): Flow<UnitDetail> {
         return unitDao.getDetail(id)
     }

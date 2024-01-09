@@ -386,6 +386,65 @@ class CheckInViewModel(
         }
     }
 
+    fun dataIsComplete(): Boolean {
+        clearError()
+
+        //check Tenant Selected
+        if (checkInUi.value.tenantId == "0") {
+            _isTenantSelectedValid.value = ValidationResult(true, "Pilih Tenant/Penyewa Gan")
+            _isCheckInSuccess.value = ValidationResult(true, "Pilih Tenant/Penyewa Gan")
+            return false
+        }
+
+        //check Kost Selected
+        if (checkInUi.value.kostId == "0") {
+            _isKostSelectedValid.value = ValidationResult(true, "Pilih Kost Gan")
+            _isCheckInSuccess.value = ValidationResult(true, "Pilih Kost Gan")
+            return false
+        }
+
+        //check Unit Selected
+        if (checkInUi.value.unitId == "0") {
+            _isUnitSelectedValid.value = ValidationResult(true, "Pilih Unit/Kamar Bro")
+            _isCheckInSuccess.value = ValidationResult(true, "Pilih Unit/Kamar Bro")
+            return false
+        }
+
+        //check Price Selected
+        if (checkInUi.value.price == 0) {
+            _isDurationSelectedValid.value = ValidationResult(true, "Pilih Harga dan Durasi")
+            _isCheckInSuccess.value = ValidationResult(true, "Pilih Harga dan Durasi")
+            return false
+        }
+
+        //check if extra price insert
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
+            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            _isNoteExtraPriceValid.value =
+                ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+            return false
+        }
+
+        //check bayar cicil
+        if (!checkInUi.value.isFullPayment) {
+            if (checkInUi.value.downPayment.trim()
+                    .isEmpty() || checkInUi.value.downPayment.trim() == "0"
+            ) {
+                _isDownPaymentValid.value = ValidationResult(true, "Masukkan Uang Muka")
+                _isCheckInSuccess.value = ValidationResult(true, "Masukkan Uang Muka")
+                return false
+            }
+
+            if (checkInUi.value.debtTenant.toBigInteger() < 1.toBigInteger()) {
+                _isCheckInSuccess.value =
+                    ValidationResult(true, "Pilih Metode Pembayaran LUNAS")
+                return false
+            }
+        }
+
+        return true
+    }
+
     fun processCheckIn() {
         clearError()
 
@@ -564,7 +623,7 @@ class CheckInViewModel(
 
                 }
 
-                cashFlowRepository.insertCheckIn(
+                cashFlowRepository.prosesCheckIn(
                     cashFlow = cashFlow,
                     creditTenant = creditTenant,
                     isFullPayment = checkInUi.value.isFullPayment,

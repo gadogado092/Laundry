@@ -21,8 +21,13 @@ interface CashFlowDao {
 
 
     //CHECK IN AREA
-    @Query("UPDATE Unit SET unitStatusId=1, tenantId=:tenantId WHERE id=:unitId")
-    suspend fun updateUnit(unitId: String, tenantId: String)
+    @Query("UPDATE Unit SET unitStatusId=:unitStatusId, noteMaintenance=:noteMaintenance, tenantId=:tenantId WHERE id=:unitId")
+    suspend fun updateUnit(
+        unitId: String,
+        tenantId: String,
+        unitStatusId: Int,
+        noteMaintenance: String
+    )
 
     @Query(
         "UPDATE Tenant " +
@@ -42,7 +47,7 @@ interface CashFlowDao {
     suspend fun insertCreditTenant(creditTenant: CreditTenant)
 
     @Transaction
-    suspend fun insertCheckIn(
+    suspend fun prosesCheckIn(
         cashFlow: CashFlow,
         creditTenant: CreditTenant,
         isFullPayment: Boolean,
@@ -62,13 +67,48 @@ interface CashFlowDao {
             unitId = cashFlow.unitId
         )
         //update unit
-        updateUnit(unitId = cashFlow.unitId, tenantId = cashFlow.tenantId)
+        updateUnit(
+            unitId = cashFlow.unitId,
+            tenantId = cashFlow.tenantId,
+            unitStatusId = 1,
+            noteMaintenance = ""
+        )
         //insert credit tenant if not full payment
         if (!isFullPayment) {
             insertCreditTenant(creditTenant)
         }
         //insert cashflow
         insert(cashFlow)
+    }
+
+    @Transaction
+    suspend fun prosesCheckOut(
+        cashFlow: CashFlow,
+        priceGuarantee: Int,
+        unitStatusId: Int,
+        noteMaintenance: String
+    ) {
+        //update tenant
+        updateTenant(
+            tenantId = cashFlow.tenantId,
+            limitCheckOut = "",
+            additionalCost = 0,
+            noteAdditionalCost = "",
+            guaranteeCost = 0,
+            unitId = "0"
+        )
+        //update unit
+        updateUnit(
+            unitId = cashFlow.unitId,
+            tenantId = cashFlow.tenantId,
+            unitStatusId = unitStatusId,
+            noteMaintenance = noteMaintenance
+        )
+
+        if (priceGuarantee > 0) {
+            //insert cashflow
+            insert(cashFlow)
+        }
     }
 
 }

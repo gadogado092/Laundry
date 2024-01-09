@@ -17,13 +17,15 @@ import androidx.compose.ui.unit.sp
 fun BoxRectangle(
     modifier: Modifier = Modifier,
     title: String,
+    backgroundColor: Color = TealGreen,
     fontSize: TextUnit = 12.sp,
+
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(4.dp),
-        backgroundColor = TealGreen,
-        contentColor = TealGreen,
+        backgroundColor = backgroundColor,
+        contentColor = backgroundColor,
         content = {
             Text(
                 text = title,

@@ -18,7 +18,7 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         cashFlowDao.update(booking)
     }
 
-    suspend fun insertCheckIn(
+    suspend fun prosesCheckIn(
         cashFlow: CashFlow,
         creditTenant: CreditTenant,
         isFullPayment: Boolean,
@@ -27,7 +27,7 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         noteAdditionalCost: String,
         guaranteeCost: Int
     ) {
-        cashFlowDao.insertCheckIn(
+        cashFlowDao.prosesCheckIn(
             cashFlow = cashFlow,
             creditTenant = creditTenant,
             isFullPayment = isFullPayment,
@@ -35,6 +35,20 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
             additionalCost = additionalCost,
             noteAdditionalCost = noteAdditionalCost,
             guaranteeCost = guaranteeCost
+        )
+    }
+
+    suspend fun prosesCheckOut(
+        cashFlow: CashFlow,
+        priceGuarantee: Int,
+        unitStatusId: Int,
+        noteMaintenance: String
+    ) {
+        cashFlowDao.prosesCheckOut(
+            cashFlow = cashFlow,
+            priceGuarantee = priceGuarantee,
+            unitStatusId = unitStatusId,
+            noteMaintenance = noteMaintenance
         )
     }
 

@@ -36,7 +36,8 @@ fun ComboBox(
         if (title.isNotEmpty()) {
             Text(
                 text = title,
-                style = TextStyle(color = FontBlack)
+                style = TextStyle(color = FontBlack),
+                fontSize = 16.sp
             )
         }
         OutlinedTextField(
@@ -69,6 +70,36 @@ fun ComboBox(
             text = errorMessage,
             fontSize = 14.sp,
             color = Color.Red
+        )
+    }
+}
+
+@Composable
+fun ComboBox(
+    modifier: Modifier = Modifier,
+    title: String = "",
+    value: String
+) {
+    Column(modifier) {
+        if (title.isNotEmpty()) {
+            Text(
+                text = title,
+                style = TextStyle(color = FontBlack),
+                fontSize = 16.sp
+            )
+        }
+        OutlinedTextField(
+            value = value,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp),
+            onValueChange = {},
+            textStyle = TextStyle(color = FontBlack),
+            singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = TealGreen,
+                errorBorderColor = ErrorColor
+            ),
         )
     }
 }
