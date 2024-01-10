@@ -111,4 +111,44 @@ interface CashFlowDao {
         }
     }
 
+    //EXTEND AREA
+    @Query(
+        "UPDATE Tenant " +
+                "SET limitCheckOut=:limitCheckOut, " +
+                "additionalCost=:additionalCost, " +
+                "noteAdditionalCost=:noteAdditionalCost " +
+                "WHERE id=:tenantId"
+    )
+    suspend fun updateTenantExtend(
+        tenantId: String,
+        limitCheckOut: String,
+        additionalCost: Int,
+        noteAdditionalCost: String
+    )
+
+    @Transaction
+    suspend fun prosesExtend(
+        cashFlow: CashFlow,
+        creditTenant: CreditTenant,
+        isFullPayment: Boolean,
+        limitCheckOut: String,
+        additionalCost: Int,
+        noteAdditionalCost: String
+    ) {
+        //eksekusi pakai transaction
+        //update tenant
+        updateTenantExtend(
+            tenantId = cashFlow.tenantId,
+            limitCheckOut = limitCheckOut,
+            additionalCost = additionalCost,
+            noteAdditionalCost = if (additionalCost == 0) "" else noteAdditionalCost
+        )
+        //insert credit tenant if not full payment
+        if (!isFullPayment) {
+            insertCreditTenant(creditTenant)
+        }
+        //insert cashflow
+        insert(cashFlow)
+    }
+
 }

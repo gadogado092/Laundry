@@ -1,6 +1,6 @@
-package amat.kelolakost.ui.screen.check_in
+package amat.kelolakost
 
-import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.databinding.ItemPriceDurationBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup

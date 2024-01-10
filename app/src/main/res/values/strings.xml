@@ -28,6 +28,7 @@
     <string name="bill">"Bukti Pembayaran</string>
     <string name="booking">"Booking Unit/Kamar</string>
     <string name="extend_rent">"Perpanjang Sewa</string>
+    <string name="finish_renovation">"Laporan Pekerjaan</string>
     <string name="check_out">"Check Out</string>
     <string name="move_unit">"Pindah Unit/Kamar</string>
     <string name="ok">"OK</string>
@@ -66,6 +67,7 @@
     <string name="success_add_data">"Tambah data berhasil"</string>
     <string name="success_check_in">"Check In berhasil"</string>
     <string name="success_check_out">"Check Out berhasil"</string>
+    <string name="success_extend_rent">"Perpanjang sewa berhasil"</string>
     <string name="success_update_data">"Update data berhasil"</string>
     <string name="error_input_data">"Ada kesalahan input"</string>
     <string name="subtitle_price_unit">"Biaya/Harga Sewa Kamar"</string>
@@ -85,6 +87,8 @@
     <string name="date_check_in">Tanggal Masuk</string>
     <string name="date_check_out">Tanggal Keluar</string>
     <string name="debt_tenant">Hutang Penyewa</string>
+    <string name="debt_tenant_extend">Hutang Perpanjang</string>
+    <string name="total_debt">Total Hutang</string>
     <string name="add">Tambah</string>
     <string name="subtitle_select_price">"Pilih Harga dan Durasi"</string>
     <string name="info_limit">Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya</string>

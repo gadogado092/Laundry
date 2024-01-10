@@ -12,6 +12,8 @@ data class UnitHome(
     val tenantId: String,
     val tenantName: String,
     val limitCheckOut: String,
+    val additionalCost: Int,
+    val noteAdditionalCost: String,
 
     val unitTypeName: String,
     val priceDay: Int,

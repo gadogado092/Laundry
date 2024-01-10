@@ -52,6 +52,24 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         )
     }
 
+    suspend fun prosesExtend(
+        cashFlow: CashFlow,
+        creditTenant: CreditTenant,
+        isFullPayment: Boolean,
+        limitCheckOut: String,
+        additionalCost: Int,
+        noteAdditionalCost: String
+    ) {
+        cashFlowDao.prosesExtend(
+            cashFlow = cashFlow,
+            creditTenant = creditTenant,
+            isFullPayment = isFullPayment,
+            limitCheckOut = limitCheckOut,
+            additionalCost = additionalCost,
+            noteAdditionalCost = noteAdditionalCost
+        )
+    }
+
     companion object {
         @Volatile
         private var instance: CashFlowRepository? = null

@@ -1,6 +1,6 @@
-package amat.kelolakost.ui.screen.check_in
+package amat.kelolakost.ui.screen.extend
 
-data class CheckInUi(
+data class ExtendUi(
     val tenantId: String = "",
     val tenantName: String = "",
     val kostId: String = "",
@@ -9,25 +9,26 @@ data class CheckInUi(
     val unitName: String = "",
     val unitTypeName: String = "",
 
+    val currentDebtTenant: Int = 0,
+    val limitCheckOut: String = "",
+
     val price: Int = 0,
     val qty: Int = 1,
     val duration: String = "",
 
-    val noteAdditionalCost: String = "",
     val additionalCost: String = "0",
+    val noteAdditionalCost: String = "",
     val discount: String = "0",
-    val guaranteeCost: Int = 0,
-    val checkInDate: String = "",
-    val checkOutDate: String = "",
-    val totalPrice: String = "0",
 
+    val checkOutDateNew: String = "",
+
+    val totalPrice: String = "0",
     val isFullPayment: Boolean = true,
 
     val downPayment: String = "0",
-    val debtTenant: String = "0",
+    val debtTenantExtend: String = "0",
+    val totalDebtTenant: String = "0",
 
     val totalPayment: String = "0",
 
-    val createAt: String = ""
 )
-

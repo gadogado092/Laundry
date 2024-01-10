@@ -2,14 +2,19 @@ package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
-import amat.kelolakost.ui.screen.check_in.PriceDuration
+import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -45,10 +50,10 @@ fun UnitItem(
     priceGuarantee: Int,
     colorLimitCheckOut: Color = FontBlack,
     onClickCheckIn: (String, String, String, String, String) -> Unit,
-    onClickExtend: () -> Unit,
+    onClickExtend: (String, String, String) -> Unit,
     onClickCheckOut: (String) -> Unit,
-    onClickMoveUnit: () -> Unit,
-    onClickFinishRenovation: () -> Unit
+    onClickMoveUnit: (String) -> Unit,
+    onClickFinishRenovation: (String) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
@@ -198,10 +203,10 @@ fun BuildIcon(
     priceDuration: PriceDuration,
     priceGuarantee: String,
     onClickCheckIn: (String, String, String, String, String) -> Unit,
-    onClickExtend: () -> Unit,
+    onClickExtend: (String, String, String) -> Unit,
     onClickCheckOut: (String) -> Unit,
-    onClickMoveUnit: () -> Unit,
-    onClickFinishRenovation: () -> Unit
+    onClickMoveUnit: (String) -> Unit,
+    onClickFinishRenovation: (String) -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         when (unitStatusId) {
@@ -219,13 +224,13 @@ fun BuildIcon(
 
             3 -> {
                 IconUnit(id = R.drawable.finish_job, Modifier.clickable {
-                    onClickFinishRenovation()
+                    onClickFinishRenovation(unitId)
                 })
             }
 
             4 -> {
                 IconUnit(id = R.drawable.finish_job, Modifier.clickable {
-                    onClickFinishRenovation()
+                    onClickFinishRenovation(unitId)
                 })
             }
 
@@ -234,10 +239,13 @@ fun BuildIcon(
                     onClickCheckOut(unitId)
                 })
                 IconUnit(id = R.drawable.ic_baseline_autorenew_24, Modifier.clickable {
-                    onClickMoveUnit()
+                    onClickMoveUnit(unitId)
                 })
                 IconUnit(id = R.drawable.add_duration, Modifier.clickable {
-                    onClickExtend()
+                    onClickExtend(
+                        unitId, priceDuration.price,
+                        priceDuration.duration
+                    )
                 })
             }
         }

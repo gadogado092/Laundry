@@ -126,6 +126,11 @@
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.finish_renovation.FinishRenovationActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

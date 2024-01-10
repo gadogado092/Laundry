@@ -19,6 +19,9 @@ import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.UnitItem
 import amat.kelolakost.ui.screen.check_in.CheckInActivity
 import amat.kelolakost.ui.screen.check_out.CheckOutActivity
+import amat.kelolakost.ui.screen.extend.ExtendActivity
+import amat.kelolakost.ui.screen.finish_renovation.FinishRenovationActivity
+import amat.kelolakost.ui.screen.move.MoveActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import android.content.Context
@@ -136,7 +139,23 @@ fun UnitScreen(
                                 val intent = Intent(context, CheckOutActivity::class.java)
                                 intent.putExtra("unitId", id)
                                 context.startActivity(intent)
-                            })
+                            },
+                            onClickExtend = { id, price, duration ->
+                                val intent = Intent(context, ExtendActivity::class.java)
+                                intent.putExtra("unitId", id)
+                                intent.putExtra("price", price)
+                                intent.putExtra("duration", duration)
+                                context.startActivity(intent)
+                            }, onClickFinishRenovation = { id ->
+                                val intent = Intent(context, FinishRenovationActivity::class.java)
+                                intent.putExtra("unitId", id)
+                                context.startActivity(intent)
+                            }, onClickMove = { id ->
+                                val intent = Intent(context, MoveActivity::class.java)
+                                intent.putExtra("unitId", id)
+                                context.startActivity(intent)
+                            }
+                        )
                     }
                 }
             }
@@ -170,6 +189,9 @@ fun ListUnitView(
     listData: List<UnitHome>,
     onItemClick: (String) -> Unit,
     onClickCheckIn: (String, String, String, String, String) -> Unit,
+    onClickExtend: (String, String, String) -> Unit,
+    onClickMove: (String) -> Unit,
+    onClickFinishRenovation: (String) -> Unit,
     onClickCheckOut: (String) -> Unit
 ) {
     if (listData.isEmpty()) {
@@ -214,16 +236,10 @@ fun ListUnitView(
                     priceYear = data.priceYear,
                     priceGuarantee = data.priceGuarantee,
                     onClickCheckIn = onClickCheckIn,
-                    onClickExtend = {
-
-                    },
+                    onClickExtend = onClickExtend,
                     onClickCheckOut = onClickCheckOut,
-                    onClickMoveUnit = {
-
-                    },
-                    onClickFinishRenovation = {
-
-                    }
+                    onClickMoveUnit = onClickMove,
+                    onClickFinishRenovation = onClickFinishRenovation
                 )
             }
         }

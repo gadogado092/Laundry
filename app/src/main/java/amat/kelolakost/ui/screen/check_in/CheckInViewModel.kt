@@ -8,28 +8,29 @@ import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
+import amat.kelolakost.data.UnitAdapter
+import amat.kelolakost.data.User
+import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.data.entity.ValidationResult
+import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
-import amat.kelolakost.ui.common.UiState
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import amat.kelolakost.data.UnitAdapter
-import amat.kelolakost.data.User
-import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.dateDialogToUniversalFormat
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.generateDateNow
 import amat.kelolakost.generateTextDuration
 import amat.kelolakost.getLimitDay
+import amat.kelolakost.ui.common.UiState
 import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.util.UUID
 
@@ -172,8 +173,7 @@ class CheckInViewModel(
         _checkInUi.value = _checkInUi.value.copy(additionalCost = valueFormat)
         refreshDataUI()
 
-        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
-            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) > 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
             _isNoteExtraPriceValid.value =
                 ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
             return
@@ -186,8 +186,7 @@ class CheckInViewModel(
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
         _checkInUi.value = _checkInUi.value.copy(noteAdditionalCost = value)
-        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
-            _isCheckInSuccess.value = ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
+        if (cleanCurrencyFormatter(checkInUi.value.additionalCost) > 0 && checkInUi.value.noteAdditionalCost.isEmpty()) {
             _isNoteExtraPriceValid.value =
                 ValidationResult(true, "Masukkan Keterangan Biaya Tambahan")
             return
@@ -564,7 +563,7 @@ class CheckInViewModel(
                     }
 
                     if (checkInUi.value.guaranteeCost != 0) {
-                        noteCashFlow += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                        noteCashFlow += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
                     cashFlow = cashFlow.copy(note = noteCashFlow)
@@ -590,7 +589,7 @@ class CheckInViewModel(
                     }
 
                     if (checkInUi.value.guaranteeCost != 0) {
-                        noteCashFlow += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                        noteCashFlow += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
                     noteCashFlow += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
@@ -615,7 +614,7 @@ class CheckInViewModel(
                     }
 
                     if (checkInUi.value.guaranteeCost != 0) {
-                        noteDebt += " - Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
+                        noteDebt += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
                     noteDebt += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
@@ -632,8 +631,9 @@ class CheckInViewModel(
                     noteAdditionalCost = checkInUi.value.noteAdditionalCost,
                     guaranteeCost = checkInUi.value.guaranteeCost
                 )
+
+                _isCheckInSuccess.value = ValidationResult(false)
             }
-            _isCheckInSuccess.value = ValidationResult(false)
         } catch (e: Exception) {
             _isCheckInSuccess.value = ValidationResult(true, e.message.toString())
         }

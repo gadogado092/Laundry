@@ -1,33 +1,36 @@
 package amat.kelolakost.ui.screen.check_in
 
-import amat.kelolakost.R
-import amat.kelolakost.data.Kost
-import amat.kelolakost.di.Injection
-import amat.kelolakost.ui.common.OnLifecycleEvent
-import amat.kelolakost.ui.common.UiState
-import amat.kelolakost.ui.component.ComboBox
-import amat.kelolakost.ui.screen.kost.AddKostActivity
 import amat.kelolakost.KostAdapter
+import amat.kelolakost.PriceDurationAdapter
+import amat.kelolakost.R
 import amat.kelolakost.TenantAdapter
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.convertDateToDay
 import amat.kelolakost.convertDateToMonth
 import amat.kelolakost.convertDateToYear
 import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.UnitAdapter
+import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.dateToDisplayMidFormat
+import amat.kelolakost.di.Injection
 import amat.kelolakost.generateTextDuration
+import amat.kelolakost.ui.common.OnLifecycleEvent
+import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.BoxPrice
 import amat.kelolakost.ui.component.BoxRectangle
+import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
 import amat.kelolakost.ui.screen.bill.BillActivity
 import amat.kelolakost.ui.screen.invoice.InvoiceActivity
+import amat.kelolakost.ui.screen.kost.AddKostActivity
 import amat.kelolakost.ui.screen.tenant.AddTenantActivity
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
+import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
@@ -480,6 +483,7 @@ fun CheckInScreen(
             }
 
             Text(
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = stringResource(id = R.string.price_and_duration),
                 style = TextStyle(color = FontBlack),
                 fontSize = 16.sp
@@ -659,7 +663,8 @@ fun CheckInScreen(
                         )
                         BoxRectangle(
                             title = currencyFormatterStringViewZero(checkInViewModel.checkInUi.collectAsState().value.debtTenant),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            backgroundColor = ColorRed
                         )
                     }
                     Divider(
