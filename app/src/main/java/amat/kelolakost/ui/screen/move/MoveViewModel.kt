@@ -2,6 +2,9 @@ package amat.kelolakost.ui.screen.move
 
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
+import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.CashFlow
+import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.UnitAdapter
 import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.User
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.math.BigInteger
+import java.util.UUID
 
 class MoveViewModel(
     private val unitRepository: UnitRepository,
@@ -270,7 +274,103 @@ class MoveViewModel(
     }
 
     fun prosesCheckOut() {
+        clearError()
+        viewModelScope.launch {
+            try {
+                viewModelScope.launch {
+                    val cashFlowid = UUID.randomUUID()
+                    var statusIdUnitOld = 1
 
+                    when (moveUi.value.statusAfterCheckOut) {
+                        "Siap Digunakan" -> statusIdUnitOld = 2
+                        "Pembersihan" -> statusIdUnitOld = 3
+                        "Perbaikan" -> statusIdUnitOld = 4
+                    }
+
+                    var creditTenant = CreditTenant(
+                        id = "0",
+                        note = "",
+                        tenantId = moveUi.value.tenantId,
+                        status = 0,
+                        remainingDebt = cleanCurrencyFormatter(moveUi.value.debtTenantMove),
+                        kostId = moveUi.value.kostId,
+                        unitId = moveUi.value.unitIdMove,
+                        createAt = moveUi.value.moveDate,
+                        isDelete = false
+                    )
+
+                    var cashFlow = CashFlow(
+                        id = cashFlowid.toString(),
+                        note = "",
+                        nominal = cleanCurrencyFormatter(moveUi.value.totalPayment).toString(),
+                        type = 0,
+                        creditTenantId = "0",
+                        creditId = "0",
+                        debitId = "0",
+                        unitId = moveUi.value.unitIdMove,
+                        tenantId = moveUi.value.tenantId,
+                        kostId = moveUi.value.kostId,
+                        createAt = moveUi.value.moveDate,
+                        isDelete = false
+                    )
+
+                    if (moveUi.value.moveType == "Downgrade") {
+                        val note =
+                            "Pengembalian dana ke ${moveUi.value.tenantName}, Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
+
+                        cashFlow =
+                            cashFlow.copy(
+                                note = note,
+                                unitId = moveUi.value.unitId,
+                                type = 1,
+                                nominal = cleanCurrencyFormatter(moveUi.value.nominal).toString()
+                            )
+
+                    } else if (moveUi.value.moveType == "Upgrade") {
+
+                        if (moveUi.value.isFullPayment) {
+                            val note =
+                                "Pembayaran Lunas untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove} oleh ${moveUi.value.tenantName}"
+
+                            cashFlow = cashFlow.copy(
+                                note = note,
+                                unitId = moveUi.value.unitIdMove,
+                                type = 0
+                            )
+
+                        } else {
+                            val creditTenantId = UUID.randomUUID().toString()
+                            var note =
+                                "Pembayaran Uang Muka/Dp oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
+                            note += " \nSisa tagihan ${currencyFormatterStringViewZero(moveUi.value.debtTenantMove)}"
+
+                            cashFlow = cashFlow.copy(note = note, creditTenantId = creditTenantId)
+
+                            //NOTE HUTANG
+                            var noteDebt =
+                                "Pembayaran Uang Muka/Dp oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
+                            noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(moveUi.value.debtTenantMove)}"
+                            creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
+
+                        }
+                    }
+
+                    cashFlowRepository.prosesMoveUnit(
+                        cashFlow = cashFlow,
+                        creditTenant = creditTenant,
+                        unitIdOld = moveUi.value.unitId,
+                        statusIdUnitOld = statusIdUnitOld,
+                        noteMaintenanceUnitOld = moveUi.value.noteMaintenance,
+                        moveType = moveUi.value.moveType,
+                        isFullPayment = moveUi.value.isFullPayment
+                    )
+
+                    _isMoveSuccess.value = ValidationResult(false)
+                }
+            } catch (e: Exception) {
+                _isMoveSuccess.value = ValidationResult(true, e.message.toString())
+            }
+        }
     }
 
 

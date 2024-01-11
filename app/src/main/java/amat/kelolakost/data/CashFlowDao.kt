@@ -100,7 +100,7 @@ interface CashFlowDao {
         //update unit
         updateUnit(
             unitId = cashFlow.unitId,
-            tenantId = cashFlow.tenantId,
+            tenantId = "0",
             unitStatusId = unitStatusId,
             noteMaintenance = noteMaintenance
         )
@@ -149,6 +149,62 @@ interface CashFlowDao {
         }
         //insert cashflow
         insert(cashFlow)
+    }
+
+    //MOVE UNIT AREA
+    @Query(
+        "UPDATE Tenant " +
+                "SET unitId=:unitId " +
+                "WHERE id=:tenantId"
+    )
+    suspend fun updateTenantMove(
+        tenantId: String,
+        unitId: String
+    )
+
+    @Transaction
+    suspend fun prosesMoveUnit(
+        cashFlow: CashFlow,
+        creditTenant: CreditTenant,
+        unitIdOld: String,
+        statusIdUnitOld: Int,
+        noteMaintenanceUnitOld: String,
+        moveType: String,
+        isFullPayment: Boolean
+    ) {
+        //update unit old
+        updateUnit(
+            unitId = unitIdOld,
+            tenantId = "0",
+            unitStatusId = statusIdUnitOld,
+            noteMaintenance = noteMaintenanceUnitOld
+        )
+
+        //update unitMove
+        updateUnit(
+            unitId = cashFlow.unitId,
+            tenantId = cashFlow.tenantId,
+            unitStatusId = 1,
+            noteMaintenance = ""
+        )
+        //tenantMoveNew Unit
+        updateTenantMove(
+            cashFlow.tenantId,
+            cashFlow.unitId
+        )
+
+        if (moveType=="Downgrade"){
+            val cashFLowNew = cashFlow.copy(type = 1)
+            insert(cashFLowNew)
+        }else if (moveType=="Upgrade"){
+            val cashFLowNew = cashFlow.copy(type = 0)
+            insert(cashFLowNew)
+            //insert credit tenant if not full payment
+            if (!isFullPayment) {
+                insertCreditTenant(creditTenant)
+            }
+        }
+
     }
 
 }

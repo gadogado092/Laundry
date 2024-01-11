@@ -13,6 +13,7 @@ import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
+import amat.kelolakost.ui.screen.bill.BillActivity
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
@@ -25,6 +26,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -160,11 +162,12 @@ fun MoveScreen(
     if (!moveViewModel.isMoveSuccess.collectAsState().value.isError) {
         Toast.makeText(context, stringResource(id = R.string.success_move_unit), Toast.LENGTH_SHORT)
             .show()
-//        val intent = Intent(context, BillActivity::class.java)
-//        context.startActivity(intent)
-//        val activity = (context as? Activity)
-//        activity?.finish()
-        //TODO Handle buka bill berdsarkan pilihan jenis perpindahan
+        if (moveViewModel.moveUi.collectAsState().value.moveType != "Gratis") {
+            val intent = Intent(context, BillActivity::class.java)
+            context.startActivity(intent)
+        }
+        val activity = (context as? Activity)
+        activity?.finish()
     } else {
         if (moveViewModel.isMoveSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
             Toast.makeText(
@@ -608,11 +611,16 @@ fun showBottomSheetUnit(
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.setText(R.string.location_unit)
     buttonAdd?.setText(R.string.add)
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
 
     buttonAdd?.setOnClickListener {
         val intent = Intent(context, AddUnitActivity::class.java)

@@ -597,7 +597,7 @@ class CheckInViewModel(
                         noteCashFlow += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
-                    noteCashFlow += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
+                    noteCashFlow += " \nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
 
                     cashFlow = cashFlow.copy(note = noteCashFlow)
 
@@ -622,7 +622,7 @@ class CheckInViewModel(
                         noteDebt += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
-                    noteDebt += "\nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
+                    noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
                     creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                 }

@@ -70,6 +70,26 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         )
     }
 
+    suspend fun prosesMoveUnit(
+        cashFlow: CashFlow,
+        creditTenant: CreditTenant,
+        unitIdOld: String,
+        statusIdUnitOld: Int,
+        noteMaintenanceUnitOld: String,
+        moveType: String,
+        isFullPayment: Boolean
+    ) {
+        cashFlowDao.prosesMoveUnit(
+            cashFlow = cashFlow,
+            creditTenant = creditTenant,
+            unitIdOld = unitIdOld,
+            statusIdUnitOld = statusIdUnitOld,
+            noteMaintenanceUnitOld = noteMaintenanceUnitOld,
+            moveType = moveType,
+            isFullPayment = isFullPayment
+        )
+    }
+
     companion object {
         @Volatile
         private var instance: CashFlowRepository? = null

@@ -216,6 +216,7 @@ class ExtendViewModel(
     }
 
     fun prosesExtend() {
+        clearError()
         try {
             viewModelScope.launch {
                 _isExtendSuccess.value = ValidationResult(false)
@@ -297,7 +298,7 @@ class ExtendViewModel(
                         noteCashFlow += " - Diskon ${extendUi.value.discount}"
                     }
 
-                    noteCashFlow += "\nSisa tagihan ${currencyFormatterStringViewZero(extendUi.value.debtTenantExtend)}"
+                    noteCashFlow += " \nSisa tagihan ${currencyFormatterStringViewZero(extendUi.value.debtTenantExtend)}"
 
                     cashFlow = cashFlow.copy(note = noteCashFlow)
 
@@ -318,7 +319,7 @@ class ExtendViewModel(
                         noteDebt += " - Diskon ${extendUi.value.discount}"
                     }
 
-                    noteDebt += "\nSisa tagihan ${currencyFormatterStringViewZero(extendUi.value.debtTenantExtend)}"
+                    noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(extendUi.value.debtTenantExtend)}"
                     creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                 }

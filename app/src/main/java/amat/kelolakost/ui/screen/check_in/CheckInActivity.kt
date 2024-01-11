@@ -784,11 +784,16 @@ fun showBottomSheetTenant(
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.setText(R.string.subtitle_tenant)
     buttonAdd?.setText(R.string.add)
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
 
     buttonAdd?.setOnClickListener {
         val intent = Intent(context, AddTenantActivity::class.java)
@@ -820,11 +825,16 @@ fun showBottomSheetKost(
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.setText(R.string.location_unit)
     buttonAdd?.setText(R.string.add)
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
 
     buttonAdd?.setOnClickListener {
         val intent = Intent(context, AddKostActivity::class.java)
@@ -857,11 +867,16 @@ fun showBottomSheetUnit(
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.setText(R.string.location_unit)
     buttonAdd?.setText(R.string.add)
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
 
     buttonAdd?.setOnClickListener {
         val intent = Intent(context, AddUnitActivity::class.java)
@@ -894,11 +909,16 @@ fun showBottomSheetPriceDuration(
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
     val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
     title?.text = context.getText(R.string.subtitle_select_price)
     buttonAdd?.visibility = View.INVISIBLE
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
 
     val adapter = PriceDurationAdapter {
         checkInViewModel.setPriceDurationSelected(it.price, it.duration)
