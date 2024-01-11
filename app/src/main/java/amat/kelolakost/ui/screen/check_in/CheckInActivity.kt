@@ -103,6 +103,7 @@ class CheckInActivity : ComponentActivity() {
         val kostName = intent.getStringExtra("kostName")
         val unitId = intent.getStringExtra("unitId")
         val unitName = intent.getStringExtra("unitName")
+        val unitTypeName = intent.getStringExtra("unitTypeName")
         val price = intent.getStringExtra("price")
         val duration = intent.getStringExtra("duration")
         val priceGuarantee = intent.getStringExtra("priceGuarantee")
@@ -120,6 +121,7 @@ class CheckInActivity : ComponentActivity() {
                 var priceScreen = ""
                 var durationScreen = ""
                 var priceGuaranteeScreen = ""
+                var unitTypeNameScreen = ""
 
                 if (tenantName != null && tenantId != null) {
                     tenantIdScreen = tenantId
@@ -146,6 +148,10 @@ class CheckInActivity : ComponentActivity() {
                     priceGuaranteeScreen = priceGuarantee
                 }
 
+                if (unitTypeName!=null){
+                    unitTypeNameScreen = unitTypeName
+                }
+
 
                 CheckInScreen(
                     context = context,
@@ -157,7 +163,8 @@ class CheckInActivity : ComponentActivity() {
                     kostName = kostNameScreen,
                     price = priceScreen,
                     duration = durationScreen,
-                    priceGuarantee = priceGuaranteeScreen
+                    priceGuarantee = priceGuaranteeScreen,
+                    unitTypeName = unitTypeNameScreen,
                 )
 
             }
@@ -184,6 +191,7 @@ fun CheckInScreen(
     price: String = "",
     duration: String = "",
     priceGuarantee: String = "",
+    unitTypeName: String = "",
     context: Context
 ) {
     val checkInViewModel: CheckInViewModel =
@@ -212,7 +220,8 @@ fun CheckInScreen(
                     checkInViewModel.setUnitSelected(
                         unitId,
                         unitName,
-                        cleanCurrencyFormatter(priceGuarantee)
+                        cleanCurrencyFormatter(priceGuarantee),
+                        unitTypeName
                     )
                 }
 
@@ -418,7 +427,7 @@ fun CheckInScreen(
             }
             ComboBox(
                 title = stringResource(id = R.string.subtitle_unit),
-                value = checkInViewModel.checkInUi.collectAsState().value.unitName,
+                value = "${checkInViewModel.checkInUi.collectAsState().value.unitName} - ${checkInViewModel.checkInUi.collectAsState().value.unitTypeName}",
                 isError = checkInViewModel.isUnitSelectedValid.collectAsState().value.isError,
                 errorMessage = checkInViewModel.isUnitSelectedValid.collectAsState().value.errorMessage
             ) {
@@ -861,7 +870,7 @@ fun showBottomSheetUnit(
     }
 
     val adapter = amat.kelolakost.UnitAdapter {
-        checkInViewModel.setUnitSelected(it.id, it.name, it.priceGuarantee)
+        checkInViewModel.setUnitSelected(it.id, it.name, it.priceGuarantee, it.unitTypeName)
         bottomSheetDialog.dismiss()
         checkInViewModel.getPriceDuration()
     }

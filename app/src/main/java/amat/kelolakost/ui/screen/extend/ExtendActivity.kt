@@ -17,6 +17,7 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
+import amat.kelolakost.ui.screen.bill.BillActivity
 import amat.kelolakost.ui.screen.invoice.InvoiceActivity
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
@@ -187,8 +188,9 @@ fun ExtendScreen(
             context,
             stringResource(id = R.string.success_extend_rent),
             Toast.LENGTH_SHORT
-        )
-            .show()
+        ).show()
+        val intent = Intent(context, BillActivity::class.java)
+        context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()
     } else {
@@ -247,7 +249,7 @@ fun ExtendScreen(
             ComboBox(
                 modifier = Modifier.padding(bottom = 8.dp),
                 title = stringResource(id = R.string.subtitle_unit),
-                value = extendViewModel.extendUi.collectAsState().value.unitName
+                value = "${extendViewModel.extendUi.collectAsState().value.unitName} - ${extendViewModel.extendUi.collectAsState().value.unitTypeName}"
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),

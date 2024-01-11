@@ -49,7 +49,7 @@ fun UnitItem(
     priceYear: Int,
     priceGuarantee: Int,
     colorLimitCheckOut: Color = FontBlack,
-    onClickCheckIn: (String, String, String, String, String) -> Unit,
+    onClickCheckIn: (String, String, String, String, String, String) -> Unit,
     onClickExtend: (String, String, String) -> Unit,
     onClickCheckOut: (String) -> Unit,
     onClickMoveUnit: (String) -> Unit,
@@ -130,6 +130,7 @@ fun UnitItem(
                 onClickMoveUnit = onClickMoveUnit,
                 onClickFinishRenovation = onClickFinishRenovation,
                 priceGuarantee = priceGuarantee.toString(),
+                unitTypeName = unitTypeName,
                 priceDuration = getPriceDuration(
                     priceDay = priceDay,
                     priceWeek = priceWeek,
@@ -202,7 +203,8 @@ fun BuildIcon(
     unitStatusId: Int,
     priceDuration: PriceDuration,
     priceGuarantee: String,
-    onClickCheckIn: (String, String, String, String, String) -> Unit,
+    unitTypeName: String,
+    onClickCheckIn: (String, String, String, String, String, String) -> Unit,
     onClickExtend: (String, String, String) -> Unit,
     onClickCheckOut: (String) -> Unit,
     onClickMoveUnit: (String) -> Unit,
@@ -217,7 +219,8 @@ fun BuildIcon(
                         unitName,
                         priceDuration.price,
                         priceDuration.duration,
-                        priceGuarantee
+                        priceGuarantee,
+                        unitTypeName,
                     )
                 })
             }

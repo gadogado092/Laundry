@@ -174,7 +174,7 @@ fun CheckOutScreen(
             ComboBox(
                 modifier = Modifier.padding(bottom = 8.dp),
                 title = stringResource(id = R.string.subtitle_unit),
-                value = checkOutViewModel.checkOutUi.collectAsState().value.unitName
+                value = "${checkOutViewModel.checkOutUi.collectAsState().value.unitName} - ${checkOutViewModel.checkOutUi.collectAsState().value.unitTypeName}"
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),

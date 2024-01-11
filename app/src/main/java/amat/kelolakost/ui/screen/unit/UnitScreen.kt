@@ -124,7 +124,7 @@ fun UnitScreen(
                             val intent = Intent(context, UpdateUnitActivity::class.java)
                             intent.putExtra("id", it)
                             context.startActivity(intent)
-                        }, onClickCheckIn = { id, name, price, duration, priceGuarantee ->
+                        }, onClickCheckIn = { id, name, price, duration, priceGuarantee, unitTypeName ->
                             val intent = Intent(context, CheckInActivity::class.java)
                             intent.putExtra("unitId", id)
                             intent.putExtra("unitName", name)
@@ -133,6 +133,7 @@ fun UnitScreen(
                             intent.putExtra("price", price)
                             intent.putExtra("duration", duration)
                             intent.putExtra("priceGuarantee", priceGuarantee)
+                            intent.putExtra("unitTypeName", unitTypeName)
                             context.startActivity(intent)
                         },
                             onClickCheckOut = { id ->
@@ -188,7 +189,7 @@ fun UnitScreen(
 fun ListUnitView(
     listData: List<UnitHome>,
     onItemClick: (String) -> Unit,
-    onClickCheckIn: (String, String, String, String, String) -> Unit,
+    onClickCheckIn: (String, String, String, String, String, String) -> Unit,
     onClickExtend: (String, String, String) -> Unit,
     onClickMove: (String) -> Unit,
     onClickFinishRenovation: (String) -> Unit,

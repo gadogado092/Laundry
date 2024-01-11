@@ -149,11 +149,16 @@ class CheckInViewModel(
         _stateListKost.value = UiState.Error("")
     }
 
-    fun setUnitSelected(id: String, name: String, guaranteeCost: Int) {
+    fun setUnitSelected(id: String, name: String, guaranteeCost: Int, unitTypeName: String) {
         _isUnitSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
         _checkInUi.value =
-            _checkInUi.value.copy(unitId = id, unitName = name, guaranteeCost = guaranteeCost)
+            _checkInUi.value.copy(
+                unitId = id,
+                unitName = name,
+                guaranteeCost = guaranteeCost,
+                unitTypeName = unitTypeName
+            )
         _stateListUnit.value = UiState.Error("")
     }
 
