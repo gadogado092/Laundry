@@ -393,7 +393,7 @@ class MoveViewModel(
 
 }
 
-class MoveViewModelModelFactory(
+class MoveViewModelFactory(
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
     private val userRepository: UserRepository,

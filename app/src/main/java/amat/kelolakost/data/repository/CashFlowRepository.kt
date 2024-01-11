@@ -90,6 +90,10 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         )
     }
 
+    suspend fun prosesFinishMaintenance(cashFlow: CashFlow){
+        cashFlowDao.prosesFinishMaintenance(cashFlow)
+    }
+
     companion object {
         @Volatile
         private var instance: CashFlowRepository? = null

@@ -193,16 +193,34 @@ interface CashFlowDao {
             cashFlow.unitId
         )
 
-        if (moveType=="Downgrade"){
+        if (moveType == "Downgrade") {
             val cashFLowNew = cashFlow.copy(type = 1)
             insert(cashFLowNew)
-        }else if (moveType=="Upgrade"){
+        } else if (moveType == "Upgrade") {
             val cashFLowNew = cashFlow.copy(type = 0)
             insert(cashFLowNew)
             //insert credit tenant if not full payment
             if (!isFullPayment) {
                 insertCreditTenant(creditTenant)
             }
+        }
+
+    }
+
+    @Transaction
+    suspend fun prosesFinishMaintenance(
+        cashFlow: CashFlow,
+    ) {
+        //update unit
+        updateUnit(
+            unitId = cashFlow.unitId,
+            tenantId = "0",
+            unitStatusId = 2,
+            noteMaintenance = ""
+        )
+
+        if (cashFlow.nominal != "0") {
+            insert(cashFlow)
         }
 
     }

@@ -110,7 +110,7 @@ fun MoveScreen(
 
     val moveViewModel: MoveViewModel =
         viewModel(
-            factory = MoveViewModelModelFactory(
+            factory = MoveViewModelFactory(
                 Injection.provideUnitRepository(context),
                 Injection.provideCreditTenantRepository(context),
                 Injection.provideUserRepository(context),

@@ -68,6 +68,7 @@
     <string name="success_add_data">"Tambah data berhasil"</string>
     <string name="success_check_in">"Check In berhasil"</string>
     <string name="success_move_unit">"Pindah Unit/Kamar berhasil"</string>
+    <string name="success_report">"Laporan berhasil"</string>
     <string name="success_check_out">"Check Out berhasil"</string>
     <string name="success_extend_rent">"Perpanjang sewa berhasil"</string>
     <string name="success_update_data">"Update data berhasil"</string>
