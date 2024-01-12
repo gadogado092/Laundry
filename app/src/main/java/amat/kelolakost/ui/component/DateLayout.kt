@@ -71,3 +71,42 @@ fun DateLayout(
         )
     }
 }
+
+@Composable
+fun DateLayout(
+    modifier: Modifier = Modifier,
+    value: String,
+    contentHorizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    isEnable: Boolean = false
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(4.dp),
+        border = if (isEnable) BorderStroke(1.dp, GreenDark) else BorderStroke(
+            1.dp,
+            Color.Gray
+        ),
+        content = {
+            Row(
+                modifier = Modifier.padding(8.dp),
+                horizontalArrangement = contentHorizontalArrangement
+            ) {
+                Image(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "",
+                    colorFilter = if (isEnable) ColorFilter.tint(GreenDark) else ColorFilter.tint(
+                        Color.Gray
+                    )
+                )
+                Text(
+                    text = value,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    style = TextStyle(
+                        color = FontBlack,
+                    )
+                )
+            }
+        }
+    )
+}

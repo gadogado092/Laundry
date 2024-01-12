@@ -3,6 +3,7 @@ package amat.kelolakost.data.repository
 import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CashFlowDao
 import amat.kelolakost.data.CreditTenant
+import amat.kelolakost.data.entity.Sum
 import kotlinx.coroutines.flow.Flow
 
 class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
@@ -90,8 +91,21 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         )
     }
 
-    suspend fun prosesFinishMaintenance(cashFlow: CashFlow){
+    suspend fun prosesFinishMaintenance(cashFlow: CashFlow) {
         cashFlowDao.prosesFinishMaintenance(cashFlow)
+    }
+
+    //CASH FLOW HOME
+    fun getBalanceFlow(): Flow<Sum> {
+        return cashFlowDao.getBalanceFlow()
+    }
+
+    fun getTotalIncomeFlow(startDate: String, endDate: String): Flow <Sum> {
+        return cashFlowDao.getTotalIncomeFlow(startDate, endDate)
+    }
+
+    fun getTotalOutcomeFlow(startDate: String, endDate: String): Flow <Sum> {
+        return cashFlowDao.getTotalOutcomeFlow(startDate, endDate)
     }
 
     companion object {
@@ -105,4 +119,5 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
                 }
             }
     }
+
 }

@@ -37,6 +37,12 @@ fun generateDateTimeNow(): String {
 }
 
 @SuppressLint("SimpleDateFormat")
+fun calenderSelect(date: Date): String {
+    val fmtOut = SimpleDateFormat("yyyy-MM-dd")
+    return fmtOut.format(date)
+}
+
+@SuppressLint("SimpleDateFormat")
 fun generateDateNow(): String {
     val c = Calendar.getInstance()
     val fmtOut = SimpleDateFormat("yyyy-MM-dd")
@@ -277,3 +283,61 @@ fun getLimitDay(dateString: String): String {
         ""
     }
 }
+
+@SuppressLint("SimpleDateFormat")
+fun dateRoomDay(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+    val fmtOut = SimpleDateFormat("dd")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateRoomMonth(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+
+    val fmtOut = SimpleDateFormat("M")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateRoomYear(dateString: String, dayAdd: Int = 0): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val c = Calendar.getInstance()
+    c.time = fmt.parse(dateString) as Date
+    c.add(Calendar.DAY_OF_MONTH, dayAdd)
+    val fmtOut = SimpleDateFormat("yyyy")
+    return fmtOut.format(c.time)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun checkDateRangeValid(dateStart: String, dateEnd: String): Boolean {
+    try {
+        val fmt = SimpleDateFormat("yyyy-MM-dd")
+        val start = fmt.parse(dateStart)
+        val end = fmt.parse(dateEnd)
+        if (start != null) {
+            if (start <= end) {
+                return true
+            }
+        }
+        return false
+    } catch (e: Exception) {
+        return false
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateDialogToRoomFormat(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-M-dd")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("yyyy-MM-dd")
+    return fmtOut.format(date as Date)
+}
+

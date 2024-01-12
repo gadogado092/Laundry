@@ -95,5 +95,6 @@
     <string name="total_debt">Total Hutang</string>
     <string name="add">Tambah</string>
     <string name="subtitle_select_price">"Pilih Harga dan Durasi"</string>
+    <string name="message_date_range_invalid">"Tanggal awal dan akhir tidak sesuai"</string>
     <string name="info_limit">Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya</string>
 </resources>

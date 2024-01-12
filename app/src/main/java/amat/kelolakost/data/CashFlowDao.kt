@@ -1,5 +1,6 @@
 package amat.kelolakost.data
 
+import amat.kelolakost.data.entity.Sum
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -224,5 +225,26 @@ interface CashFlowDao {
         }
 
     }
+
+    //CASH FLOW HOME
+    @Query(
+        "SELECT (SUM (CASE WHEN type='0' THEN nominal ELSE 0 END ) - SUM (CASE WHEN type='1' THEN nominal ELSE 0 END )) AS total " +
+                "FROM cashflow "
+    )
+    fun getBalanceFlow(): Flow<Sum>
+
+    @Query(
+        "SELECT SUM(nominal) AS total " +
+                "FROM cashflow " +
+                "WHERE cashflow.type='0' AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate ORDER BY cashflow.createAt DESC"
+    )
+    fun getTotalIncomeFlow(startDate: String, endDate: String): Flow<Sum>
+
+    @Query(
+        "SELECT SUM(nominal) AS total " +
+                "FROM cashflow " +
+                "WHERE cashflow.type='1' AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate ORDER BY cashflow.createAt DESC"
+    )
+    fun getTotalOutcomeFlow(startDate: String, endDate: String): Flow<Sum>
 
 }

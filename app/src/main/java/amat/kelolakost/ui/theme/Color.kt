@@ -26,3 +26,4 @@ val FontBlackSoft = Color(0xFF5A5A5A)
 
 val ColorRed = Color(0xFFFF0000)
 val ColorYellow = Color(0xFFFFD600)
+val ColorIncome = Color(0xFF398AE5)
