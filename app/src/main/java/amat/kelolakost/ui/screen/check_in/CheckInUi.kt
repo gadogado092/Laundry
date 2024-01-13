@@ -22,6 +22,7 @@ data class CheckInUi(
     val totalPrice: String = "0",
 
     val isFullPayment: Boolean = true,
+    val isCash: Boolean = true,
 
     val downPayment: String = "0",
     val debtTenant: String = "0",

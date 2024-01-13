@@ -87,6 +87,9 @@
     <string name="total_rental_price">Total Biaya Sewa</string>
     <string name="total_payment">Total Pembayaran</string>
     <string name="payment_method">Metode Pembayaran</string>
+    <string name="payment_via">Pembayaran Secara</string>
+    <string name="payment_guarantee_via">Pengembalian Dana Secara</string>
+    <string name="payment_finish_via">Bayar Biaya Secara</string>
     <string name="date_check_in">Tanggal Masuk</string>
     <string name="date_check_out">Tanggal Keluar</string>
     <string name="debt_tenant">Hutang Penyewa</string>

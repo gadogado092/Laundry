@@ -11,6 +11,8 @@ data class CheckOutUi(
     val tenantId: String = "",
     val tenantName: String = "",
 
+    val isCash: Boolean = true,
+
     val kostId: String = "",
     val kostName: String = "",
 

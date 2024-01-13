@@ -14,6 +14,7 @@ import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
 import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.data.repository.UserRepository
+import amat.kelolakost.dateDialogToUniversalFormat
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.generateDateNow
 import amat.kelolakost.generateTextDuration
@@ -76,6 +77,7 @@ class ExtendViewModel(
 
     init {
         getUser()
+        _extendUi.value = extendUi.value.copy(createAt = generateDateNow())
     }
 
     private fun getUser() {
@@ -185,6 +187,12 @@ class ExtendViewModel(
         }
     }
 
+    fun setPaymentDate(value: String) {
+        clearError()
+        _extendUi.value = extendUi.value.copy(createAt = dateDialogToUniversalFormat(value))
+        refreshDataUI()
+    }
+
 
     fun dataIsComplete(): Boolean {
         clearError()
@@ -239,6 +247,7 @@ class ExtendViewModel(
                     id = cashFlowid.toString(),
                     note = "",
                     nominal = cleanCurrencyFormatter(extendUi.value.totalPayment).toString(),
+                    typePayment = if (extendUi.value.isCash) 1 else 0,
                     type = 0,
                     creditTenantId = "0",
                     creditId = "0",
@@ -345,6 +354,11 @@ class ExtendViewModel(
         clearError()
         _extendUi.value = extendUi.value.copy(isFullPayment = value)
         setDownPayment("0")
+    }
+
+    fun setPaymentType(value: Boolean) {
+        clearError()
+        _extendUi.value = extendUi.value.copy(isCash = value)
     }
 
     fun setDownPayment(value: String) {

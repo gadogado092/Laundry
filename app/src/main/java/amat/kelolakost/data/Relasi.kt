@@ -33,6 +33,7 @@ data class UnitDetail(
     val unitStatusId: Int,
 
     val kostId: String,
+    val bookingId: String,
     val kostName: String,
 
     val unitTypeId: String,

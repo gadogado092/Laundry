@@ -25,6 +25,7 @@ data class MoveUi(
     val nominal: String = "",
 
     val isFullPayment: Boolean = true,
+    val isCash: Boolean = true,
     val downPayment: String = "",
     val debtTenantMove: String = "",
     val totalDebtTenant: String = "",

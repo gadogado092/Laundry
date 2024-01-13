@@ -91,6 +91,7 @@ class UpdateUnitViewModel(
                         noteMaintenance = data.noteMaintenance,
                         unitStatusId = data.unitStatusId,
                         tenantId = data.tenantId,
+                        bookingId = data.bookingId,
                         isDelete = data.isDelete
                     )
                 }
@@ -197,6 +198,7 @@ class UpdateUnitViewModel(
                     unitStatusId = unitUi.value.unitStatusId,
                     tenantId = unitUi.value.tenantId,
                     kostId = unitUi.value.kostId,
+                    bookingId = "0",
                     isDelete = unitUi.value.isDelete
                 )
                 updateUnit(unit)

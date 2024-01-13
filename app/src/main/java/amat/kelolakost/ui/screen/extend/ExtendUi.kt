@@ -24,11 +24,14 @@ data class ExtendUi(
 
     val totalPrice: String = "0",
     val isFullPayment: Boolean = true,
+    val isCash: Boolean = true,
 
     val downPayment: String = "0",
     val debtTenantExtend: String = "0",
     val totalDebtTenant: String = "0",
 
     val totalPayment: String = "0",
+
+    val createAt: String = ""
 
 )

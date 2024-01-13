@@ -14,5 +14,6 @@ data class Unit(
     val unitStatusId: Int,
     val tenantId: String,
     val kostId: String,
+    val bookingId: String,
     val isDelete: Boolean
 )

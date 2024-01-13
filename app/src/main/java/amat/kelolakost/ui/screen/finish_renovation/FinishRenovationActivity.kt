@@ -21,7 +21,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,12 +34,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.RadioButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -208,6 +212,53 @@ fun FinishRenovationScreen(
                     .fillMaxWidth(),
                 currencyValue = finishRenovationViewModel.finishRenovationUi.collectAsState().value.costMaintenance,
             )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.payment_finish_via),
+                    style = TextStyle(color = FontBlack),
+                    fontSize = 16.sp
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                finishRenovationViewModel.setPaymentType(true)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (finishRenovationViewModel.finishRenovationUi.collectAsState().value.isCash),
+                            onClick = { finishRenovationViewModel.setPaymentType(true) }
+                        )
+                        Text(
+                            text = "Cash", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                finishRenovationViewModel.setPaymentType(false)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (!finishRenovationViewModel.finishRenovationUi.collectAsState().value.isCash),
+                            onClick = { finishRenovationViewModel.setPaymentType(false) }
+                        )
+                        Text(
+                            text = "Transfer", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
 
             Button(
                 onClick = {

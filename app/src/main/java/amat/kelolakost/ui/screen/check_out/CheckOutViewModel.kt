@@ -100,6 +100,11 @@ class CheckOutViewModel(
         setNoteMaintenance("")
     }
 
+    fun setPaymentType(value: Boolean) {
+        clearError()
+        _checkOutUi.value = checkOutUi.value.copy(isCash = value)
+    }
+
     fun setNoteMaintenance(value: String) {
 
         _checkOutUi.value = checkOutUi.value.copy(noteMaintenance = value)
@@ -142,6 +147,7 @@ class CheckOutViewModel(
                     id = cashFlowid.toString(),
                     note = "",
                     nominal = cleanCurrencyFormatter(checkOutUi.value.priceGuarantee.toString()).toString(),
+                    typePayment = if (checkOutUi.value.isCash) 1 else 0,
                     type = 1,
                     creditTenantId = "0",
                     creditId = "0",

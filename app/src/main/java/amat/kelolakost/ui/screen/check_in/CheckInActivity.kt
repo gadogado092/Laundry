@@ -587,6 +587,50 @@ fun CheckInScreen(
                 thickness = 2.dp
             )
 
+            Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                Text(
+                    text = stringResource(id = R.string.payment_via),
+                    style = TextStyle(color = FontBlack),
+                    fontSize = 16.sp
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                checkInViewModel.setPaymentType(true)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (checkInViewModel.checkInUi.collectAsState().value.isCash),
+                            onClick = { checkInViewModel.setPaymentType(true) }
+                        )
+                        Text(
+                            text = "Cash", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                checkInViewModel.setPaymentType(false)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (!checkInViewModel.checkInUi.collectAsState().value.isCash),
+                            onClick = { checkInViewModel.setPaymentType(false) }
+                        )
+                        Text(
+                            text = "Transfer", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+
             DateLayout(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -597,7 +641,7 @@ fun CheckInScreen(
                 isEnable = true
             )
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                 Text(
                     text = stringResource(id = R.string.payment_method),
                     style = TextStyle(color = FontBlack),

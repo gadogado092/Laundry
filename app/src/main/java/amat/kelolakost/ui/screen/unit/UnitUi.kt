@@ -5,6 +5,7 @@ data class UnitUi(
     val name: String = "",
     val note: String = "",
     val kostId: String = "",
+    val bookingId: String = "",
     val kostName: String = "",
     val unitTypeId: String = "",
     val unitTypeName: String = "",

@@ -8,6 +8,8 @@ data class FinishRenovationUi(
     val unitTypeName: String = "",
     val unitStatusId: Int = 0,
 
+    val isCash: Boolean = true,
+
     val finishDate: String = "",
     val noteMaintenance: String = "",
     val costMaintenance: String = "",

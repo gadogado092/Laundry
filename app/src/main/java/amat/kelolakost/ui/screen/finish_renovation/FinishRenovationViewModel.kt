@@ -96,6 +96,11 @@ class FinishRenovationViewModel(
         _finishRenovationUi.value = finishRenovationUi.value.copy(costMaintenance = valueFormat)
     }
 
+    fun setPaymentType(value: Boolean) {
+        clearError()
+        _finishRenovationUi.value = finishRenovationUi.value.copy(isCash = value)
+    }
+
     fun dataIsComplete(): Boolean {
         clearError()
 
@@ -113,6 +118,7 @@ class FinishRenovationViewModel(
                     id = cashFlowid.toString(),
                     note = "",
                     nominal = cleanCurrencyFormatter(finishRenovationUi.value.costMaintenance).toString(),
+                    typePayment = if (finishRenovationUi.value.isCash) 1 else 0,
                     type = 1,
                     creditTenantId = "0",
                     creditId = "0",

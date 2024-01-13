@@ -174,6 +174,11 @@ class MoveViewModel(
         refreshDataUi()
     }
 
+    fun setPaymentType(value: Boolean) {
+        clearError()
+        _moveUi.value = moveUi.value.copy(isCash = value)
+    }
+
     fun setPaymentMethod(value: Boolean) {
         clearError()
         _moveUi.value = moveUi.value.copy(isFullPayment = value)
@@ -303,6 +308,7 @@ class MoveViewModel(
                         id = cashFlowid.toString(),
                         note = "",
                         nominal = cleanCurrencyFormatter(moveUi.value.totalPayment).toString(),
+                        typePayment = if (moveUi.value.isCash) 1 else 0,
                         type = 0,
                         creditTenantId = "0",
                         creditId = "0",

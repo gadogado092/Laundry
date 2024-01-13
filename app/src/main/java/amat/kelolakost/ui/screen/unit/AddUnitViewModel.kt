@@ -164,6 +164,7 @@ class AddUnitViewModel(
                     unitStatusId = 2,
                     tenantId = "0",
                     kostId = unitUi.value.kostId,
+                    bookingId = "0",
                     isDelete = false
                 )
                 insertUnit(unit)

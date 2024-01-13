@@ -443,6 +443,51 @@ fun MoveScreen(
                     isError = moveViewModel.isNominalValid.collectAsState().value.isError,
                     errorMessage = moveViewModel.isNominalValid.collectAsState().value.errorMessage
                 )
+
+                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Text(
+                        text = stringResource(id = R.string.payment_via),
+                        style = TextStyle(color = FontBlack),
+                        fontSize = 16.sp
+                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    moveViewModel.setPaymentType(true)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (moveViewModel.moveUi.collectAsState().value.isCash),
+                                onClick = { moveViewModel.setPaymentType(true) }
+                            )
+                            Text(
+                                text = "Cash", style = TextStyle(color = FontBlack),
+                                fontSize = 16.sp
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    moveViewModel.setPaymentType(false)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (!moveViewModel.moveUi.collectAsState().value.isCash),
+                                onClick = { moveViewModel.setPaymentType(false) }
+                            )
+                            Text(
+                                text = "Transfer", style = TextStyle(color = FontBlack),
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+                }
+
             }
 
             if (moveViewModel.moveUi.collectAsState().value.moveType == "Upgrade") {
@@ -462,6 +507,51 @@ fun MoveScreen(
                     isError = moveViewModel.isNominalValid.collectAsState().value.isError,
                     errorMessage = moveViewModel.isNominalValid.collectAsState().value.errorMessage
                 )
+
+                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Text(
+                        text = stringResource(id = R.string.payment_via),
+                        style = TextStyle(color = FontBlack),
+                        fontSize = 16.sp
+                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    moveViewModel.setPaymentType(true)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (moveViewModel.moveUi.collectAsState().value.isCash),
+                                onClick = { moveViewModel.setPaymentType(true) }
+                            )
+                            Text(
+                                text = "Cash", style = TextStyle(color = FontBlack),
+                                fontSize = 16.sp
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    moveViewModel.setPaymentType(false)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (!moveViewModel.moveUi.collectAsState().value.isCash),
+                                onClick = { moveViewModel.setPaymentType(false) }
+                            )
+                            Text(
+                                text = "Transfer", style = TextStyle(color = FontBlack),
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+                }
+
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = stringResource(id = R.string.payment_method),

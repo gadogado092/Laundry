@@ -2,6 +2,9 @@ package amat.kelolakost.ui.screen.extend
 
 import amat.kelolakost.PriceDurationAdapter
 import amat.kelolakost.R
+import amat.kelolakost.convertDateToDay
+import amat.kelolakost.convertDateToMonth
+import amat.kelolakost.convertDateToYear
 import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.dateToDisplayMidFormat
@@ -27,11 +30,13 @@ import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import amat.kelolakost.ui.theme.TealGreen
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -429,6 +434,66 @@ fun ExtendScreen(
                 )
             }
 
+            Divider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = GreyLight,
+                thickness = 2.dp
+            )
+
+            Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                Text(
+                    text = stringResource(id = R.string.payment_via),
+                    style = TextStyle(color = FontBlack),
+                    fontSize = 16.sp
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                extendViewModel.setPaymentType(true)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (extendViewModel.extendUi.collectAsState().value.isCash),
+                            onClick = { extendViewModel.setPaymentType(true) }
+                        )
+                        Text(
+                            text = "Cash", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                extendViewModel.setPaymentType(false)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (!extendViewModel.extendUi.collectAsState().value.isCash),
+                            onClick = { extendViewModel.setPaymentType(false) }
+                        )
+                        Text(
+                            text = "Transfer", style = TextStyle(color = FontBlack),
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+
+            DateLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePickerPayment(context, extendViewModel) },
+                title = "Tanggal Pembayaran",
+                value = if (extendViewModel.extendUi.collectAsState().value.createAt.isNotEmpty())
+                    dateToDisplayMidFormat(extendViewModel.extendUi.collectAsState().value.createAt) else "-",
+                isEnable = true
+            )
+
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = stringResource(id = R.string.payment_method),
@@ -654,4 +719,19 @@ fun showBottomSheetPriceDuration(
 
     adapter.setData(data)
     bottomSheetDialog.show()
+}
+
+fun showDatePickerPayment(context: Context, viewModel: ExtendViewModel) {
+    val mYear: Int = convertDateToYear(viewModel.extendUi.value.createAt).toInt()
+    val mMonth: Int = convertDateToMonth(viewModel.extendUi.value.createAt).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.extendUi.value.createAt).toInt()
+
+    val mDatePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, day: Int ->
+            val dateSelected = "$year-${month + 1}-$day"
+            viewModel.setPaymentDate(dateSelected)
+        }, mYear, mMonth, mDay
+    )
+    mDatePickerDialog.show()
 }

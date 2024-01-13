@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.screen.user
 
 import amat.kelolakost.addDateLimitApp
+import amat.kelolakost.data.Booking
 import amat.kelolakost.data.Credit
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.Debit
@@ -11,6 +12,7 @@ import amat.kelolakost.data.UnitStatus
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
+import amat.kelolakost.data.repository.BookingRepository
 import amat.kelolakost.data.repository.CreditRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
 import amat.kelolakost.data.repository.DebitRepository
@@ -41,7 +43,8 @@ class NewUserViewModel(
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
     private val creditRepository: CreditRepository,
-    private val debitRepository: DebitRepository
+    private val debitRepository: DebitRepository,
+    private val bookingRepository: BookingRepository
 ) :
     ViewModel() {
 
@@ -143,6 +146,7 @@ class NewUserViewModel(
     fun setTypeWa(value: String) {
         _user.value = _user.value.copy(typeWa = value)
     }
+
     fun setBankName(value: String) {
         _user.value = _user.value.copy(bankName = value)
     }
@@ -266,6 +270,7 @@ class NewUserViewModel(
                 unitStatusId = 2,
                 tenantId = "0",
                 kostId = "0",
+                bookingId = "0",
                 isDelete = false
             )
             unitRepository.insertUnit(unitDummy)
@@ -308,6 +313,20 @@ class NewUserViewModel(
             )
             debitRepository.insert(debit)
 
+            val booking = Booking(
+                id = "",
+                name = "Kosong",
+                numberPhone = "",
+                note = "",
+                nominal = "",
+                planCheckIn = "2000-10-20",
+                unitId = "0",
+                kostId = "0",
+                createAt = "2000-10-20",
+                isDelete = false
+            )
+            bookingRepository.insert(booking)
+
             userRepository.insertUser(user)
             kostRepository.insertKost(kost)
             val listStatus = listOf(
@@ -336,7 +355,8 @@ class NewUserViewModelFactory(
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
     private val creditRepository: CreditRepository,
-    private val debitRepository: DebitRepository
+    private val debitRepository: DebitRepository,
+    private val bookingRepository: BookingRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -352,7 +372,8 @@ class NewUserViewModelFactory(
                 unitRepository,
                 creditTenantRepository,
                 creditRepository,
-                debitRepository
+                debitRepository,
+                bookingRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

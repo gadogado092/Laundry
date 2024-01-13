@@ -230,6 +230,11 @@ class CheckInViewModel(
         setDownPayment("0")
     }
 
+    fun setPaymentType(value: Boolean) {
+        clearError()
+        _checkInUi.value = _checkInUi.value.copy(isCash = value)
+    }
+
     fun setDownPayment(value: String) {
         clearError()
         _isCheckInSuccess.value = ValidationResult(true, "")
@@ -530,6 +535,7 @@ class CheckInViewModel(
                     id = cashFlowid.toString(),
                     note = "",
                     nominal = cleanCurrencyFormatter(checkInUi.value.totalPayment).toString(),
+                    typePayment = if (checkInUi.value.isCash) 1 else 0,
                     type = 0,
                     creditTenantId = "0",
                     creditId = "0",

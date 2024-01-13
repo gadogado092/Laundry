@@ -60,8 +60,10 @@ interface UnitDao {
     @Query(
         "SELECT Unit.id AS id, Unit.name AS name, Unit.note AS note, Unit.noteMaintenance AS noteMaintenance, Unit.unitStatusId AS unitStatusId, Unit.kostId AS kostId, Unit.unitTypeId AS unitTypeId, Unit.tenantId AS tenantId, Unit.isDelete AS isDelete, " +
                 "Kost.name AS kostName, " +
-                "UnitType.name AS unitTypeName " +
+                "UnitType.name AS unitTypeName, " +
+                "Booking.id AS bookingId " +
                 "FROM Unit " +
+                "LEFT JOIN (SELECT Booking.id FROM Booking) AS Booking ON Unit.bookingId = Booking.id " +
                 "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
                 "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
                 "WHERE Unit.id=:id"
