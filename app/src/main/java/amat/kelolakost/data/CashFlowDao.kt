@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CashFlowDao {
@@ -15,7 +14,7 @@ interface CashFlowDao {
     suspend fun insert(cashFlow: CashFlow)
 
     @Query("SELECT * FROM CashFlow")
-    fun getAllCashFlow(): Flow<List<CashFlow>>
+    fun getAllCashFlow(): List<CashFlow>
 
     @Update
     suspend fun update(cashFlow: CashFlow)
@@ -227,24 +226,31 @@ interface CashFlowDao {
     }
 
     //CASH FLOW HOME
+
+    @Query(
+        "SELECT * " +
+                "FROM cashflow WHERE isDelete=0 AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate ORDER BY cashflow.createAt DESC"
+    )
+    suspend fun getAllCashFlow(startDate: String, endDate: String): List<CashFlow>
+
     @Query(
         "SELECT (SUM (CASE WHEN type='0' THEN nominal ELSE 0 END ) - SUM (CASE WHEN type='1' THEN nominal ELSE 0 END )) AS total " +
-                "FROM cashflow "
+                "FROM cashflow WHERE isDelete=0"
     )
-    fun getBalanceFlow(): Flow<Sum>
+    suspend fun getBalance(): Sum
 
     @Query(
         "SELECT SUM(nominal) AS total " +
                 "FROM cashflow " +
-                "WHERE cashflow.type='0' AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate ORDER BY cashflow.createAt DESC"
+                "WHERE cashflow.type='0' AND isDelete=0 AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate"
     )
-    fun getTotalIncomeFlow(startDate: String, endDate: String): Flow<Sum>
+    suspend fun getTotalIncome(startDate: String, endDate: String): Sum
 
     @Query(
         "SELECT SUM(nominal) AS total " +
                 "FROM cashflow " +
-                "WHERE cashflow.type='1' AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate ORDER BY cashflow.createAt DESC"
+                "WHERE cashflow.type='1' AND isDelete=0 AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate"
     )
-    fun getTotalOutcomeFlow(startDate: String, endDate: String): Flow<Sum>
+    suspend fun getTotalOutcome(startDate: String, endDate: String): Sum
 
 }

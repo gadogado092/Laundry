@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.cash_flow
 import amat.kelolakost.R
 import amat.kelolakost.checkDateRangeValid
 import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.CashFlow
 import amat.kelolakost.dateRoomDay
 import amat.kelolakost.dateRoomMonth
 import amat.kelolakost.dateRoomYear
@@ -11,25 +12,43 @@ import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.CashCard
+import amat.kelolakost.ui.component.CashFlowItem
+import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.DateLayout
+import amat.kelolakost.ui.component.ErrorLayout
+import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.theme.FontBlack
+import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.TealGreen
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,7 +75,9 @@ fun CashFlowScreen(
                 viewModel.getIncome()
                 viewModel.getBalance()
                 viewModel.getOutCome()
+                viewModel.getCashFlow()
             }
+
             else -> { /* other stuff */
             }
         }
@@ -111,6 +132,78 @@ fun CashFlowScreen(
             modifier = Modifier.padding(top = 2.dp),
         )
 
+        Box(
+            modifier = modifier.fillMaxSize()
+        ) {
+
+            viewModel.stateListCashFlow.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        ErrorLayout(errorMessage = uiState.errorMessage) {
+                            viewModel.getCashFlow()
+                        }
+                    }
+
+                    UiState.Loading -> {
+                        LoadingLayout()
+                    }
+
+                    is UiState.Success -> {
+                        ListCashFLow(uiState.data)
+                    }
+                }
+            }
+
+            FloatingActionButton(
+                onClick = {
+                    val intent = Intent(context, AddCashFlowActivity::class.java)
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+                backgroundColor = GreenDark
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    "",
+                    modifier = Modifier.size(30.dp),
+                    tint = Color.White,
+                )
+            }
+
+        }
+
+    }
+}
+
+@Composable
+fun ListCashFLow(listData: List<CashFlow>) {
+    if (listData.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        "Alur Kas"
+                    )
+                )
+            }
+        )
+    } else {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 64.dp)
+        ) {
+            items(listData) { data ->
+                CashFlowItem(
+                    nominal= data.nominal,
+                    typePayment = data.typePayment,
+                    createAt = data.createAt,
+                    type = data.type,
+                    note = data.note
+                )
+            }
+        }
     }
 }
 
@@ -142,7 +235,9 @@ fun ContentBalance(viewModel: CashFlowViewModel) {
 
             is UiState.Success -> {
                 Text(
-                    text = currencyFormatterStringViewZero(uiState.data),
+                    text = if (uiState.data.total == null) "0" else currencyFormatterStringViewZero(
+                        uiState.data.total!!
+                    ),
                     style = TextStyle(fontWeight = FontWeight.Medium)
                 )
             }
@@ -169,7 +264,9 @@ fun ContentTotalIncome(viewModel: CashFlowViewModel) {
             is UiState.Success -> {
                 CashCard(
                     type = 0,
-                    nominal = currencyFormatterStringViewZero(uiState.data),
+                    nominal = if (uiState.data.total == null) "0" else currencyFormatterStringViewZero(
+                        uiState.data.total!!
+                    ),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
@@ -196,7 +293,9 @@ fun ContentTotalOutcome(viewModel: CashFlowViewModel) {
             is UiState.Success -> {
                 CashCard(
                     type = 1,
-                    nominal = currencyFormatterStringViewZero(uiState.data),
+                    nominal = if (uiState.data.total == null) "0" else currencyFormatterStringViewZero(
+                        uiState.data.total!!
+                    ),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }

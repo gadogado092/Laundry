@@ -4,11 +4,10 @@ import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CashFlowDao
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.entity.Sum
-import kotlinx.coroutines.flow.Flow
 
 class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
-    fun getAllCashFlow(): Flow<List<CashFlow>> {
-        return cashFlowDao.getAllCashFlow()
+    suspend fun getAllCashFlow(startDate: String, endDate: String): List<CashFlow> {
+        return cashFlowDao.getAllCashFlow(startDate, endDate)
     }
 
     suspend fun insert(cashFlow: CashFlow) {
@@ -96,16 +95,16 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
     }
 
     //CASH FLOW HOME
-    fun getBalanceFlow(): Flow<Sum> {
-        return cashFlowDao.getBalanceFlow()
+    suspend fun getBalance(): Sum {
+        return cashFlowDao.getBalance()
     }
 
-    fun getTotalIncomeFlow(startDate: String, endDate: String): Flow <Sum> {
-        return cashFlowDao.getTotalIncomeFlow(startDate, endDate)
+    suspend fun getTotalIncome(startDate: String, endDate: String): Sum {
+        return cashFlowDao.getTotalIncome(startDate, endDate)
     }
 
-    fun getTotalOutcomeFlow(startDate: String, endDate: String): Flow <Sum> {
-        return cashFlowDao.getTotalOutcomeFlow(startDate, endDate)
+    suspend fun getTotalOutcome(startDate: String, endDate: String): Sum {
+        return cashFlowDao.getTotalOutcome(startDate, endDate)
     }
 
     companion object {
