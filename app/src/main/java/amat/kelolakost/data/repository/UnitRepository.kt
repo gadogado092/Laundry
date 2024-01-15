@@ -32,6 +32,10 @@ class UnitRepository(private val unitDao: UnitDao) {
         return unitDao.getUnitByKost(kostId, unitStatusId)
     }
 
+    suspend fun getUnitByKost(kostId: String): List<UnitAdapter> {
+        return unitDao.getUnitByKost(kostId)
+    }
+
     suspend fun getPriceUnit(unitId: String): UnitAdapter {
         return unitDao.getPriceUnit(unitId)
     }

@@ -915,7 +915,7 @@ fun showBottomSheetUnit(
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
-    title?.setText(R.string.location_unit)
+    title?.setText(R.string.subtitle_unit)
     buttonAdd?.setText(R.string.add)
 
     if (data.isEmpty()) {
