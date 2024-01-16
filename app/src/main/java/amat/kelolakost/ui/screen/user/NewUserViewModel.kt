@@ -224,7 +224,7 @@ class NewUserViewModel(
                     name = "Tanpa Kost",
                     address = "",
                     note = "",
-                    createAt = "2000-10-20",
+                    createAt = user.createAt,
                     isDelete = false
                 )
             kostRepository.insertKost(kostDummy)
@@ -257,6 +257,7 @@ class NewUserViewModel(
                 noteAdditionalCost = "",
                 guaranteeCost = 0,
                 unitId = "0",
+                createAt = user.createAt,
                 isDelete = false
             )
             tenantRepository.insertTenant(tenantDummy)
@@ -284,7 +285,7 @@ class NewUserViewModel(
                 remainingDebt = 0,
                 kostId = "0",
                 unitId = "0",
-                createAt = "2000-10-20",
+                createAt = user.createAt,
                 isDelete = false
             )
             creditTenantRepository.insert(creditTenant)
@@ -296,7 +297,7 @@ class NewUserViewModel(
                 status = -1,
                 remaining = 0,
                 customerCreditDebitId = "0",
-                createAt = "2000-10-20",
+                createAt = user.createAt,
                 isDelete = false
             )
             creditRepository.insert(credit)
@@ -308,7 +309,7 @@ class NewUserViewModel(
                 status = -1,
                 remaining = 0,
                 customerCreditDebitId = "0",
-                createAt = "2000-10-20",
+                createAt = user.createAt,
                 isDelete = false
             )
             debitRepository.insert(debit)
@@ -319,10 +320,10 @@ class NewUserViewModel(
                 numberPhone = "",
                 note = "",
                 nominal = "",
-                planCheckIn = "2000-10-20",
+                planCheckIn = "",
                 unitId = "0",
                 kostId = "0",
-                createAt = "2000-10-20",
+                createAt = user.createAt,
                 isDelete = false
             )
             bookingRepository.insert(booking)

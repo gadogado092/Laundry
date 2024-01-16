@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.sendWhatsApp
 import amat.kelolakost.ui.navigation.NavigationItem
 import amat.kelolakost.ui.navigation.Screen
+import amat.kelolakost.ui.screen.booking.BookingActivity
 import amat.kelolakost.ui.screen.cash_flow.CashFlowScreen
 import amat.kelolakost.ui.screen.kost.KostScreen
 import amat.kelolakost.ui.screen.other.OtherScreen
@@ -28,13 +29,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.People
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -124,7 +125,8 @@ fun MainScreen(
 
                     },
                     navigateToBooking = {
-
+                        val intent = Intent(context, BookingActivity::class.java)
+                        context.startActivity(intent)
                     },
                     navigateCreditTenant = {
 

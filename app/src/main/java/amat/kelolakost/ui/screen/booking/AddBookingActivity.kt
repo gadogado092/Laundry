@@ -1,24 +1,20 @@
-package amat.kelolakost.ui.screen.cash_flow
+package amat.kelolakost.ui.screen.booking
 
 import amat.kelolakost.KostAdapter
 import amat.kelolakost.R
-import amat.kelolakost.TenantAdapter
 import amat.kelolakost.convertDateToDay
 import amat.kelolakost.convertDateToMonth
 import amat.kelolakost.convertDateToYear
 import amat.kelolakost.data.Kost
-import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.UnitAdapter
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.DateLayout
-import amat.kelolakost.ui.component.InformationBox
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.screen.kost.AddKostActivity
-import amat.kelolakost.ui.screen.tenant.AddTenantActivity
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
@@ -74,13 +70,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class AddCashFlowActivity : ComponentActivity() {
+class AddBookingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                AddCashFlowScreen(context = context)
+                AddBookingScreen(context = context)
             }
         }
 
@@ -93,50 +89,19 @@ class AddCashFlowActivity : ComponentActivity() {
 }
 
 @Composable
-fun AddCashFlowScreen(
+fun AddBookingScreen(
     modifier: Modifier = Modifier,
     context: Context
 ) {
-    val myViewModel: AddCashFlowViewModel =
+
+    val myViewModel: AddBookingViewModel =
         viewModel(
-            factory = AddCashFlowViewModelFactory(
-                Injection.provideTenantRepository(context),
+            factory = AddBookingViewModelFactory(
                 Injection.provideUnitRepository(context),
                 Injection.provideKostRepository(context),
-                Injection.provideCashFlowRepository(context)
+                Injection.provideBookingRepository(context)
             )
         )
-
-    //catch get Tenant result
-    myViewModel.stateListTenant.collectAsState(initial = UiState.Error("")).value.let { uiState ->
-        when (uiState) {
-            is UiState.Error -> {
-                if (uiState.errorMessage.isNotEmpty()) {
-                    Toast.makeText(
-                        context,
-                        uiState.errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            UiState.Loading -> {
-                Toast.makeText(
-                    context,
-                    "Loading Data Penyewa/Tenant",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            is UiState.Success -> {
-                showBottomSheetTenant(
-                    addCashFlowViewModel = myViewModel,
-                    context = context,
-                    uiState.data
-                )
-            }
-        }
-    }
 
     //catch get Kost result
     myViewModel.stateListKost.collectAsState(initial = UiState.Error("")).value.let { uiState ->
@@ -161,7 +126,7 @@ fun AddCashFlowScreen(
 
             is UiState.Success -> {
                 showBottomSheetKost(
-                    addCashFlowViewModel = myViewModel,
+                    addBookingViewModel = myViewModel,
                     context = context,
                     uiState.data
                 )
@@ -192,7 +157,7 @@ fun AddCashFlowScreen(
 
             is UiState.Success -> {
                 showBottomSheetUnit(
-                    addCashFlowViewModel = myViewModel,
+                    addBookingViewModel = myViewModel,
                     context = context,
                     uiState.data
                 )
@@ -201,7 +166,11 @@ fun AddCashFlowScreen(
     }
 
     if (!myViewModel.isProsesSuccess.collectAsState().value.isError) {
-        Toast.makeText(context, stringResource(id = R.string.success_add_data), Toast.LENGTH_SHORT)
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.success_add_booking),
+            Toast.LENGTH_SHORT
+        )
             .show()
         val activity = (context as? Activity)
         activity?.finish()
@@ -221,7 +190,7 @@ fun AddCashFlowScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.add_cash_flow),
+                    text = stringResource(id = R.string.add_booking),
                     color = FontWhite,
                     fontSize = 22.sp
                 )
@@ -248,58 +217,6 @@ fun AddCashFlowScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(id = R.string.type_cash_flow),
-                style = TextStyle(color = FontBlack),
-                fontSize = 16.sp
-            )
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .weight(1F)
-                        .clickable {
-                            myViewModel.setCashFlowType(true)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = (myViewModel.stateUi.collectAsState().value.isCashOut),
-                        onClick = { myViewModel.setCashFlowType(true) }
-                    )
-                    Text(
-                        text = "Keluar", style = TextStyle(color = FontBlack),
-                        fontSize = 16.sp
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .weight(1F)
-                        .clickable {
-                            myViewModel.setCashFlowType(false)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = (!myViewModel.stateUi.collectAsState().value.isCashOut),
-                        onClick = { myViewModel.setCashFlowType(false) }
-                    )
-                    Text(
-                        text = "Masuk", style = TextStyle(color = FontBlack),
-                        fontSize = 16.sp
-                    )
-                }
-            }
-
-            InformationBox(
-                modifier = Modifier.padding(bottom = 8.dp),
-                value = stringResource(id = R.string.info_add_cash_flow)
-            )
-            ComboBox(
-                title = stringResource(id = R.string.subtitle_tenant),
-                value = myViewModel.stateUi.collectAsState().value.tenantName
-            ) {
-                myViewModel.getTenant()
-            }
             ComboBox(
                 title = stringResource(id = R.string.location_unit),
                 value = myViewModel.stateUi.collectAsState().value.kostName,
@@ -310,25 +227,35 @@ fun AddCashFlowScreen(
             }
             ComboBox(
                 title = stringResource(id = R.string.subtitle_unit),
-                value = "${myViewModel.stateUi.collectAsState().value.unitName} - ${myViewModel.stateUi.collectAsState().value.unitTypeName}"
+                value = "${myViewModel.stateUi.collectAsState().value.unitName} - ${myViewModel.stateUi.collectAsState().value.unitTypeName}",
+                isError = myViewModel.isUnitSelectedValid.collectAsState().value.isError,
+                errorMessage = myViewModel.isUnitSelectedValid.collectAsState().value.errorMessage
             ) {
                 myViewModel.getUnit()
             }
-            MyOutlinedTextFieldCurrency(
-                label = "Nominal",
-                value = myViewModel.stateUi.collectAsState().value.nominal.replace(
-                    ".",
-                    ""
-                ),
+            MyOutlinedTextField(
+                label = "Nama Calon Penyewa",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                value = myViewModel.stateUi.collectAsState().value.name,
                 onValueChange = {
-                    myViewModel.setNominal(it)
+                    myViewModel.setName(it)
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth(),
-                isError = myViewModel.isNominalValid.collectAsState().value.isError,
-                errorMessage = myViewModel.isNominalValid.collectAsState().value.errorMessage,
-                currencyValue = myViewModel.stateUi.collectAsState().value.nominal
+                isError = myViewModel.isNameValid.collectAsState().value.isError,
+                errorMessage = myViewModel.isNameValid.collectAsState().value.errorMessage
+            )
+            MyOutlinedTextField(
+                label = "Nomor Handphone",
+                value = myViewModel.stateUi.collectAsState().value.numberPhone,
+                onValueChange = {
+                    myViewModel.setNumberPhone(it)
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                isError = myViewModel.isNumberPhoneValid.collectAsState().value.isError,
+                errorMessage = myViewModel.isNumberPhoneValid.collectAsState().value.errorMessage
             )
             MyOutlinedTextField(
                 label = "Keterangan",
@@ -337,19 +264,16 @@ fun AddCashFlowScreen(
                 onValueChange = {
                     myViewModel.setNote(it)
                 },
-                isError = myViewModel.isNoteValid.collectAsState().value.isError,
-                errorMessage = myViewModel.isNoteValid.collectAsState().value.errorMessage,
                 modifier = Modifier
                     .fillMaxWidth()
             )
-
             DateLayout(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showDatePickerPayment(context, myViewModel) },
-                title = "Tanggal Pembayaran",
-                value = if (myViewModel.stateUi.collectAsState().value.createAt.isNotEmpty())
-                    dateToDisplayMidFormat(myViewModel.stateUi.collectAsState().value.createAt) else "-",
+                    .fillMaxWidth().padding(bottom = 16.dp)
+                    .clickable { showDatePickerPlanCheckIn(context, myViewModel) },
+                title = "Rencana Check-In",
+                value = if (myViewModel.stateUi.collectAsState().value.planCheckIn.isNotEmpty())
+                    dateToDisplayMidFormat(myViewModel.stateUi.collectAsState().value.planCheckIn) else "-",
                 isEnable = true
             )
 
@@ -395,6 +319,22 @@ fun AddCashFlowScreen(
                 }
             }
 
+            MyOutlinedTextFieldCurrency(
+                label = "Nominal Dp/Uang Booking",
+                value = myViewModel.stateUi.collectAsState().value.nominal.replace(
+                    ".",
+                    ""
+                ),
+                onValueChange = {
+                    myViewModel.setNominal(it)
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                isError = myViewModel.isNominalValid.collectAsState().value.isError,
+                errorMessage = myViewModel.isNominalValid.collectAsState().value.errorMessage,
+                currencyValue = myViewModel.stateUi.collectAsState().value.nominal
+            )
             Button(
                 onClick = {
                     if (myViewModel.dataIsComplete()) {
@@ -403,60 +343,40 @@ fun AddCashFlowScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
             ) {
                 Text(text = stringResource(id = R.string.process), color = FontWhite)
             }
 
         }
-
     }
 }
 
-fun showBottomSheetTenant(
-    addCashFlowViewModel: AddCashFlowViewModel,
+private fun showBottomConfirm(
     context: Context,
-    data: List<Tenant>
+    addBookingViewModel: AddBookingViewModel
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
-    bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
-    val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
-    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
-    val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
-    val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
-    title?.setText(R.string.subtitle_tenant)
-    buttonAdd?.setText(R.string.add)
+    val messageString =
+        "Tambah Data Booking?"
 
-    if (data.isEmpty()) {
-        textEmpty?.visibility = View.VISIBLE
-    }
+    message?.text = messageString
 
-    buttonAdd?.setOnClickListener {
-        val intent = Intent(context, AddTenantActivity::class.java)
-        context.startActivity(intent)
+    buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
+        addBookingViewModel.process()
     }
-
-    val adapter = TenantAdapter {
-        addCashFlowViewModel.setTenantSelected(it.id, it.name)
-        bottomSheetDialog.dismiss()
-    }
-
-    with(recyclerView) {
-        this?.setHasFixedSize(true)
-        this?.layoutManager =
-            LinearLayoutManager(context)
-        this?.adapter = adapter
-    }
-
-    adapter.setData(data)
     bottomSheetDialog.show()
+
 }
 
 fun showBottomSheetKost(
-    addCashFlowViewModel: AddCashFlowViewModel,
+    addBookingViewModel: AddBookingViewModel,
     context: Context,
     data: List<Kost>
 ) {
@@ -481,8 +401,9 @@ fun showBottomSheetKost(
     }
 
     val adapter = KostAdapter {
-        addCashFlowViewModel.setKostSelected(it.id, it.name)
+        addBookingViewModel.setKostSelected(it.id, it.name)
         bottomSheetDialog.dismiss()
+        addBookingViewModel.getUnit()
     }
 
     with(recyclerView) {
@@ -497,7 +418,7 @@ fun showBottomSheetKost(
 }
 
 fun showBottomSheetUnit(
-    addCashFlowViewModel: AddCashFlowViewModel,
+    addBookingViewModel: AddBookingViewModel,
     context: Context,
     data: List<UnitAdapter>
 ) {
@@ -522,7 +443,7 @@ fun showBottomSheetUnit(
     }
 
     val adapter = amat.kelolakost.UnitAdapter {
-        addCashFlowViewModel.setUnitSelected(it.id, it.name, it.unitTypeName)
+        addBookingViewModel.setUnitSelected(it.id, it.name, it.unitTypeName)
         bottomSheetDialog.dismiss()
     }
 
@@ -537,39 +458,17 @@ fun showBottomSheetUnit(
     bottomSheetDialog.show()
 }
 
-fun showDatePickerPayment(context: Context, viewModel: AddCashFlowViewModel) {
-    val mYear: Int = convertDateToYear(viewModel.stateUi.value.createAt).toInt()
-    val mMonth: Int = convertDateToMonth(viewModel.stateUi.value.createAt).toInt() - 1
-    val mDay: Int = convertDateToDay(viewModel.stateUi.value.createAt).toInt()
+fun showDatePickerPlanCheckIn(context: Context, viewModel: AddBookingViewModel) {
+    val mYear: Int = convertDateToYear(viewModel.stateUi.value.planCheckIn).toInt()
+    val mMonth: Int = convertDateToMonth(viewModel.stateUi.value.planCheckIn).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.stateUi.value.planCheckIn).toInt()
 
     val mDatePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, day: Int ->
             val dateSelected = "$year-${month + 1}-$day"
-            viewModel.setPaymentDate(dateSelected)
+            viewModel.setPlanCheckIn(dateSelected)
         }, mYear, mMonth, mDay
     )
     mDatePickerDialog.show()
-}
-
-private fun showBottomConfirm(
-    context: Context,
-    addCashFlowViewModel: AddCashFlowViewModel
-) {
-    val bottomSheetDialog = BottomSheetDialog(context)
-    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
-    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
-    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
-
-    val messageString =
-        "Tambah Data Alur Kas?"
-
-    message?.text = messageString
-
-    buttonOk?.setOnClickListener {
-        bottomSheetDialog.dismiss()
-        addCashFlowViewModel.process()
-    }
-    bottomSheetDialog.show()
-
 }

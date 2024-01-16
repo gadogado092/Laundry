@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.tenant
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.TenantRepository
+import amat.kelolakost.generateDateNow
 import amat.kelolakost.isEmailValid
 import amat.kelolakost.isNumberPhoneValid
 import androidx.lifecycle.ViewModel
@@ -147,6 +148,7 @@ class AddTenantViewModel(private val tenantRepository: TenantRepository) : ViewM
                     guaranteeCost = 0,
                     additionalCost = 0,
                     noteAdditionalCost = "",
+                    createAt = generateDateNow(),
                     isDelete = false
                 )
                 insertTenant(tenant)

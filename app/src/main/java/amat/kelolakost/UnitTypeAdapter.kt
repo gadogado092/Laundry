@@ -49,10 +49,8 @@ class UnitTypeAdapter(
         fun bind(item: UnitType) {
             with(binding) {
                 textName.text = item.name
-                textPriceGuarantee.text = itemView.context.getString(
-                    R.string.price_guarantee,
-                    currencyFormatterStringViewZero(item.priceGuarantee.toString())
-                )
+                textPriceGuarantee.text = "Uang Deposit/Jaminan ${currencyFormatterStringViewZero(item.priceGuarantee.toString())}"
+
             }
         }
 

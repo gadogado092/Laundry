@@ -133,7 +133,7 @@ fun CashFlowScreen(
         )
 
         Box(
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
 
             viewModel.stateListCashFlow.collectAsState(initial = UiState.Loading).value.let { uiState ->

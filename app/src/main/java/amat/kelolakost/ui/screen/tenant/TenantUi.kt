@@ -13,5 +13,6 @@ data class TenantUi(
     val guaranteeCost: Int = 0,
     val additionalCost: Int = 0,
     val noteAdditionalCost: String = "",
+    val createAt: String = "",
     val isDelete: Boolean = false
 )

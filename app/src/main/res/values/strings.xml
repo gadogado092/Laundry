@@ -28,6 +28,7 @@
     <string name="invoice">Invoice Penagihan</string>
     <string name="bill">Bukti Pembayaran</string>
     <string name="add_cash_flow">Tambah Alur Kas</string>
+    <string name="add_booking">Booking Unit/Kamar</string>
     <string name="info_add_cash_flow">Silahkan pilih penyewa, kost atau kamar jika alur kas terkait dengan salah satu, semuanya atau tidak memilih apapun</string>
     <string name="booking">Booking Unit/Kamar</string>
     <string name="extend_rent">Perpanjang Sewa</string>
@@ -68,6 +69,7 @@
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">Tambah data berhasil</string>
+    <string name="success_add_booking">Tambah Booking berhasil</string>
     <string name="success_check_in">Check In berhasil</string>
     <string name="success_move_unit">Pindah Unit/Kamar berhasil</string>
     <string name="success_report">Laporan berhasil</string>

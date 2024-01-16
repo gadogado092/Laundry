@@ -74,6 +74,7 @@ class UpdateTenantViewModel(private val tenantRepository: TenantRepository) : Vi
                             guaranteeCost = data.guaranteeCost,
                             additionalCost = data.additionalCost,
                             noteAdditionalCost = data.noteAdditionalCost,
+                            createAt = data.createAt,
                             isDelete = data.isDelete
                         )
                 }
@@ -183,6 +184,7 @@ class UpdateTenantViewModel(private val tenantRepository: TenantRepository) : Vi
                 guaranteeCost = _tenantUi.value.guaranteeCost,
                 additionalCost = _tenantUi.value.additionalCost,
                 noteAdditionalCost = _tenantUi.value.noteAdditionalCost,
+                createAt = _tenantUi.value.createAt,
                 isDelete = _tenantUi.value.isDelete
             )
             updateTenant(tenant)

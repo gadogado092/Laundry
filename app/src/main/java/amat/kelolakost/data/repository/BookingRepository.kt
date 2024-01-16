@@ -2,6 +2,7 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Booking
 import amat.kelolakost.data.BookingDao
+import amat.kelolakost.data.CashFlow
 import kotlinx.coroutines.flow.Flow
 
 class BookingRepository(private val bookingDao: BookingDao) {
@@ -15,6 +16,10 @@ class BookingRepository(private val bookingDao: BookingDao) {
 
     suspend fun update(booking: Booking) {
         bookingDao.update(booking)
+    }
+
+    suspend fun addBooking(booking: Booking, cashFlow: CashFlow) {
+        bookingDao.addBooking(booking, cashFlow)
     }
 
     companion object {
