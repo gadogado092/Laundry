@@ -315,7 +315,7 @@ class NewUserViewModel(
             debitRepository.insert(debit)
 
             val booking = Booking(
-                id = "",
+                id = "0",
                 name = "Kosong",
                 numberPhone = "",
                 note = "",

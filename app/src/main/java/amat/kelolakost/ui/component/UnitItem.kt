@@ -58,7 +58,7 @@ fun UnitItem(
     Column(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,

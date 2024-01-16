@@ -66,3 +66,13 @@ data class UnitAdapter(
     val priceYear: Int,
     val priceGuarantee: Int,
 )
+
+data class BookingHome(
+    val id: String,
+    val name: String,
+    val numberPhone: String,
+    val planCheckIn: String,
+    val unitName: String,
+    val unitTypeName: String,
+    val kostName: String
+)

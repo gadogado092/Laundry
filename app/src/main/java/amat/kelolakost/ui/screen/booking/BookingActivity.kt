@@ -1,6 +1,14 @@
 package amat.kelolakost.ui.screen.booking
 
 import amat.kelolakost.R
+import amat.kelolakost.data.BookingHome
+import amat.kelolakost.dateToDisplayMidFormat
+import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.UiState
+import amat.kelolakost.ui.component.BookingItem
+import amat.kelolakost.ui.component.CenterLayout
+import amat.kelolakost.ui.component.ErrorLayout
+import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -12,9 +20,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,6 +35,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class BookingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +71,9 @@ fun BookingScreen(
     context: Context,
     modifier: Modifier = Modifier
 ) {
+    val myViewModel: BookingViewModel =
+        viewModel(factory = BookingViewModelFactory(Injection.provideBookingRepository(context)))
+
     Column(modifier = modifier) {
         TopAppBar(
             title = {
@@ -84,26 +100,26 @@ fun BookingScreen(
             }
         )
 
-        Box (
+        Box(
             modifier = Modifier.fillMaxSize()
-        ){
-//            viewModel.stateListCashFlow.collectAsState(initial = UiState.Loading).value.let { uiState ->
-//                when (uiState) {
-//                    is UiState.Error -> {
-//                        ErrorLayout(errorMessage = uiState.errorMessage) {
-//                            viewModel.getCashFlow()
-//                        }
-//                    }
-//
-//                    UiState.Loading -> {
-//                        LoadingLayout()
-//                    }
-//
-//                    is UiState.Success -> {
-//                        ListCashFLow(uiState.data)
-//                    }
-//                }
-//            }
+        ) {
+            myViewModel.stateListBooking.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        ErrorLayout(errorMessage = uiState.errorMessage) {
+                            myViewModel.getAllBooking()
+                        }
+                    }
+
+                    UiState.Loading -> {
+                        LoadingLayout()
+                    }
+
+                    is UiState.Success -> {
+                        ListBookingView(uiState.data)
+                    }
+                }
+            }
 
             FloatingActionButton(
                 onClick = {
@@ -124,5 +140,42 @@ fun BookingScreen(
             }
         }
 
+    }
+}
+
+@Composable
+fun ListBookingView(listBooking: List<BookingHome>) {
+    if (listBooking.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        "Booking"
+                    )
+                )
+            }
+        )
+    } else {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 64.dp)
+        ) {
+            items(listBooking) { data ->
+                BookingItem(
+                    id = data.id,
+                    unitName = data.unitName,
+                    numberPhone = data.numberPhone,
+                    name = data.name,
+                    unitTypeName = data.unitTypeName,
+                    planCheckIn = dateToDisplayMidFormat(data.planCheckIn),
+                    onClickCheckIn = {
+
+                    },
+                    onClickCancel = {
+
+                    }
+                )
+            }
+        }
     }
 }

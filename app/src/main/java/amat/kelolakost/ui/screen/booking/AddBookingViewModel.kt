@@ -122,7 +122,7 @@ class AddBookingViewModel(
         viewModelScope.launch {
             _stateListUnit.value = UiState.Loading
             try {
-                val data = unitRepository.getUnitByKost(
+                val data = unitRepository.getUnitAvailableBooking(
                     kostId = stateUi.value.kostId
                 )
                 _stateListUnit.value = UiState.Success(data)
@@ -246,8 +246,8 @@ class AddBookingViewModel(
                 )
 
                 val note =
-                    "Pembayaran Booking kost ${stateUi.value.kostName} untuk ${stateUi.value.unitName}-${stateUi.value.unitTypeName}" +
-                            "oleh ${stateUi.value.name}-${stateUi.value.numberPhone}"
+                    "Pembayaran Booking pada kost ${stateUi.value.kostName} untuk unit ${stateUi.value.unitName}-${stateUi.value.unitTypeName} " +
+                            "Oleh ${stateUi.value.name}(${stateUi.value.numberPhone})"
                 val cashFlow = CashFlow(
                     id = UUID.randomUUID().toString(),
                     note = note,

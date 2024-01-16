@@ -2,11 +2,12 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Booking
 import amat.kelolakost.data.BookingDao
+import amat.kelolakost.data.BookingHome
 import amat.kelolakost.data.CashFlow
 import kotlinx.coroutines.flow.Flow
 
 class BookingRepository(private val bookingDao: BookingDao) {
-    fun getAllUser(): Flow<List<Booking>> {
+    fun getAllBooking(): Flow<List<BookingHome>> {
         return bookingDao.getAllBooking()
     }
 

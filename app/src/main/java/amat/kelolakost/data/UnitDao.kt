@@ -105,6 +105,16 @@ interface UnitDao {
                 "UnitType.name AS unitTypeName, UnitType.priceDay AS priceDay, UnitType.priceWeek AS priceWeek, UnitType.priceMonth AS priceMonth, UnitType.priceThreeMonth AS priceThreeMonth, UnitType.priceSixMonth AS priceSixMonth, UnitType.priceYear AS priceYear, UnitType.priceGuarantee AS priceGuarantee " +
                 "FROM Unit " +
                 "LEFT JOIN (SELECT UnitType.id, UnitType.name, UnitType.priceDay, UnitType.priceWeek, UnitType.priceMonth, UnitType.priceThreeMonth, UnitType.priceSixMonth, UnitType.priceYear, UnitType.priceGuarantee FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
+                "WHERE Unit.isDelete=0 AND Unit.id!=0 AND Unit.kostId=:kostId AND Unit.bookingId=0 " +
+                "ORDER BY name ASC"
+    )
+    suspend fun getUnitAvailableBooking(kostId: String): List<UnitAdapter>
+
+    @Query(
+        "SELECT Unit.id AS id, Unit.name AS name, " +
+                "UnitType.name AS unitTypeName, UnitType.priceDay AS priceDay, UnitType.priceWeek AS priceWeek, UnitType.priceMonth AS priceMonth, UnitType.priceThreeMonth AS priceThreeMonth, UnitType.priceSixMonth AS priceSixMonth, UnitType.priceYear AS priceYear, UnitType.priceGuarantee AS priceGuarantee " +
+                "FROM Unit " +
+                "LEFT JOIN (SELECT UnitType.id, UnitType.name, UnitType.priceDay, UnitType.priceWeek, UnitType.priceMonth, UnitType.priceThreeMonth, UnitType.priceSixMonth, UnitType.priceYear, UnitType.priceGuarantee FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
                 "WHERE Unit.isDelete=0 AND Unit.id=:unitId " +
                 "ORDER BY name ASC"
     )

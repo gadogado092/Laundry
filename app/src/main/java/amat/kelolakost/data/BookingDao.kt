@@ -16,8 +16,14 @@ interface BookingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cashFlow: CashFlow)
 
-    @Query("SELECT * FROM Booking")
-    fun getAllBooking(): Flow<List<Booking>>
+    @Query("SELECT Booking.id AS id, Booking.name AS name, Booking.numberPhone AS numberPhone, Booking.planCheckIn AS planCheckIn, " +
+            "Unit.name AS unitName, UnitType.name AS unitTypeName, kost.name AS kostName " +
+            "FROM Booking " +
+            "LEFT JOIN (SELECT Unit.id, Unit.unitTypeId, Unit.kostId, Unit.name FROM Unit) AS Unit ON Booking.unitId = Unit.id " +
+            "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
+            "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
+            "WHERE Booking.isDelete=0 AND Booking.id!=0 ORDER BY Booking.planCheckIn DESC")
+    fun getAllBooking(): Flow<List<BookingHome>>
 
     @Update
     suspend fun update(booking: Booking)
