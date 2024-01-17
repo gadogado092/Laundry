@@ -119,8 +119,7 @@ fun SubBooking(
             colorFilter = ColorFilter.tint(color = TealGreen)
         )
         Text(
-            text = title, style = TextStyle(fontSize = 16.sp), maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            text = title, style = TextStyle(fontSize = 16.sp)
         )
     }
 }

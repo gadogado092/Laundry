@@ -47,6 +47,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhoneIphone
+import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -67,7 +68,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class CancelBooking : ComponentActivity() {
+class CancelBookingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -217,6 +218,10 @@ fun ContentCancelBooking(myViewModel: CancelBookingViewModel, context: Context) 
                 SubBooking(Icons.Default.Person, data.name)
                 SubBooking(Icons.Default.PhoneIphone, data.numberPhone)
                 SubBooking(Icons.Default.House, data.kostName)
+                SubBooking(
+                    Icons.Outlined.StickyNote2,
+                    data.note.ifEmpty { "-" }
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween

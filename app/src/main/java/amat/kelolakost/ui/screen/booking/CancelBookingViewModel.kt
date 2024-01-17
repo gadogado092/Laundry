@@ -51,6 +51,7 @@ class CancelBookingViewModel(private val repository: BookingRepository) : ViewMo
                     unitName = data.unitName,
                     unitTypeName = data.unitTypeName,
                     name = data.name,
+                    note = data.note,
                     numberPhone = data.numberPhone,
                     nominalBooking = data.nominal,
                     planCheckIn = data.planCheckIn

@@ -173,12 +173,14 @@ fun ListBookingView(
                     unitTypeName = data.unitTypeName,
                     planCheckIn = dateToDisplayMidFormat(data.planCheckIn),
                     onClickCancel = {
-                        val intent = Intent(context, CancelBooking::class.java)
+                        val intent = Intent(context, CancelBookingActivity::class.java)
                         intent.putExtra("bookingId", data.id)
                         context.startActivity(intent)
                     },
                     onClickCheckIn = {
-
+                        val intent = Intent(context, CheckInBookingActivity::class.java)
+                        intent.putExtra("bookingId", data.id)
+                        context.startActivity(intent)
                     }
                 )
             }

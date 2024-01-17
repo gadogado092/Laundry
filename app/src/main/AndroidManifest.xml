@@ -142,7 +142,12 @@
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.screen.booking.CancelBooking"
+            android:name=".ui.screen.booking.CancelBookingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.booking.CheckInBookingActivity"
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />

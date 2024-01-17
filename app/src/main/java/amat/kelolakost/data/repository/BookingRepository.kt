@@ -4,6 +4,7 @@ import amat.kelolakost.data.Booking
 import amat.kelolakost.data.BookingDao
 import amat.kelolakost.data.BookingHome
 import amat.kelolakost.data.CashFlow
+import amat.kelolakost.data.CreditTenant
 import kotlinx.coroutines.flow.Flow
 
 class BookingRepository(private val bookingDao: BookingDao) {
@@ -29,6 +30,28 @@ class BookingRepository(private val bookingDao: BookingDao) {
 
     suspend fun cancelBooking(cashFlow: CashFlow, bookingId: String) {
         bookingDao.cancelBooking(cashFlow, bookingId)
+    }
+
+    suspend fun prosesCheckIn(
+        cashFlow: CashFlow,
+        creditTenant: CreditTenant,
+        isFullPayment: Boolean,
+        limitCheckOut: String,
+        additionalCost: Int,
+        noteAdditionalCost: String,
+        guaranteeCost: Int,
+        bookingId: String
+    ) {
+        bookingDao.prosesCheckIn(
+            cashFlow = cashFlow,
+            creditTenant = creditTenant,
+            isFullPayment = isFullPayment,
+            limitCheckOut = limitCheckOut,
+            additionalCost = additionalCost,
+            noteAdditionalCost = noteAdditionalCost,
+            guaranteeCost = guaranteeCost,
+            bookingId = bookingId
+        )
     }
 
     companion object {

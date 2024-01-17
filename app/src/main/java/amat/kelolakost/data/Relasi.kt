@@ -71,10 +71,13 @@ data class BookingHome(
     val id: String,
     val name: String,
     val numberPhone: String,
+    val note: String,
     val planCheckIn: String,
     val unitId: String,
     val unitName: String,
+    val unitStatusId: String,
     val unitTypeName: String,
+    val priceGuarantee: String,
     val kostId: String,
     val kostName: String,
     val nominal: String
