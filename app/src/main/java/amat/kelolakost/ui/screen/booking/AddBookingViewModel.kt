@@ -28,16 +28,16 @@ class AddBookingViewModel(
     private val bookingRepository: BookingRepository
 ) : ViewModel() {
 
-    private val _stateUi: MutableStateFlow<AddBookingUi> =
+    private val _stateUi: MutableStateFlow<BookingUi> =
         MutableStateFlow(
-            AddBookingUi(
+            BookingUi(
                 kostId = "0",
                 kostName = "Pilih Kost",
                 unitId = "0",
                 unitName = "Pilih Unit/Kamar"
             )
         )
-    val stateUi: StateFlow<AddBookingUi>
+    val stateUi: StateFlow<BookingUi>
         get() = _stateUi
 
     private val _stateListKost: MutableStateFlow<UiState<List<Kost>>> =

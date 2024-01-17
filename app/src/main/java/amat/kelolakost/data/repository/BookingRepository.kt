@@ -11,6 +11,10 @@ class BookingRepository(private val bookingDao: BookingDao) {
         return bookingDao.getAllBooking()
     }
 
+    suspend fun getBooking(bookingId: String): BookingHome {
+        return bookingDao.getBooking(bookingId)
+    }
+
     suspend fun insert(booking: Booking) {
         bookingDao.insert(booking)
     }
@@ -21,6 +25,10 @@ class BookingRepository(private val bookingDao: BookingDao) {
 
     suspend fun addBooking(booking: Booking, cashFlow: CashFlow) {
         bookingDao.addBooking(booking, cashFlow)
+    }
+
+    suspend fun cancelBooking(cashFlow: CashFlow, bookingId: String) {
+        bookingDao.cancelBooking(cashFlow, bookingId)
     }
 
     companion object {

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.runtime.Composable
@@ -34,11 +35,12 @@ fun BookingItem(
     id: String,
     unitName: String,
     unitTypeName: String,
+    kostName: String,
     name: String,
     numberPhone: String,
     planCheckIn: String,
     onClickCheckIn: (String) -> Unit,
-    onClickCancel: (String) -> Unit,
+    onClickCancel: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
@@ -69,6 +71,7 @@ fun BookingItem(
             Column(modifier = Modifier.weight(1F)) {
                 SubBooking(Icons.Default.Person, name)
                 SubBooking(Icons.Default.PhoneIphone, numberPhone)
+                SubBooking(Icons.Default.House, kostName)
             }
             Text(
                 modifier = Modifier.padding(end = 8.dp),
@@ -83,7 +86,7 @@ fun BookingItem(
             IconBooking(
                 id = R.drawable.baseline_close_24,
                 modifier = Modifier
-                    .clickable { onClickCheckIn(id) }
+                    .clickable { onClickCancel(id) }
                     .align(Alignment.Bottom)
             )
             IconBooking(

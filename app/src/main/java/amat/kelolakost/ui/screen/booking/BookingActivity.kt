@@ -116,7 +116,7 @@ fun BookingScreen(
                     }
 
                     is UiState.Success -> {
-                        ListBookingView(uiState.data)
+                        ListBookingView(uiState.data, context)
                     }
                 }
             }
@@ -144,7 +144,10 @@ fun BookingScreen(
 }
 
 @Composable
-fun ListBookingView(listBooking: List<BookingHome>) {
+fun ListBookingView(
+    listBooking: List<BookingHome>,
+    context: Context
+) {
     if (listBooking.isEmpty()) {
         CenterLayout(
             content = {
@@ -165,13 +168,16 @@ fun ListBookingView(listBooking: List<BookingHome>) {
                     id = data.id,
                     unitName = data.unitName,
                     numberPhone = data.numberPhone,
+                    kostName = data.kostName,
                     name = data.name,
                     unitTypeName = data.unitTypeName,
                     planCheckIn = dateToDisplayMidFormat(data.planCheckIn),
-                    onClickCheckIn = {
-
-                    },
                     onClickCancel = {
+                        val intent = Intent(context, CancelBooking::class.java)
+                        intent.putExtra("bookingId", data.id)
+                        context.startActivity(intent)
+                    },
+                    onClickCheckIn = {
 
                     }
                 )

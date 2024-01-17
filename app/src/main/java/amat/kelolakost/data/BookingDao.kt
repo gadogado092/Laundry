@@ -1,5 +1,6 @@
 package amat.kelolakost.data
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -16,14 +17,27 @@ interface BookingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cashFlow: CashFlow)
 
-    @Query("SELECT Booking.id AS id, Booking.name AS name, Booking.numberPhone AS numberPhone, Booking.planCheckIn AS planCheckIn, " +
-            "Unit.name AS unitName, UnitType.name AS unitTypeName, kost.name AS kostName " +
-            "FROM Booking " +
-            "LEFT JOIN (SELECT Unit.id, Unit.unitTypeId, Unit.kostId, Unit.name FROM Unit) AS Unit ON Booking.unitId = Unit.id " +
-            "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
-            "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
-            "WHERE Booking.isDelete=0 AND Booking.id!=0 ORDER BY Booking.planCheckIn DESC")
+    @Query(
+        "SELECT Booking.id AS id, Booking.name AS name, Booking.numberPhone AS numberPhone, Booking.planCheckIn AS planCheckIn, Booking.nominal AS nominal, " +
+                "Unit.id AS unitId, Unit.name AS unitName, UnitType.name AS unitTypeName, Kost.id AS kostId, kost.name AS kostName " +
+                "FROM Booking " +
+                "LEFT JOIN (SELECT Unit.id, Unit.unitTypeId, Unit.kostId, Unit.name FROM Unit) AS Unit ON Booking.unitId = Unit.id " +
+                "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
+                "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
+                "WHERE Booking.isDelete=0 AND Booking.id!=0 ORDER BY Booking.planCheckIn DESC"
+    )
     fun getAllBooking(): Flow<List<BookingHome>>
+
+    @Query(
+        "SELECT Booking.id AS id, Booking.name AS name, Booking.numberPhone AS numberPhone, Booking.planCheckIn AS planCheckIn, Booking.nominal AS nominal, " +
+                "Unit.id AS unitId, Unit.name AS unitName, UnitType.name AS unitTypeName, Kost.id AS kostId, kost.name AS kostName " +
+                "FROM Booking " +
+                "LEFT JOIN (SELECT Unit.id, Unit.unitTypeId, Unit.kostId, Unit.name FROM Unit) AS Unit ON Booking.unitId = Unit.id " +
+                "LEFT JOIN (SELECT UnitType.id, UnitType.name FROM UnitType) AS UnitType ON Unit.unitTypeId = UnitType.id " +
+                "LEFT JOIN (SELECT Kost.id, Kost.name FROM Kost) AS Kost ON Unit.kostId = Kost.id " +
+                "WHERE Booking.isDelete=0 AND Booking.id=:bookingId ORDER BY Booking.planCheckIn DESC"
+    )
+    suspend fun getBooking(bookingId: String): BookingHome
 
     @Update
     suspend fun update(booking: Booking)
@@ -40,6 +54,24 @@ interface BookingDao {
         insert(cashFlow)
         //insert booking
         insert(booking)
+    }
+
+    //CANCEL Booking
+    @Query("UPDATE Booking SET isDelete=1 WHERE id=:bookingId")
+    suspend fun deleteBooking(bookingId: String)
+
+    @Transaction
+    suspend fun cancelBooking(cashFlow: CashFlow, bookingId: String) {
+        //update unit
+        updateUnitBookingId(unitId = cashFlow.unitId, bookingId = "0")
+        //delete data booking
+        deleteBooking(bookingId)
+        Log.d("saya cancel","ada ${cashFlow.nominal}")
+
+        //insert cash flow return booking
+        if (cashFlow.nominal != "0") {
+            insert(cashFlow)
+        }
     }
 
 }

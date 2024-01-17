@@ -38,3 +38,16 @@ fun InformationBox(
         }
     )
 }
+
+@Composable
+fun InformationBox(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(4.dp),
+        border = BorderStroke(1.dp, LightGreen),
+        content = content
+    )
+}
