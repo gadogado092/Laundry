@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.Text
@@ -29,7 +30,8 @@ fun DetailCreditTenantItem(
     note: String,
     date: String,
     onClickHistory: (String) -> Unit,
-    onClickPay: (String) -> Unit
+    onClickPay: (String) -> Unit,
+    onClickRemove: (String) -> Unit
 ) {
     Column(modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
@@ -64,15 +66,27 @@ fun DetailCreditTenantItem(
                     }
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
-            ItemIconText(
-                imageVector = Icons.Default.Payment,
-                title = "Bayar",
-                modifier = Modifier
-                    .clickable {
-                        onClickPay(creditTenantId)
-                    }
-                    .padding(end = 16.dp, top = 4.dp, bottom = 4.dp, start = 8.dp)
-            )
+            if (remainingDebt.isEmpty() || remainingDebt == "0") {
+                ItemIconText(
+                    imageVector = Icons.Default.DeleteOutline,
+                    title = "Hapus",
+                    modifier = Modifier
+                        .clickable {
+                            onClickRemove(creditTenantId)
+                        }
+                        .padding(end = 16.dp, top = 4.dp, bottom = 4.dp, start = 8.dp)
+                )
+            } else {
+                ItemIconText(
+                    imageVector = Icons.Default.Payment,
+                    title = "Bayar",
+                    modifier = Modifier
+                        .clickable {
+                            onClickPay(creditTenantId)
+                        }
+                        .padding(end = 16.dp, top = 4.dp, bottom = 4.dp, start = 8.dp)
+                )
+            }
         }
         Divider(
             color = GreyLight,

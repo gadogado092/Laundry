@@ -89,3 +89,14 @@ data class CreditTenantHome(
     val total: String,
     val tenantNumberPhone: String
 )
+
+data class CreditTenantDetail(
+    val creditTenantId: String,
+    val note: String,
+    val tenantId: String,
+    val unitId: String,
+    val kostId: String,
+    val tenantName: String,
+    val remainingDebt: Int,
+    val tenantNumberPhone: String
+)

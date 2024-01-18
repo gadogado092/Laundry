@@ -312,7 +312,7 @@ class ExtendViewModel(
 
                     //NOTE HUTANG
                     var noteDebt =
-                        "Pembayaran Uang Muka/DP untuk Perpanjang unit ${extendUi.value.unitName}-${extendUi.value.kostName} oleh ${extendUi.value.tenantName}, " +
+                        "Hutang untuk Perpanjang unit ${extendUi.value.unitName}-${extendUi.value.kostName} oleh ${extendUi.value.tenantName}, " +
                                 "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
                                     currencyFormatterStringViewZero(
                                         totalPriceUnit.toString()
@@ -327,7 +327,6 @@ class ExtendViewModel(
                         noteDebt += " - Diskon ${extendUi.value.discount}"
                     }
 
-                    noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(extendUi.value.debtTenantExtend)}"
                     creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                 }

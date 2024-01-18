@@ -132,7 +132,7 @@ fun CreditTenantScreen(
                     }
 
                     is UiState.Success -> {
-                        ListCreditTenantView(uiState.data, onItemClick = {tenantId->
+                        ListCreditTenantView(uiState.data, onItemClick = { tenantId ->
                             val intent = Intent(context, DetailCreditTenantActivity::class.java)
                             intent.putExtra("tenantId", tenantId)
                             context.startActivity(intent)
@@ -167,7 +167,11 @@ fun ListCreditTenantView(data: List<CreditTenantHome>, onItemClick: (String) -> 
                         onItemClick(item.tenantId)
                     },
                     tenantName = item.tenantName,
-                    total = currencyFormatterStringViewZero(item.total),
+                    total = if (item.total.isEmpty() || item.total == "0") "Lunas" else "Total Hutang ${
+                        currencyFormatterStringViewZero(
+                            item.total
+                        )
+                    }",
                     tenantNumberPhone = item.tenantNumberPhone
                 )
             }

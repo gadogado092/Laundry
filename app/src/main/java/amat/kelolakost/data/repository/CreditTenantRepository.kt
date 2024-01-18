@@ -1,7 +1,9 @@
 package amat.kelolakost.data.repository
 
+import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.CreditTenantDao
+import amat.kelolakost.data.CreditTenantDetail
 import amat.kelolakost.data.CreditTenantHome
 
 class CreditTenantRepository(private val creditTenantDao: CreditTenantDao) {
@@ -17,6 +19,10 @@ class CreditTenantRepository(private val creditTenantDao: CreditTenantDao) {
         return creditTenantDao.getAllCreditTenant(tenantId)
     }
 
+    suspend fun getDetailCreditTenant(creditTenantId: String): CreditTenantDetail {
+        return creditTenantDao.getDetailCreditTenant(creditTenantId)
+    }
+
     suspend fun insert(creditTenant: CreditTenant) {
         creditTenantDao.insert(creditTenant)
     }
@@ -27,6 +33,14 @@ class CreditTenantRepository(private val creditTenantDao: CreditTenantDao) {
 
     suspend fun getTotalDebt(tenantId: String): Int {
         return creditTenantDao.getTotalDebt(tenantId)
+    }
+
+    suspend fun payDebt(cashFlow: CashFlow, remainingDebt: Int) {
+        creditTenantDao.payDebt(cashFlow, remainingDebt)
+    }
+
+    suspend fun deleteCreditTenant(creditTenantId: String) {
+        creditTenantDao.deleteCreditTenant(creditTenantId)
     }
 
     companion object {

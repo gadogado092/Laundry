@@ -2,6 +2,7 @@ package amat.kelolakost.ui.screen.credit_tenant
 
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.CreditTenantHome
+import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.CreditTenantRepository
 import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,12 @@ class DetailCreditTenantViewModel(private val repository: CreditTenantRepository
         MutableStateFlow(UiState.Loading)
     val stateListCreditTenant: StateFlow<UiState<List<CreditTenant>>>
         get() = _stateListCreditTenant
+
+    private val _isProsesDeleteSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesDeleteSuccess: StateFlow<ValidationResult>
+        get() = _isProsesDeleteSuccess
 
     fun getCreditTenant(tenantId: String) {
         _stateCreditTenant.value = UiState.Loading
@@ -46,6 +53,18 @@ class DetailCreditTenantViewModel(private val repository: CreditTenantRepository
             _stateListCreditTenant.value = UiState.Error(e.message.toString())
         }
 
+    }
+
+    fun delete(creditTenantId: String) {
+        _isProsesDeleteSuccess.value = ValidationResult(true, "")
+        try {
+            viewModelScope.launch {
+                repository.deleteCreditTenant(creditTenantId)
+                _isProsesDeleteSuccess.value = ValidationResult(false)
+            }
+        } catch (e: Exception) {
+            _isProsesDeleteSuccess.value = ValidationResult(true, e.message.toString())
+        }
     }
 
 }

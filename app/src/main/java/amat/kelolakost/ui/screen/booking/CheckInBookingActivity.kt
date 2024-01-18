@@ -823,9 +823,9 @@ fun showDatePicker(context: Context, viewModel: CheckInBookingViewModel) {
 }
 
 fun showDatePickerPayment(context: Context, viewModel: CheckInBookingViewModel) {
-    val mYear: Int = convertDateToYear(viewModel.checkInUi.value.checkInDate).toInt()
-    val mMonth: Int = convertDateToMonth(viewModel.checkInUi.value.checkInDate).toInt() - 1
-    val mDay: Int = convertDateToDay(viewModel.checkInUi.value.checkInDate).toInt()
+    val mYear: Int = convertDateToYear(viewModel.checkInUi.value.createAt).toInt()
+    val mMonth: Int = convertDateToMonth(viewModel.checkInUi.value.createAt).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.checkInUi.value.createAt).toInt()
 
     val mDatePickerDialog = DatePickerDialog(
         context,

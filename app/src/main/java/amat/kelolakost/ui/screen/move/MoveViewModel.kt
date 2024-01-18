@@ -352,9 +352,8 @@ class MoveViewModel(
                             cashFlow = cashFlow.copy(note = note, creditTenantId = creditTenantId)
 
                             //NOTE HUTANG
-                            var noteDebt =
-                                "Pembayaran Uang Muka/Dp oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
-                            noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(moveUi.value.debtTenantMove)}"
+                            val noteDebt =
+                                "Hutang oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
                             creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                         }

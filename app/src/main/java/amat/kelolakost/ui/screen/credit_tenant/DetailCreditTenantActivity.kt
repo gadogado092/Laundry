@@ -21,6 +21,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -47,6 +50,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class DetailCreditTenantActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +102,27 @@ fun DetailCreditTenantScreen(
             else -> {
 
             }
+        }
+    }
+
+    if (!myViewModel.isProsesDeleteSuccess.collectAsState().value.isError) {
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.success_delete_payment_debt),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        if (tenantId != null) {
+            myViewModel.getAllCreditTenant(tenantId)
+        }
+    } else {
+        if (myViewModel.isProsesDeleteSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                myViewModel.isProsesDeleteSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
@@ -200,7 +225,11 @@ fun ContentHeaderCreditTenant(
                             val intent = Intent(context, PaymentCreditTenantActivity::class.java)
                             intent.putExtra("creditTenantId", creditTenantId)
                             context.startActivity(intent)
-                        })
+                        },
+                        onClickRemove = {creditTenantId->
+                            showBottomConfirm(context, myViewModel, creditTenantId)
+                        }
+                    )
                 }
             }
 
@@ -211,7 +240,8 @@ fun ContentHeaderCreditTenant(
 @Composable
 fun ListCreditTenant(
     data: List<CreditTenant>, onClickHistory: (String) -> Unit,
-    onClickPay: (String) -> Unit
+    onClickPay: (String) -> Unit,
+    onClickRemove: (String) -> Unit
 ) {
     if (data.isEmpty()) {
         CenterLayout(
@@ -233,9 +263,33 @@ fun ListCreditTenant(
                     note = item.note,
                     date = if (item.createAt.isEmpty()) "" else dateToDisplayMidFormat(item.createAt),
                     onClickHistory = onClickHistory,
-                    onClickPay = onClickPay
+                    onClickPay = onClickPay,
+                    onClickRemove = onClickRemove
                 )
             }
         }
     }
+}
+
+private fun showBottomConfirm(
+    context: Context,
+    detailCreditTenantViewModel: DetailCreditTenantViewModel,
+    creditTenantId:String,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Hapus Hutang Penyewa?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        detailCreditTenantViewModel.delete(creditTenantId)
+    }
+    bottomSheetDialog.show()
+
 }

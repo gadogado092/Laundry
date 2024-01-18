@@ -43,6 +43,7 @@
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
     <string name="title_credit_tenant">Piutang Tenant/Penyewa</string>
     <string name="title_detail_credit_tenant">Detail Piutang Penyewa</string>
+    <string name="payment_detail_credit_tenant">Bayar Piutang Penyewa</string>
     <string name="title_history_credit_tenant">Riwayat Pembayaran Piutang</string>
     <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
     <string name="title_debt_credit_tenant">Hutang Piutang</string>
@@ -74,6 +75,8 @@
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">Tambah data berhasil</string>
     <string name="success_add_booking">Tambah Booking berhasil</string>
+    <string name="success_payment_debt">Pembayaran Hutang berhasil</string>
+    <string name="success_delete_payment_debt">Hapus Hutang berhasil</string>
     <string name="success_cancel_booking">Batalkan Booking berhasil</string>
     <string name="success_check_in">Check In berhasil</string>
     <string name="success_move_unit">Pindah Unit/Kamar berhasil</string>

@@ -608,7 +608,7 @@ class CheckInViewModel(
 
                     //NOTE HUTANG
                     var noteDebt =
-                        "Pembayaran Uang Muka/DP untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
+                        "Hutang untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
                                 "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
                                     currencyFormatterStringViewZero(
                                         totalPriceUnit.toString()
@@ -627,7 +627,6 @@ class CheckInViewModel(
                         noteDebt += " + Uang Jaminan ${currencyFormatterStringViewZero(checkInUi.value.guaranteeCost.toString())}"
                     }
 
-                    noteDebt += " \nSisa tagihan ${currencyFormatterStringViewZero(checkInUi.value.debtTenant)}"
                     creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                 }
