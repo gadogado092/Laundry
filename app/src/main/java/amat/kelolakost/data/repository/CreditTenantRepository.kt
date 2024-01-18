@@ -2,11 +2,19 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.CreditTenantDao
-import kotlinx.coroutines.flow.Flow
+import amat.kelolakost.data.CreditTenantHome
 
 class CreditTenantRepository(private val creditTenantDao: CreditTenantDao) {
-    fun getAllCreditTenant(): Flow<List<CreditTenant>> {
+    suspend fun getAllCreditTenant(): List<CreditTenantHome> {
         return creditTenantDao.getAllCreditTenant()
+    }
+
+    suspend fun getCreditTenant(tenantId: String): CreditTenantHome {
+        return creditTenantDao.getCreditTenant(tenantId)
+    }
+
+    suspend fun getAllCreditTenant(tenantId: String): List<CreditTenant> {
+        return creditTenantDao.getAllCreditTenant(tenantId)
     }
 
     suspend fun insert(creditTenant: CreditTenant) {

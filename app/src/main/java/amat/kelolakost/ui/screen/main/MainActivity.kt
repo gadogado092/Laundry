@@ -6,6 +6,7 @@ import amat.kelolakost.ui.navigation.NavigationItem
 import amat.kelolakost.ui.navigation.Screen
 import amat.kelolakost.ui.screen.booking.BookingActivity
 import amat.kelolakost.ui.screen.cash_flow.CashFlowScreen
+import amat.kelolakost.ui.screen.credit_tenant.CreditTenantActivity
 import amat.kelolakost.ui.screen.kost.KostScreen
 import amat.kelolakost.ui.screen.other.OtherScreen
 import amat.kelolakost.ui.screen.tenant.TenantScreen
@@ -129,7 +130,8 @@ fun MainScreen(
                         context.startActivity(intent)
                     },
                     navigateCreditTenant = {
-
+                        val intent = Intent(context, CreditTenantActivity::class.java)
+                        context.startActivity(intent)
                     },
                     navigateToDebtCredit = {
 

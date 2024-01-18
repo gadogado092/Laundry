@@ -281,7 +281,6 @@ class NewUserViewModel(
                 id = "0",
                 note = "Kosong",
                 tenantId = "0",
-                status = -1,
                 remainingDebt = 0,
                 kostId = "0",
                 unitId = "0",

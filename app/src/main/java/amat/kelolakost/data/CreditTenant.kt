@@ -9,8 +9,6 @@ data class CreditTenant(
     val id: String,
     val note: String,
     val tenantId: String,
-    //type 0=belum 1=lunas
-    val status: Int,
     val remainingDebt: Int,
     val kostId: String,
     val unitId: String,

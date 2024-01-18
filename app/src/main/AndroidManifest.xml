@@ -151,6 +151,27 @@
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.credit_tenant.CreditTenantActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.credit_tenant.DetailCreditTenantActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.credit_tenant.PaymentCreditTenantActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.credit_tenant.HistoryCreditTenantActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
+
 
     </application>
 

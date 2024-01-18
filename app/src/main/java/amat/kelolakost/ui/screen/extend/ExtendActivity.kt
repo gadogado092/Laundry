@@ -21,7 +21,6 @@ import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
 import amat.kelolakost.ui.screen.bill.BillActivity
-import amat.kelolakost.ui.screen.invoice.InvoiceActivity
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
@@ -629,18 +628,18 @@ fun ExtendScreen(
                 Text(text = stringResource(id = R.string.process), color = FontWhite)
             }
 
-            Button(
-                onClick = {
-                    val intent = Intent(context, InvoiceActivity::class.java)
-                    context.startActivity(intent)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = GreyLight)
-            ) {
-                Text(text = stringResource(id = R.string.invoice), color = FontBlack)
-            }
+//            Button(
+//                onClick = {
+//                    val intent = Intent(context, InvoiceActivity::class.java)
+//                    context.startActivity(intent)
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 16.dp),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = GreyLight)
+//            ) {
+//                Text(text = stringResource(id = R.string.invoice), color = FontBlack)
+//            }
 
 
         }

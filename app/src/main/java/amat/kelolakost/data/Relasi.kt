@@ -82,3 +82,10 @@ data class BookingHome(
     val kostName: String,
     val nominal: String
 )
+
+data class CreditTenantHome(
+    val tenantId: String,
+    val tenantName: String,
+    val total: String,
+    val tenantNumberPhone: String
+)

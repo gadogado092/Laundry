@@ -22,6 +22,7 @@
 
     <string name="location_unit">Lokasi Kamar/Unit</string>
     <string name="subtitle_tenant">Penyewa/Tenant</string>
+    <string name="subtitle_number_phone">Nomor Telepon</string>
     <string name="subtitle_unit">Kamar/Unit</string>
     <string name="subtitle_unit_move">Kamar/Unit Tujuan</string>
     <string name="process">PROSES</string>
@@ -41,6 +42,7 @@
     <string name="title_booking">Booking</string>
     <string name="subtitle_booking">Lihat data booking Unit/Kamar</string>
     <string name="title_credit_tenant">Piutang Tenant/Penyewa</string>
+    <string name="title_detail_credit_tenant">Detail Piutang Penyewa</string>
     <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
     <string name="title_debt_credit_tenant">Hutang Piutang</string>
     <string name="subtitle_debt_credit_tenant">Kelola data hutang dan piutang</string>

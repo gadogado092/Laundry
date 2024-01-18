@@ -235,7 +235,6 @@ class ExtendViewModel(
                     id = "0",
                     note = "",
                     tenantId = extendUi.value.tenantId,
-                    status = 0,
                     remainingDebt = cleanCurrencyFormatter(extendUi.value.debtTenantExtend),
                     kostId = extendUi.value.kostId,
                     unitId = extendUi.value.unitId,

@@ -296,7 +296,6 @@ class MoveViewModel(
                         id = "0",
                         note = "",
                         tenantId = moveUi.value.tenantId,
-                        status = 0,
                         remainingDebt = cleanCurrencyFormatter(moveUi.value.debtTenantMove),
                         kostId = moveUi.value.kostId,
                         unitId = moveUi.value.unitIdMove,

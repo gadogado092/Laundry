@@ -424,7 +424,6 @@ class CheckInBookingViewModel(
                     id = "0",
                     note = "",
                     tenantId = checkInUi.value.tenantId,
-                    status = 0,
                     remainingDebt = cleanCurrencyFormatter(checkInUi.value.debtTenant),
                     kostId = checkInUi.value.kostId,
                     unitId = checkInUi.value.unitId,
