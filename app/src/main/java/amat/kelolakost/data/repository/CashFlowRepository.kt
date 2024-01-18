@@ -10,6 +10,10 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         return cashFlowDao.getAllCashFlow(startDate, endDate)
     }
 
+    suspend fun getCreditTenantHistory(creditTenantId: String): List<CashFlow> {
+        return cashFlowDao.getCreditTenantHistory(creditTenantId = creditTenantId)
+    }
+
     suspend fun insert(cashFlow: CashFlow) {
         cashFlowDao.insert(cashFlow)
     }

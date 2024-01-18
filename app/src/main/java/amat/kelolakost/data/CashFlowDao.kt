@@ -13,8 +13,9 @@ interface CashFlowDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cashFlow: CashFlow)
 
-    @Query("SELECT * FROM CashFlow")
-    fun getAllCashFlow(): List<CashFlow>
+    @Query("SELECT * FROM CashFlow " +
+            "WHERE isDelete=0 AND creditTenantId=:creditTenantId")
+    suspend fun getCreditTenantHistory(creditTenantId:String): List<CashFlow>
 
     @Update
     suspend fun update(cashFlow: CashFlow)

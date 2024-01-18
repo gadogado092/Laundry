@@ -93,12 +93,17 @@ fun generateTextDuration(type: String, valueAdd: Int): String {
 
 @SuppressLint("SimpleDateFormat")
 fun dateToDisplayMidFormat(dateString: String): String {
-    val fmt = SimpleDateFormat("yyyy-MM-dd")
-    val date = fmt.parse(dateString)
+    return try {
+        val fmt = SimpleDateFormat("yyyy-MM-dd")
+        val date = fmt.parse(dateString)
 
-    val fmtOut = SimpleDateFormat("dd MMM yyyy")
-    return fmtOut.format(date)
+        val fmtOut = SimpleDateFormat("dd MMM yyyy")
+        fmtOut.format(date)
+    } catch (e: Exception) {
+        dateString
+    }
 }
+
 @SuppressLint("SimpleDateFormat")
 fun dateToDisplayDayMonth(dateString: String): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd")
@@ -243,6 +248,7 @@ fun generateLimitText(checkOutDate: String?): String {
         return "Batas $checkOutDate"
     }
 }
+
 @SuppressLint("SimpleDateFormat")
 fun generateLimitColor(checkOutDate: String?): Color {
     return try {

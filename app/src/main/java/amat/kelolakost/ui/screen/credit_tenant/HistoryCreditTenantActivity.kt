@@ -1,6 +1,16 @@
 package amat.kelolakost.ui.screen.credit_tenant
 
 import amat.kelolakost.R
+import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.CashFlow
+import amat.kelolakost.dateToDisplayMidFormat
+import amat.kelolakost.di.Injection
+import amat.kelolakost.ui.common.OnLifecycleEvent
+import amat.kelolakost.ui.common.UiState
+import amat.kelolakost.ui.component.CashFlowItem
+import amat.kelolakost.ui.component.CenterLayout
+import amat.kelolakost.ui.component.ErrorLayout
+import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -10,6 +20,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
@@ -17,22 +30,30 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class HistoryCreditTenantActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        val creditTenantId = intent.getStringExtra("creditTenantId")
+
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                HistoryCreditTenantScreen(context=context)
+                HistoryCreditTenantScreen(context = context, creditTenantId = creditTenantId)
             }
         }
 
@@ -48,15 +69,41 @@ class HistoryCreditTenantActivity : ComponentActivity() {
 fun HistoryCreditTenantScreen(
     modifier: Modifier = Modifier,
     context: Context,
+    creditTenantId: String?,
 ) {
+
+    val myViewModel: HistoryCreditTenantViewModel =
+        viewModel(
+            factory = HistoryCreditTenantViewModelFactory(
+                Injection.provideCashFlowRepository(
+                    context
+                )
+            )
+        )
+
+    OnLifecycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                if (creditTenantId != null) {
+                    myViewModel.getCreditTenantHistory(creditTenantId)
+                }
+            }
+
+            else -> {
+
+            }
+
+        }
+    }
+
     //START UI
     Column(modifier = modifier) {
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.title_detail_credit_tenant),
+                    text = stringResource(id = R.string.title_history_credit_tenant),
                     color = FontWhite,
-                    fontSize = 22.sp
+                    fontSize = 20.sp
                 )
             },
             backgroundColor = GreenDark,
@@ -75,5 +122,52 @@ fun HistoryCreditTenantScreen(
                 }
             }
         )
+
+        myViewModel.stateListCashFlow.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            when (uiState) {
+                is UiState.Error -> {
+                    ErrorLayout(errorMessage = uiState.errorMessage) {
+                        if (creditTenantId != null) {
+                            myViewModel.getCreditTenantHistory(creditTenantId)
+                        }
+                    }
+                }
+
+                UiState.Loading -> LoadingLayout()
+                is UiState.Success -> {
+                    ListHistory(uiState.data)
+                }
+            }
+
+        }
+
+    }
+}
+
+@Composable
+fun ListHistory(data: List<CashFlow>) {
+    if (data.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        "Riwayat"
+                    )
+                )
+            }
+        )
+    } else {
+        LazyColumn(contentPadding = PaddingValues(bottom = 8.dp)) {
+            items(data) { item ->
+                CashFlowItem(
+                    nominal = currencyFormatterStringViewZero(item.nominal),
+                    typePayment = item.typePayment,
+                    createAt = dateToDisplayMidFormat(item.createAt),
+                    type = item.type,
+                    note = item.note
+                )
+            }
+        }
     }
 }

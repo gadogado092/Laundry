@@ -19,6 +19,7 @@ import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -139,7 +140,7 @@ fun DetailCreditTenantScreen(
 
                 UiState.Loading -> LoadingLayout()
                 is UiState.Success -> {
-                    ContentHeaderCreditTenant(uiState.data, myViewModel)
+                    ContentHeaderCreditTenant(context, uiState.data, myViewModel)
                 }
             }
 
@@ -149,7 +150,11 @@ fun DetailCreditTenantScreen(
 }
 
 @Composable
-fun ContentHeaderCreditTenant(data: CreditTenantHome, myViewModel: DetailCreditTenantViewModel) {
+fun ContentHeaderCreditTenant(
+    context: Context,
+    data: CreditTenantHome,
+    myViewModel: DetailCreditTenantViewModel
+) {
     if (data.tenantId.isEmpty()) {
         Text(
             text = stringResource(
@@ -185,7 +190,17 @@ fun ContentHeaderCreditTenant(data: CreditTenantHome, myViewModel: DetailCreditT
 
                 UiState.Loading -> LoadingLayout()
                 is UiState.Success -> {
-                    ListCreditTenant(uiState.data, onClickHistory = {}, onClickPay = {})
+                    ListCreditTenant(uiState.data,
+                        onClickHistory = { creditTenantId ->
+                            val intent = Intent(context, HistoryCreditTenantActivity::class.java)
+                            intent.putExtra("creditTenantId", creditTenantId)
+                            context.startActivity(intent)
+                        },
+                        onClickPay = { creditTenantId ->
+                            val intent = Intent(context, PaymentCreditTenantActivity::class.java)
+                            intent.putExtra("creditTenantId", creditTenantId)
+                            context.startActivity(intent)
+                        })
                 }
             }
 
