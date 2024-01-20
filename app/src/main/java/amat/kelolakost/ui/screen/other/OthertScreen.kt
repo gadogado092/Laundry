@@ -114,7 +114,7 @@ fun OtherScreen(
         )
         OtherMenuItem(
             Icons.Default.Reorder,
-            stringResource(id = R.string.title_debt_credit_tenant),
+            stringResource(id = R.string.title_debt_credit),
             stringResource(id = R.string.subtitle_debt_credit_tenant),
             modifier = Modifier
                 .clickable {

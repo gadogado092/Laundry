@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         User::class, Kost::class, UnitStatus::class, UnitType::class, Unit::class, Tenant::class, CashFlow::class,
-        Booking::class, Credit::class, CreditTenant::class, CustomerCreditDebit::class, Debit::class
+        Booking::class, CreditTenant::class, CreditDebit::class, CustomerCreditDebit::class
     ],
     version = 1
 )
@@ -21,10 +21,9 @@ abstract class KelolaKostRoomDatabase : RoomDatabase() {
     abstract fun tenantDao(): TenantDao
     abstract fun bookingDao(): BookingDao
     abstract fun cashFlowDao(): CashFlowDao
-    abstract fun creditDao(): CreditDao
+    abstract fun creditDao(): CreditDebitDao
     abstract fun creditTenantDao(): CreditTenantDao
     abstract fun customerCreditDebitDao(): CustomerCreditDebitDao
-    abstract fun debitDao(): DebitDao
 
     companion object {
         @Volatile

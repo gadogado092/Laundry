@@ -75,8 +75,7 @@ fun NewUserScreen() {
                 Injection.provideTenantRepository(context),
                 Injection.provideUnitRepository(context),
                 Injection.provideCreditTenantRepository(context),
-                Injection.provideCreditRepository(context),
-                Injection.provideDebitRepository(context),
+                Injection.provideCreditDebitRepository(context),
                 Injection.provideBookingRepository(context)
             )
         )

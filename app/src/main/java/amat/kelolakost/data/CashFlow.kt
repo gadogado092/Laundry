@@ -14,8 +14,7 @@ data class CashFlow(
     //type 0=in 1=out
     val type: Int,
     val creditTenantId: String,
-    val creditId: String,
-    val debitId: String,
+    val creditDebitId: String,
     val unitId: String,
     val tenantId: String,
     val kostId: String,

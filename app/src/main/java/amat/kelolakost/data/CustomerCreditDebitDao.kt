@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerCreditDebitDao {
@@ -13,7 +12,7 @@ interface CustomerCreditDebitDao {
     suspend fun insert(customerCreditDebit: CustomerCreditDebit)
 
     @Query("SELECT * FROM CustomerCreditDebit")
-    fun getAllCustomerCreditDebit(): Flow<List<CustomerCreditDebit>>
+    suspend fun getAllCustomerCreditDebit(): List<CustomerCreditDebit>
 
     @Update
     suspend fun update(customerCreditDebit: CustomerCreditDebit)

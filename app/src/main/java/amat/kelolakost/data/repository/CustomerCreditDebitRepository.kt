@@ -2,10 +2,9 @@ package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.CustomerCreditDebit
 import amat.kelolakost.data.CustomerCreditDebitDao
-import kotlinx.coroutines.flow.Flow
 
 class CustomerCreditDebitRepository(private val customerCreditDebitDao: CustomerCreditDebitDao) {
-    fun getAllCustomerCreditDebit(): Flow<List<CustomerCreditDebit>> {
+    suspend fun getAllCustomerCreditDebit(): List<CustomerCreditDebit> {
         return customerCreditDebitDao.getAllCustomerCreditDebit()
     }
 

@@ -3,10 +3,9 @@ package amat.kelolakost.di
 import amat.kelolakost.data.KelolaKostRoomDatabase
 import amat.kelolakost.data.repository.BookingRepository
 import amat.kelolakost.data.repository.CashFlowRepository
-import amat.kelolakost.data.repository.CreditRepository
+import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
 import amat.kelolakost.data.repository.CustomerCreditDebitRepository
-import amat.kelolakost.data.repository.DebitRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
@@ -64,8 +63,8 @@ object Injection {
         )
     }
 
-    fun provideCreditRepository(context: Context): CreditRepository {
-        return CreditRepository.getInstance(
+    fun provideCreditDebitRepository(context: Context): CreditDebitRepository {
+        return CreditDebitRepository.getInstance(
             KelolaKostRoomDatabase.getDatabase(context).creditDao()
         )
     }
@@ -82,9 +81,4 @@ object Injection {
         )
     }
 
-    fun provideDebitRepository(context: Context): DebitRepository {
-        return DebitRepository.getInstance(
-            KelolaKostRoomDatabase.getDatabase(context).debitDao()
-        )
-    }
 }

@@ -59,7 +59,7 @@ class UnitViewModel(
             FilterEntity("Perbaikan", "4"),
         )
         _listStatus.value = listStatus
-        _statusSelected.value = listStatus[1]
+        _statusSelected.value = listStatus[0]
     }
 
     fun getAllKost() {

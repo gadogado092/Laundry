@@ -2,9 +2,8 @@ package amat.kelolakost.ui.screen.user
 
 import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.Booking
-import amat.kelolakost.data.Credit
+import amat.kelolakost.data.CreditDebit
 import amat.kelolakost.data.CreditTenant
-import amat.kelolakost.data.Debit
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.Unit
@@ -13,9 +12,8 @@ import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.BookingRepository
-import amat.kelolakost.data.repository.CreditRepository
+import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
-import amat.kelolakost.data.repository.DebitRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
@@ -42,8 +40,7 @@ class NewUserViewModel(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
-    private val creditRepository: CreditRepository,
-    private val debitRepository: DebitRepository,
+    private val creditDebitRepository: CreditDebitRepository,
     private val bookingRepository: BookingRepository
 ) :
     ViewModel() {
@@ -289,29 +286,19 @@ class NewUserViewModel(
             )
             creditTenantRepository.insert(creditTenant)
 
-            //insert dummy credit
-            val credit = Credit(
+            //insert dummy credit debit
+            val creditDebit = CreditDebit(
                 id = "0",
                 note = "Kosong",
                 status = -1,
                 remaining = 0,
                 customerCreditDebitId = "0",
                 createAt = user.createAt,
+                dueDate = "",
                 isDelete = false
             )
-            creditRepository.insert(credit)
+            creditDebitRepository.insert(creditDebit)
 
-            //insert dummy debit
-            val debit = Debit(
-                id = "0",
-                note = "Kosong",
-                status = -1,
-                remaining = 0,
-                customerCreditDebitId = "0",
-                createAt = user.createAt,
-                isDelete = false
-            )
-            debitRepository.insert(debit)
 
             val booking = Booking(
                 id = "0",
@@ -354,8 +341,7 @@ class NewUserViewModelFactory(
     private val tenantRepository: TenantRepository,
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
-    private val creditRepository: CreditRepository,
-    private val debitRepository: DebitRepository,
+    private val creditDebitRepository: CreditDebitRepository,
     private val bookingRepository: BookingRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
@@ -371,8 +357,7 @@ class NewUserViewModelFactory(
                 tenantRepository,
                 unitRepository,
                 creditTenantRepository,
-                creditRepository,
-                debitRepository,
+                creditDebitRepository,
                 bookingRepository
             ) as T
         }

@@ -22,6 +22,7 @@
 
     <string name="location_unit">Lokasi Kamar/Unit</string>
     <string name="subtitle_tenant">Penyewa/Tenant</string>
+    <string name="subtitle_customer">Pelanggan</string>
     <string name="subtitle_number_phone">Nomor Telepon</string>
     <string name="subtitle_unit">Kamar/Unit</string>
     <string name="subtitle_unit_move">Kamar/Unit Tujuan</string>
@@ -46,7 +47,9 @@
     <string name="payment_detail_credit_tenant">Bayar Piutang Penyewa</string>
     <string name="title_history_credit_tenant">Riwayat Pembayaran Piutang</string>
     <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
-    <string name="title_debt_credit_tenant">Hutang Piutang</string>
+    <string name="title_debt_credit">Hutang Piutang</string>
+    <string name="title_add_debt_credit">Tambah Hutang Piutang</string>
+    <string name="title_add_debt_credit_customer">Tambah Pelanggan</string>
     <string name="subtitle_debt_credit_tenant">Kelola data hutang dan piutang</string>
     <string name="title_kost">Kost</string>
     <string name="subtitle_other_kost">List kost</string>
@@ -74,6 +77,7 @@
     <string name="please_wait">Tunggu sebentar</string>
     <string name="try_again">Coba lagi</string>
     <string name="success_add_data">Tambah data berhasil</string>
+    <string name="success_add_data_customer">Tambah data pelanggan berhasil</string>
     <string name="success_add_booking">Tambah Booking berhasil</string>
     <string name="success_payment_debt">Pembayaran Hutang berhasil</string>
     <string name="success_delete_payment_debt">Hapus Hutang berhasil</string>
@@ -99,6 +103,7 @@
     <string name="total_rental_price">Total Biaya Sewa</string>
     <string name="total_payment">Total Pembayaran</string>
     <string name="payment_method">Metode Pembayaran</string>
+    <string name="type_credit_debit">Tipe</string>
     <string name="payment_via">Pembayaran Secara</string>
     <string name="payment_return_via">Pengembalian Dana Secara</string>
     <string name="type_cash_flow">Tipe Alur Kas</string>
