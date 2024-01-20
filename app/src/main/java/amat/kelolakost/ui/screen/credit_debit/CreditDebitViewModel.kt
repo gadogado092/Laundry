@@ -1,7 +1,6 @@
 package amat.kelolakost.ui.screen.credit_debit
 
 import amat.kelolakost.data.CreditDebitHome
-import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
@@ -12,8 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CreditDebitViewModel(
-    private val creditDebitRepository: CreditDebitRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val creditDebitRepository: CreditDebitRepository
 ) : ViewModel() {
     private val _stateListCreditDebit: MutableStateFlow<UiState<List<CreditDebitHome>>> =
         MutableStateFlow(UiState.Loading)
@@ -36,15 +34,14 @@ class CreditDebitViewModel(
 }
 
 class CreditDebitViewModelFactory(
-    private val creditDebitRepository: CreditDebitRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val creditDebitRepository: CreditDebitRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreditDebitViewModel::class.java)) {
-            return CreditDebitViewModel(creditDebitRepository, cashFlowRepository) as T
+            return CreditDebitViewModel(creditDebitRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

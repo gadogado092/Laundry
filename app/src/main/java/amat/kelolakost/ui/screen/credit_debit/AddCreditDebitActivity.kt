@@ -234,7 +234,7 @@ fun AddCreditDebitScreen(
             Text(
                 text = generateInfoText(myViewModel.stateUi.collectAsState().value.isCredit),
                 style = TextStyle(color = FontBlack),
-                fontSize = 12.sp
+                fontSize = 14.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             MyOutlinedTextFieldCurrency(
@@ -349,17 +349,17 @@ fun AddCreditDebitScreen(
 
 fun generateInfoText(isCredit: Boolean): String {
     return if (isCredit) {
-        "Hutang adalah Pinjaman Anda kepada Pelanggan"
+        "Hutang adalah Pinjaman Anda dari Pelanggan atau MENGAMBIl pinjaman dari orang lain"
     } else {
-        "Piutang adalah Pinjaman Pelanggan kepada Anda"
+        "Piutang adalah Pinjaman Pelanggan kepada Anda atau MEMBERI pinjaman kepada orang lain"
     }
 }
 
 fun generateLabelTypePayment(isCredit: Boolean): String {
     return if (isCredit) {
-        "Pembayaran Kas Masuk Secara"
+        "Kas Masuk Secara"
     } else {
-        "Pembayaran Kas Keluar Secara"
+        "Kas Keluar Secara"
     }
 }
 

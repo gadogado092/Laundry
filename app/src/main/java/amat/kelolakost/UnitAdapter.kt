@@ -1,10 +1,10 @@
 package amat.kelolakost
 
-import amat.kelolakost.data.UnitAdapter as UnitAdapterData
 import amat.kelolakost.databinding.ItemUnitBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import amat.kelolakost.data.UnitAdapter as UnitAdapterData
 
 class UnitAdapter(
     private val onItemClicked: (UnitAdapterData) -> Unit

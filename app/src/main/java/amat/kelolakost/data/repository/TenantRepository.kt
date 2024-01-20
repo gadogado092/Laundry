@@ -1,8 +1,8 @@
 package amat.kelolakost.data.repository
 
 import amat.kelolakost.data.Tenant
-import amat.kelolakost.data.TenantHome
 import amat.kelolakost.data.TenantDao
+import amat.kelolakost.data.TenantHome
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
 

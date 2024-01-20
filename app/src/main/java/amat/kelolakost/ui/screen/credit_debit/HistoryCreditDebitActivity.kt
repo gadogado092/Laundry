@@ -2,13 +2,13 @@ package amat.kelolakost.ui.screen.credit_debit
 
 import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
-import amat.kelolakost.data.CreditDebitHome
+import amat.kelolakost.data.CashFlow
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
+import amat.kelolakost.ui.component.CashFlowItem
 import amat.kelolakost.ui.component.CenterLayout
-import amat.kelolakost.ui.component.CreditDebitItem
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.theme.FontWhite
@@ -16,29 +16,21 @@ import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -51,13 +43,17 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-class CreditDebitActivity : ComponentActivity() {
+class HistoryCreditDebitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        val creditDebitId = intent.getStringExtra("creditDebitId")
+
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                CreditDebitScreen(context = context)
+                HistoryCreditTenantScreen(context = context, creditDebitId = creditDebitId)
             }
         }
 
@@ -70,27 +66,33 @@ class CreditDebitActivity : ComponentActivity() {
 }
 
 @Composable
-fun CreditDebitScreen(
+fun HistoryCreditTenantScreen(
     modifier: Modifier = Modifier,
-    context: Context
+    context: Context,
+    creditDebitId: String?,
 ) {
 
-    val myViewModel: CreditDebitViewModel =
+    val myViewModel: HistoryCreditDebitViewModel =
         viewModel(
-            factory = CreditDebitViewModelFactory(
-                Injection.provideCreditDebitRepository(context)
+            factory = HistoryCreditDebitViewModelFactory(
+                Injection.provideCashFlowRepository(
+                    context
+                )
             )
         )
 
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                myViewModel.getAllCreditDebit()
+                if (creditDebitId != null) {
+                    myViewModel.getCreditDebitHistory(creditDebitId)
+                }
             }
 
             else -> {
 
             }
+
         }
     }
 
@@ -99,9 +101,9 @@ fun CreditDebitScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.title_debt_credit),
+                    text = stringResource(id = R.string.title_history),
                     color = FontWhite,
-                    fontSize = 22.sp
+                    fontSize = 20.sp
                 )
             },
             backgroundColor = GreenDark,
@@ -120,93 +122,50 @@ fun CreditDebitScreen(
                 }
             }
         )
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
 
-            myViewModel.stateListCreditDebit.collectAsState(initial = UiState.Loading).value.let { uiState ->
-                when (uiState) {
-                    is UiState.Error -> {
-                        ErrorLayout(errorMessage = uiState.errorMessage) {
-                            myViewModel.getAllCreditDebit()
+        myViewModel.stateListCashFlow.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            when (uiState) {
+                is UiState.Error -> {
+                    ErrorLayout(errorMessage = uiState.errorMessage) {
+                        if (creditDebitId != null) {
+                            myViewModel.getCreditDebitHistory(creditDebitId)
                         }
                     }
+                }
 
-                    UiState.Loading -> {
-                        LoadingLayout()
-                    }
-
-                    is UiState.Success -> {
-                        ListCreditDebit(uiState.data,
-                            onClickHistory = { creditDebitId ->
-                                val intent = Intent(context, HistoryCreditDebitActivity::class.java)
-                                intent.putExtra("creditDebitId", creditDebitId)
-                                context.startActivity(intent)
-                            },
-                            onClickPay = { creditDebitId ->
-
-                            },
-                            onClickRemove = { creditDebitId ->
-
-                            })
-                    }
+                UiState.Loading -> LoadingLayout()
+                is UiState.Success -> {
+                    ListHistory(uiState.data)
                 }
             }
 
-            FloatingActionButton(
-                onClick = {
-                    val intent = Intent(context, AddCreditDebitActivity::class.java)
-                    context.startActivity(intent)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
-                backgroundColor = GreenDark
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    "",
-                    modifier = Modifier.size(30.dp),
-                    tint = Color.White,
-                )
-            }
-
         }
+
     }
 }
 
 @Composable
-fun ListCreditDebit(
-    data: List<CreditDebitHome>,
-    onClickHistory: (String) -> Unit,
-    onClickPay: (String) -> Unit,
-    onClickRemove: (String) -> Unit
-) {
+fun ListHistory(data: List<CashFlow>) {
     if (data.isEmpty()) {
         CenterLayout(
             content = {
                 Text(
                     text = stringResource(
                         id = R.string.note_empty_data,
-                        "Hutang Piutang"
+                        "Riwayat"
                     )
                 )
             }
         )
     } else {
-        LazyColumn(
-            contentPadding = PaddingValues(bottom = 64.dp)
-        ) {
+        LazyColumn(contentPadding = PaddingValues(bottom = 8.dp)) {
             items(data) { item ->
-                CreditDebitItem(
-                    creditDebitId = item.creditDebitId,
-                    creditDebitName = item.customerCreditDebitName,
-                    remaining = currencyFormatterStringViewZero(item.remaining.toString()),
-                    dueDate = dateToDisplayMidFormat(item.dueDate),
-                    status = item.status,
-                    onClickHistory = onClickHistory,
-                    onClickPay = onClickPay,
-                    onClickRemove = onClickRemove
+                CashFlowItem(
+                    nominal = currencyFormatterStringViewZero(item.nominal),
+                    typePayment = item.typePayment,
+                    createAt = dateToDisplayMidFormat(item.createAt),
+                    type = item.type,
+                    note = item.note
                 )
             }
         }
