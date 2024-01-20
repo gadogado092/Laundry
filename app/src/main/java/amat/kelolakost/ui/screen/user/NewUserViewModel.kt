@@ -4,6 +4,7 @@ import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.Booking
 import amat.kelolakost.data.CreditDebit
 import amat.kelolakost.data.CreditTenant
+import amat.kelolakost.data.CustomerCreditDebit
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.Unit
@@ -14,6 +15,7 @@ import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.BookingRepository
 import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
+import amat.kelolakost.data.repository.CustomerCreditDebitRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.TenantRepository
 import amat.kelolakost.data.repository.UnitRepository
@@ -41,6 +43,7 @@ class NewUserViewModel(
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
     private val creditDebitRepository: CreditDebitRepository,
+    private val customerCreditDebitRepository: CustomerCreditDebitRepository,
     private val bookingRepository: BookingRepository
 ) :
     ViewModel() {
@@ -298,7 +301,17 @@ class NewUserViewModel(
                 isDelete = false
             )
             creditDebitRepository.insert(creditDebit)
-
+            //insert dummy credit debit customer
+            val customerCreditDebit = CustomerCreditDebit(
+                id = "0",
+                name = "Kosong",
+                numberPhone = "",
+                note = "",
+                email = "",
+                createAt = user.createAt,
+                isDelete = false
+            )
+            customerCreditDebitRepository.insert(customerCreditDebit)
 
             val booking = Booking(
                 id = "0",
@@ -342,6 +355,7 @@ class NewUserViewModelFactory(
     private val unitRepository: UnitRepository,
     private val creditTenantRepository: CreditTenantRepository,
     private val creditDebitRepository: CreditDebitRepository,
+    private val customerCreditDebitRepository: CustomerCreditDebitRepository,
     private val bookingRepository: BookingRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
@@ -358,6 +372,7 @@ class NewUserViewModelFactory(
                 unitRepository,
                 creditTenantRepository,
                 creditDebitRepository,
+                customerCreditDebitRepository,
                 bookingRepository
             ) as T
         }

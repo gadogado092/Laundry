@@ -3,11 +3,11 @@ package amat.kelolakost.data.repository
 import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CreditDebit
 import amat.kelolakost.data.CreditDebitDao
-import kotlinx.coroutines.flow.Flow
+import amat.kelolakost.data.CreditDebitHome
 
 class CreditDebitRepository(private val creditDao: CreditDebitDao) {
-    fun getAllUser(): Flow<List<CreditDebit>> {
-        return creditDao.getAllCredit()
+    suspend fun getAllCreditDebit(): List<CreditDebitHome> {
+        return creditDao.getAllCreditDebit()
     }
 
     suspend fun insert(creditDebit: CreditDebit) {

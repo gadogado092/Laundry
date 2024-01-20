@@ -100,3 +100,16 @@ data class CreditTenantDetail(
     val remainingDebt: Int,
     val tenantNumberPhone: String
 )
+
+data class CreditDebitHome(
+    val creditDebitId: String,
+
+    val customerCreditDebitName: String,
+    val customerCreditDebitNumberPhone: String,
+
+    val remaining: Int,
+    //type 0=hutang 1=piutang
+    val status: Int,
+    val note: String,
+    val dueDate: String
+)
