@@ -311,7 +311,7 @@ class ExtendViewModel(
 
                     //NOTE HUTANG
                     var noteDebt =
-                        "Hutang untuk Perpanjang unit ${extendUi.value.unitName}-${extendUi.value.kostName} oleh ${extendUi.value.tenantName}, " +
+                        "Piutang untuk Perpanjang unit ${extendUi.value.unitName}-${extendUi.value.kostName} oleh ${extendUi.value.tenantName}, " +
                                 "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
                                     currencyFormatterStringViewZero(
                                         totalPriceUnit.toString()

@@ -191,6 +191,11 @@
             android:exported="true"
             android:theme="@style/Theme.KelolaKost"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.credit_debit.PaymentCreditDebitActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
 
     </application>

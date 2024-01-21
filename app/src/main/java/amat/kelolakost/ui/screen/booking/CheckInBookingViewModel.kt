@@ -516,7 +516,7 @@ class CheckInBookingViewModel(
 
                     //NOTE HUTANG
                     var noteDebt =
-                        "Hutang untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
+                        "Piutang untuk penyewaan unit ${checkInUi.value.unitName}-${checkInUi.value.kostName} oleh ${checkInUi.value.tenantName}, " +
                                 "selama ${durationText} (${checkInText} sampai ${checkOutText}) ${
                                     currencyFormatterStringViewZero(
                                         totalPriceUnit.toString()

@@ -352,7 +352,7 @@ class MoveViewModel(
 
                             //NOTE HUTANG
                             val noteDebt =
-                                "Hutang oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
+                                "Piutang oleh ${moveUi.value.tenantName} untuk Pindah Unit dari ${moveUi.value.unitName} ke Unit ${moveUi.value.unitNameMove}"
                             creditTenant = creditTenant.copy(note = noteDebt, id = creditTenantId)
 
                         }

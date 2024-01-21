@@ -203,7 +203,7 @@ fun ContentHeaderCreditTenant(
                 title = stringResource(id = R.string.total_debt),
                 value = currencyFormatterStringViewZero(data.total)
             )
-            Text(text = "List Hutang Penyewa", fontSize = 16.sp, color = FontBlack)
+            Text(text = "List Piutang Penyewa", fontSize = 16.sp, color = FontBlack)
         }
         myViewModel.stateListCreditTenant.collectAsState(initial = UiState.Loading).value.let { uiState ->
             when (uiState) {
@@ -249,7 +249,7 @@ fun ListCreditTenant(
                 Text(
                     text = stringResource(
                         id = R.string.note_empty_data,
-                        "Booking"
+                        ""
                     )
                 )
             }

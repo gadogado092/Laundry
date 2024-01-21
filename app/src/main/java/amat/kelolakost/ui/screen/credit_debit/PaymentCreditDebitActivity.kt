@@ -1,16 +1,17 @@
-package amat.kelolakost.ui.screen.credit_tenant
+package amat.kelolakost.ui.screen.credit_debit
 
 import amat.kelolakost.R
 import amat.kelolakost.convertDateToDay
 import amat.kelolakost.convertDateToMonth
 import amat.kelolakost.convertDateToYear
 import amat.kelolakost.currencyFormatterStringViewZero
-import amat.kelolakost.data.CreditTenantDetail
+import amat.kelolakost.data.CreditDebitHome
 import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.BoxRectangle
+import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.InformationBox
@@ -74,17 +75,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class PaymentCreditTenantActivity : ComponentActivity() {
+class PaymentCreditDebitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val intent = intent
-        val creditTenantId = intent.getStringExtra("creditTenantId")
+        val creditDebitId = intent.getStringExtra("creditDebitId")
 
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                PaymentCreditTenantScreen(context = context, creditTenantId = creditTenantId)
+                PaymentCreditDebitScreen(context = context, creditDebitId = creditDebitId)
             }
         }
 
@@ -97,16 +98,16 @@ class PaymentCreditTenantActivity : ComponentActivity() {
 }
 
 @Composable
-fun PaymentCreditTenantScreen(
+fun PaymentCreditDebitScreen(
     modifier: Modifier = Modifier,
     context: Context,
-    creditTenantId: String?
+    creditDebitId: String?,
 ) {
 
-    val myViewModel: PaymentCreditTenantViewModel =
+    val myViewModel: PaymentCreditDebitViewModel =
         viewModel(
-            factory = PaymentCreditTenantViewModelFactory(
-                Injection.provideCreditTenantRepository(
+            factory = PaymentCreditDebitViewModelFactory(
+                Injection.provideCreditDebitRepository(
                     context
                 )
             )
@@ -115,21 +116,22 @@ fun PaymentCreditTenantScreen(
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                if (creditTenantId != null) {
-                    myViewModel.getDetailCreditTenant(creditTenantId)
+                if (creditDebitId != null) {
+                    myViewModel.getDetailCreditDebit(creditDebitId)
                 }
             }
 
             else -> {
 
             }
+
         }
     }
 
     if (!myViewModel.isProsesSuccess.collectAsState().value.isError) {
         Toast.makeText(
             context,
-            stringResource(id = R.string.success_payment_debt),
+            stringResource(id = R.string.success_payment),
             Toast.LENGTH_SHORT
         )
             .show()
@@ -151,9 +153,9 @@ fun PaymentCreditTenantScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(id = R.string.payment_detail_credit_tenant),
+                    text = stringResource(id = R.string.title_payment_credit_debit),
                     color = FontWhite,
-                    fontSize = 22.sp
+                    fontSize = 20.sp
                 )
             },
             backgroundColor = GreenDark,
@@ -173,19 +175,23 @@ fun PaymentCreditTenantScreen(
             }
         )
 
-        myViewModel.stateCreditTenant.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        myViewModel.stateCreditDebit.collectAsState(initial = UiState.Loading).value.let { uiState ->
             when (uiState) {
                 is UiState.Error -> {
                     ErrorLayout(errorMessage = uiState.errorMessage) {
-                        if (creditTenantId != null) {
-                            myViewModel.getDetailCreditTenant(creditTenantId)
+                        if (creditDebitId != null) {
+                            myViewModel.getDetailCreditDebit(creditDebitId)
                         }
                     }
                 }
 
                 UiState.Loading -> LoadingLayout()
                 is UiState.Success -> {
-                    ContentPaymentCreditTenant(context, uiState.data, myViewModel)
+                    ContentPaymentCreditDebit(
+                        context = context,
+                        myViewModel = myViewModel,
+                        uiState.data
+                    )
                 }
             }
 
@@ -195,18 +201,24 @@ fun PaymentCreditTenantScreen(
 }
 
 @Composable
-fun ContentPaymentCreditTenant(
+fun ContentPaymentCreditDebit(
     context: Context,
-    data: CreditTenantDetail,
-    myViewModel: PaymentCreditTenantViewModel
+    myViewModel: PaymentCreditDebitViewModel,
+    data: CreditDebitHome
 ) {
-    if (data.tenantId.isEmpty()) {
-        Text(
-            text = stringResource(
-                id = R.string.note_empty_data
-            )
+    if (data.creditDebitId.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        ""
+                    )
+                )
+            }
         )
     } else {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -216,18 +228,18 @@ fun ContentPaymentCreditTenant(
                 )
         ) {
             Text(
-                text = stringResource(id = R.string.subtitle_tenant),
+                text = stringResource(id = R.string.subtitle_customer),
                 style = TextStyle(color = FontBlack),
                 fontSize = 16.sp
             )
-            InformationBox(borderColor = TealGreen, value = data.tenantName)
+            InformationBox(borderColor = TealGreen, value = data.customerCreditDebitName)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.subtitle_number_phone),
                 style = TextStyle(color = FontBlack),
                 fontSize = 16.sp
             )
-            InformationBox(borderColor = TealGreen, value = data.tenantNumberPhone)
+            InformationBox(borderColor = TealGreen, value = data.customerCreditDebitNumberPhone)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Keterangan",
@@ -237,13 +249,16 @@ fun ContentPaymentCreditTenant(
             InformationBox(borderColor = TealGreen, value = data.note)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Sisa Piutang",
-                style = TextStyle(color = FontBlack),
+                text = generateTextLabel(data.status),
+                style = TextStyle(
+                    color = generateColorStatus(data.status),
+                    fontWeight = FontWeight.Medium
+                ),
                 fontSize = 16.sp
             )
             InformationBox(
-                borderColor = TealGreen,
-                value = currencyFormatterStringViewZero(data.remainingDebt.toString())
+                borderColor = generateColorStatus(data.status),
+                value = currencyFormatterStringViewZero(data.remaining.toString())
             )
             Spacer(modifier = Modifier.height(8.dp))
             DateLayout(
@@ -348,6 +363,21 @@ fun ContentPaymentCreditTenant(
 
             if (!myViewModel.stateUi.collectAsState().value.isFullPayment) {
                 Column {
+                    DateLayout(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                showDatePickerDueDate(
+                                    context,
+                                    myViewModel
+                                )
+                            },
+                        title = "Jatuh Tempo Berikutnya",
+                        value = if (myViewModel.stateUi.collectAsState().value.dueDate.isNotEmpty())
+                            dateToDisplayMidFormat(myViewModel.stateUi.collectAsState().value.dueDate) else "-",
+                        isEnable = true
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     MyOutlinedTextFieldCurrency(
                         label = "Jumlah Pembayaran",
                         value = myViewModel.stateUi.collectAsState().value.downPayment.replace(
@@ -371,12 +401,12 @@ fun ContentPaymentCreditTenant(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Sisa Hutang",
+                            text = generateTextLabel(data.status),
                             style = TextStyle(color = FontBlack),
                             fontSize = 16.sp
                         )
                         BoxRectangle(
-                            title = currencyFormatterStringViewZero(myViewModel.stateUi.collectAsState().value.debtTenant),
+                            title = currencyFormatterStringViewZero(myViewModel.stateUi.collectAsState().value.remaining),
                             fontSize = 14.sp,
                             backgroundColor = ColorRed
                         )
@@ -391,7 +421,7 @@ fun ContentPaymentCreditTenant(
 
             Row(modifier = Modifier.padding(vertical = 16.dp)) {
                 Text(
-                    text = "Simpan Dana ",
+                    text = generateLabelNominal(data.status),
                     style = TextStyle(color = FontBlack),
                     fontSize = 18.sp
                 )
@@ -418,32 +448,65 @@ fun ContentPaymentCreditTenant(
             }
 
         }
+
     }
+}
+
+fun generateTextLabel(status: Int): String {
+    if (status == 0) {
+        return "Sisa Hutang"
+    } else if (status == 1) {
+        return "Sisa Piutang"
+    }
+    return ""
+}
+
+fun generateLabelNominal(status: Int): String {
+    if (status == 0) {
+        return "Dana Keluar "
+    } else if (status == 1) {
+        return "Dana Masuk "
+    }
+    return ""
+}
+
+fun generateColorStatus(status: Int): Color {
+    if (status == 0) {
+        return ColorRed
+    } else if (status == 1) {
+        return TealGreen
+    }
+    return TealGreen
 }
 
 private fun showBottomConfirm(
     context: Context,
-    paymentCreditTenantViewModel: PaymentCreditTenantViewModel
+    viewModel: PaymentCreditDebitViewModel
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
     val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
     val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
-    val messageString =
-        "Proses Pembayaran Hutang Penyewa?"
+    var messageString = ""
+    if (viewModel.stateUi.value.status == 0) {
+        messageString =
+            "Proses Pembayaran Hutang ${viewModel.stateUi.value.creditDebitName}?"
+    } else if (viewModel.stateUi.value.status == 1) {
+        messageString = "Proses Pembayaran Piutang ${viewModel.stateUi.value.creditDebitName}?"
+    }
 
     message?.text = messageString
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
-        paymentCreditTenantViewModel.proses()
+        viewModel.proses()
     }
     bottomSheetDialog.show()
 
 }
 
-fun showDatePickerPayment(context: Context, viewModel: PaymentCreditTenantViewModel) {
+fun showDatePickerPayment(context: Context, viewModel: PaymentCreditDebitViewModel) {
     val mYear: Int = convertDateToYear(viewModel.stateUi.value.createAt).toInt()
     val mMonth: Int = convertDateToMonth(viewModel.stateUi.value.createAt).toInt() - 1
     val mDay: Int = convertDateToDay(viewModel.stateUi.value.createAt).toInt()
@@ -453,6 +516,21 @@ fun showDatePickerPayment(context: Context, viewModel: PaymentCreditTenantViewMo
         { _: DatePicker, year: Int, month: Int, day: Int ->
             val dateSelected = "$year-${month + 1}-$day"
             viewModel.setPaymentDate(dateSelected)
+        }, mYear, mMonth, mDay
+    )
+    mDatePickerDialog.show()
+}
+
+fun showDatePickerDueDate(context: Context, viewModel: PaymentCreditDebitViewModel) {
+    val mYear: Int = convertDateToYear(viewModel.stateUi.value.dueDate).toInt()
+    val mMonth: Int = convertDateToMonth(viewModel.stateUi.value.dueDate).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.stateUi.value.dueDate).toInt()
+
+    val mDatePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, day: Int ->
+            val dateSelected = "$year-${month + 1}-$day"
+            viewModel.setDueDate(dateSelected)
         }, mYear, mMonth, mDay
     )
     mDatePickerDialog.show()

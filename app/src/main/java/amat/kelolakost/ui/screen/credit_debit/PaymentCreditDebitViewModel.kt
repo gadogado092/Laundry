@@ -1,12 +1,13 @@
-package amat.kelolakost.ui.screen.credit_tenant
+package amat.kelolakost.ui.screen.credit_debit
 
+import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
 import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.CashFlow
-import amat.kelolakost.data.CreditTenantDetail
+import amat.kelolakost.data.CreditDebitHome
 import amat.kelolakost.data.entity.ValidationResult
-import amat.kelolakost.data.repository.CreditTenantRepository
+import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.dateDialogToUniversalFormat
 import amat.kelolakost.generateDateNow
 import amat.kelolakost.ui.common.UiState
@@ -19,15 +20,17 @@ import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.util.UUID
 
-class PaymentCreditTenantViewModel(private val repository: CreditTenantRepository) : ViewModel() {
-    private val _stateCreditTenant: MutableStateFlow<UiState<CreditTenantDetail>> =
+class PaymentCreditDebitViewModel(
+    private val creditDebitRepository: CreditDebitRepository
+) : ViewModel() {
+    private val _stateCreditDebit: MutableStateFlow<UiState<CreditDebitHome>> =
         MutableStateFlow(UiState.Loading)
-    val stateCreditTenant: StateFlow<UiState<CreditTenantDetail>>
-        get() = _stateCreditTenant
+    val stateCreditDebit: StateFlow<UiState<CreditDebitHome>>
+        get() = _stateCreditDebit
 
-    private val _stateUi: MutableStateFlow<PaymentCreditTenantUi> =
-        MutableStateFlow(PaymentCreditTenantUi())
-    val stateUi: StateFlow<PaymentCreditTenantUi>
+    private val _stateUi: MutableStateFlow<PaymentCreditDebitUi> =
+        MutableStateFlow(PaymentCreditDebitUi())
+    val stateUi: StateFlow<PaymentCreditDebitUi>
         get() = _stateUi
 
     private val _isDownPaymentValid: MutableStateFlow<ValidationResult> =
@@ -42,27 +45,32 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
         get() = _isProsesSuccess
 
     init {
-        _stateUi.value = stateUi.value.copy(createAt = generateDateNow())
+        _stateUi.value = stateUi.value.copy(
+            createAt = generateDateNow(),
+            dueDate = addDateLimitApp(generateDateNow(), "Bulan", 1)
+        )
+
     }
 
-    fun getDetailCreditTenant(creditTenantId: String) {
-        _stateCreditTenant.value = UiState.Loading
+    fun getDetailCreditDebit(creditDebitId: String) {
+        _stateCreditDebit.value = UiState.Loading
         try {
             viewModelScope.launch {
-                val data = repository.getDetailCreditTenant(creditTenantId)
-                _stateUi.value = stateUi.value.copy(
-                    tenantId = data.tenantId,
-                    creditTenantId = data.creditTenantId,
-                    remainingDebt = data.remainingDebt,
-                    note = data.note,
-                    unitId = data.unitId,
-                    kostId = data.kostId
-                )
-                _stateCreditTenant.value = UiState.Success(data)
+                val data = creditDebitRepository.getDetailCreditDebit(creditDebitId)
+                _stateUi.value =
+                    stateUi.value.copy(
+                        creditDebitId = data.creditDebitId,
+                        note = data.note,
+                        remainingDebt = data.remaining,
+                        status = data.status,
+                        oldDueDate = data.dueDate,
+                        creditDebitName = data.customerCreditDebitName
+                    )
+                _stateCreditDebit.value = UiState.Success(data)
                 refreshDataUI()
             }
         } catch (e: Exception) {
-            _stateCreditTenant.value = UiState.Error(e.message.toString())
+            _stateCreditDebit.value = UiState.Error(e.message.toString())
         }
 
     }
@@ -75,6 +83,11 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
     fun setPaymentDate(value: String) {
         clearError()
         _stateUi.value = stateUi.value.copy(createAt = dateDialogToUniversalFormat(value))
+    }
+
+    fun setDueDate(value: String) {
+        clearError()
+        _stateUi.value = stateUi.value.copy(dueDate = dateDialogToUniversalFormat(value))
     }
 
     fun setPaymentMethod(value: Boolean) {
@@ -107,11 +120,11 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
             _stateUi.value = stateUi.value.copy(totalPayment = total.toString())
         } else {
             val downPayment = cleanCurrencyFormatter(stateUi.value.downPayment)
-            val debtTenant: BigInteger = total - downPayment.toBigInteger()
+            val remaining: BigInteger = total - downPayment.toBigInteger()
 
             _stateUi.value = stateUi.value.copy(
                 totalPayment = downPayment.toString(),
-                debtTenant = debtTenant.toString()
+                remaining = remaining.toString()
             )
         }
 
@@ -129,7 +142,7 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
                 return false
             }
 
-            if (stateUi.value.debtTenant.toBigInteger() < 1.toBigInteger()) {
+            if (stateUi.value.remaining.toBigInteger() < 1.toBigInteger()) {
                 _isProsesSuccess.value =
                     ValidationResult(true, "Pilih Metode Pembayaran Pelunasan")
                 return false
@@ -141,40 +154,49 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
     fun proses() {
         try {
             viewModelScope.launch {
+                val cashFlowid = UUID.randomUUID().toString()
 
                 var cashFlow = CashFlow(
-                    id = UUID.randomUUID().toString(),
+                    id = cashFlowid,
                     note = "",
                     nominal = cleanCurrencyFormatter(stateUi.value.totalPayment).toString(),
                     typePayment = if (stateUi.value.isCash) 1 else 0,
-                    type = 0,
-                    creditTenantId = _stateUi.value.creditTenantId,
-                    creditDebitId = "0",
-                    unitId = stateUi.value.unitId,
-                    tenantId = stateUi.value.tenantId,
-                    kostId = stateUi.value.kostId,
+                    type = if (stateUi.value.status == 0) 1 else 0,
+                    creditDebitId = stateUi.value.creditDebitId,
+                    creditTenantId = "0",
+                    unitId = "0",
+                    tenantId = "0",
+                    kostId = "0",
                     createAt = stateUi.value.createAt,
                     isDelete = false
                 )
 
+                val statusText = if (stateUi.value.status == 0) "Hutang" else "Piutang"
+
                 if (stateUi.value.isFullPayment) {
-                    val note = "Pelunasan Piutang -> ${stateUi.value.note}"
+
+                    val note = "Pelunasan $statusText -> ${stateUi.value.note}"
                     cashFlow = cashFlow.copy(note = note)
 
-                    repository.payDebt(
+                    creditDebitRepository.payCreditDebit(
                         cashFlow = cashFlow,
-                        remainingDebt = 0
+                        remaining = 0,
+                        dueDate = stateUi.value.oldDueDate,
                     )
+
                 } else {
-                    var note = "Angsuran Piutang -> ${stateUi.value.note}"
+
+                    var note = "Angsuran $statusText -> ${stateUi.value.note}"
                     note +=
-                        " \nSisa Tagihan ${currencyFormatterStringViewZero(stateUi.value.debtTenant)}"
+                        " \nSisa Tagihan ${currencyFormatterStringViewZero(stateUi.value.remaining)}"
                     cashFlow = cashFlow.copy(note = note)
 
-                    repository.payDebt(
+                    creditDebitRepository.payCreditDebit(
                         cashFlow = cashFlow,
-                        remainingDebt = cleanCurrencyFormatter(stateUi.value.debtTenant)
+                        remaining = cleanCurrencyFormatter(stateUi.value.remaining),
+                        dueDate = stateUi.value.dueDate
                     )
+
                 }
 
                 _isProsesSuccess.value = ValidationResult(false)
@@ -190,15 +212,18 @@ class PaymentCreditTenantViewModel(private val repository: CreditTenantRepositor
 
 }
 
-class PaymentCreditTenantViewModelFactory(private val repository: CreditTenantRepository) :
+class PaymentCreditDebitViewModelFactory(
+    private val creditDebitRepository: CreditDebitRepository
+) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PaymentCreditTenantViewModel::class.java)) {
-            return PaymentCreditTenantViewModel(repository) as T
+        if (modelClass.isAssignableFrom(PaymentCreditDebitViewModel::class.java)) {
+            return PaymentCreditDebitViewModel(creditDebitRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 
 }
+

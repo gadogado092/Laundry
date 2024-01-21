@@ -5,21 +5,33 @@ import amat.kelolakost.data.CreditDebit
 import amat.kelolakost.data.CreditDebitDao
 import amat.kelolakost.data.CreditDebitHome
 
-class CreditDebitRepository(private val creditDao: CreditDebitDao) {
+class CreditDebitRepository(private val creditDebitDao: CreditDebitDao) {
     suspend fun getAllCreditDebit(): List<CreditDebitHome> {
-        return creditDao.getAllCreditDebit()
+        return creditDebitDao.getAllCreditDebit()
+    }
+
+    suspend fun payCreditDebit(cashFlow: CashFlow, remaining: Int, dueDate: String) {
+        creditDebitDao.payCreditDebit(cashFlow, remaining, dueDate)
+    }
+
+    suspend fun getDetailCreditDebit(creditDebitId:String): CreditDebitHome {
+        return creditDebitDao.getDetailCreditDebit(creditDebitId)
     }
 
     suspend fun insert(creditDebit: CreditDebit) {
-        creditDao.insert(creditDebit)
+        creditDebitDao.insert(creditDebit)
     }
 
     suspend fun insertCreditDebit(creditDebit: CreditDebit, cashFlow: CashFlow) {
-        creditDao.insertCreditDebit(creditDebit, cashFlow)
+        creditDebitDao.insertCreditDebit(creditDebit, cashFlow)
     }
 
     suspend fun update(credit: CreditDebit) {
-        creditDao.update(credit)
+        creditDebitDao.update(credit)
+    }
+
+    suspend fun deleteCreditDebit(creditDebitId: String){
+        creditDebitDao.deleteCreditDebit(creditDebitId)
     }
 
     companion object {

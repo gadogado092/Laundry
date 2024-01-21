@@ -47,6 +47,7 @@
     <string name="payment_detail_credit_tenant">Bayar Piutang Penyewa</string>
     <string name="title_history_credit_tenant">Riwayat Pembayaran Piutang</string>
     <string name="title_history">Riwayat Pembayaran</string>
+    <string name="title_payment_credit_debit">Pembayaran Hutang Piutang</string>
     <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
     <string name="title_debt_credit">Hutang Piutang</string>
     <string name="title_add_debt_credit">Tambah Hutang Piutang</string>
@@ -81,7 +82,9 @@
     <string name="success_add_data_customer">Tambah data pelanggan berhasil</string>
     <string name="success_add_booking">Tambah Booking berhasil</string>
     <string name="success_payment_debt">Pembayaran Hutang berhasil</string>
+    <string name="success_payment">Pembayaran berhasil</string>
     <string name="success_delete_payment_debt">Hapus Hutang berhasil</string>
+    <string name="success_delete_payment_credit_debit">Hapus Hutang atau Piutang berhasil</string>
     <string name="success_cancel_booking">Batalkan Booking berhasil</string>
     <string name="success_check_in">Check In berhasil</string>
     <string name="success_move_unit">Pindah Unit/Kamar berhasil</string>
@@ -115,7 +118,7 @@
     <string name="debt_tenant">Hutang Penyewa</string>
     <string name="debt_tenant_move">Hutang Pindah</string>
     <string name="debt_tenant_extend">Hutang Perpanjang</string>
-    <string name="total_debt">Total Hutang</string>
+    <string name="total_debt">Total Piutang</string>
     <string name="add">Tambah</string>
     <string name="subtitle_select_price">Pilih Harga dan Durasi</string>
     <string name="message_date_range_invalid">Tanggal awal dan akhir tidak sesuai</string>

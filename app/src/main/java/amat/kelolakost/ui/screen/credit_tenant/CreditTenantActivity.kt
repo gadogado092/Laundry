@@ -167,7 +167,7 @@ fun ListCreditTenantView(data: List<CreditTenantHome>, onItemClick: (String) -> 
                         onItemClick(item.tenantId)
                     },
                     tenantName = item.tenantName,
-                    total = if (item.total.isEmpty() || item.total == "0") "Lunas" else "Total Hutang ${
+                    total = if (item.total.isEmpty() || item.total == "0") "Lunas" else "Total Piutang ${
                         currencyFormatterStringViewZero(
                             item.total
                         )

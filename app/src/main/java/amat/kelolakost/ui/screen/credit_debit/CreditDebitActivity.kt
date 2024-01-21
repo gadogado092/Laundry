@@ -18,6 +18,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -50,6 +53,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CreditDebitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +95,25 @@ fun CreditDebitScreen(
             else -> {
 
             }
+        }
+    }
+
+    if (!myViewModel.isProsesDeleteSuccess.collectAsState().value.isError) {
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.success_delete_payment_credit_debit),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        myViewModel.getAllCreditDebit()
+    } else {
+        if (myViewModel.isProsesDeleteSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                myViewModel.isProsesDeleteSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
@@ -144,10 +167,16 @@ fun CreditDebitScreen(
                                 context.startActivity(intent)
                             },
                             onClickPay = { creditDebitId ->
-
+                                val intent = Intent(context, PaymentCreditDebitActivity::class.java)
+                                intent.putExtra("creditDebitId", creditDebitId)
+                                context.startActivity(intent)
                             },
                             onClickRemove = { creditDebitId ->
-
+                                showBottomConfirm(
+                                    context,
+                                    myViewModel,
+                                    creditDebitId
+                                )
                             })
                     }
                 }
@@ -211,4 +240,27 @@ fun ListCreditDebit(
             }
         }
     }
+}
+
+private fun showBottomConfirm(
+    context: Context,
+    creditDebitViewModel: CreditDebitViewModel,
+    creditDebitId: String,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Hapus data Hutang atau Piutang?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        creditDebitViewModel.delete(creditDebitId)
+    }
+    bottomSheetDialog.show()
+
 }

@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.screen.credit_debit
 
 import amat.kelolakost.data.CreditDebitHome
+import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.CreditDebitRepository
 import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
@@ -18,8 +19,15 @@ class CreditDebitViewModel(
     val stateListCreditDebit: StateFlow<UiState<List<CreditDebitHome>>>
         get() = _stateListCreditDebit
 
+    private val _isProsesDeleteSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesDeleteSuccess: StateFlow<ValidationResult>
+        get() = _isProsesDeleteSuccess
+
     fun getAllCreditDebit() {
         _stateListCreditDebit.value = UiState.Loading
+        _isProsesDeleteSuccess.value = ValidationResult(true, "")
         try {
             viewModelScope.launch {
                 val data = creditDebitRepository.getAllCreditDebit()
@@ -29,6 +37,18 @@ class CreditDebitViewModel(
             _stateListCreditDebit.value = UiState.Error(e.message.toString())
         }
 
+    }
+
+    fun delete(creditDebitId: String) {
+        _isProsesDeleteSuccess.value = ValidationResult(true, "")
+        try {
+            viewModelScope.launch {
+                creditDebitRepository.deleteCreditDebit(creditDebitId)
+                _isProsesDeleteSuccess.value = ValidationResult(false)
+            }
+        } catch (e: Exception) {
+            _isProsesDeleteSuccess.value = ValidationResult(true, e.message.toString())
+        }
     }
 
 }
