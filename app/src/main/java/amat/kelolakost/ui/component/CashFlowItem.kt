@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CashFlowItem(
+    modifier: Modifier = Modifier,
     nominal: String,
     typePayment: Int,
     createAt: String,
@@ -36,7 +37,7 @@ fun CashFlowItem(
     note: String
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(vertical = 4.dp)
     ) {

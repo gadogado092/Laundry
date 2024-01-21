@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.checkDateRangeValid
 import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.CashFlow
+import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.dateRoomDay
 import amat.kelolakost.dateRoomMonth
 import amat.kelolakost.dateRoomYear
@@ -17,6 +18,7 @@ import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
+import amat.kelolakost.ui.screen.bill.BillActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.TealGreen
@@ -149,7 +151,12 @@ fun CashFlowScreen(
                     }
 
                     is UiState.Success -> {
-                        ListCashFLow(uiState.data)
+                        ListCashFLow(uiState.data,
+                            onItemClick = {billEntity->
+                                val intent = Intent(context, BillActivity::class.java)
+                                intent.putExtra("object", billEntity)
+                                context.startActivity(intent)
+                            })
                     }
                 }
             }
@@ -178,7 +185,7 @@ fun CashFlowScreen(
 }
 
 @Composable
-fun ListCashFLow(listData: List<CashFlow>) {
+fun ListCashFLow(listData: List<CashFlow>, onItemClick: (BillEntity) -> Unit) {
     if (listData.isEmpty()) {
         CenterLayout(
             content = {
@@ -196,7 +203,16 @@ fun ListCashFLow(listData: List<CashFlow>) {
         ) {
             items(listData) { data ->
                 CashFlowItem(
-                    nominal= data.nominal,
+                    modifier = Modifier.clickable {
+                        onItemClick(
+                            BillEntity(
+                                createAt = dateToDisplayMidFormat(data.createAt),
+                                nominal = currencyFormatterStringViewZero(data.nominal),
+                                note = data.note
+                            )
+                        )
+                    },
+                    nominal = data.nominal,
                     typePayment = data.typePayment,
                     createAt = data.createAt,
                     type = data.type,

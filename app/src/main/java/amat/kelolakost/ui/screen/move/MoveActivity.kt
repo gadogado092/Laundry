@@ -164,6 +164,7 @@ fun MoveScreen(
             .show()
         if (moveViewModel.moveUi.collectAsState().value.moveType != "Gratis") {
             val intent = Intent(context, BillActivity::class.java)
+            intent.putExtra("object", moveViewModel.getBill())
             context.startActivity(intent)
         }
         val activity = (context as? Activity)

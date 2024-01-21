@@ -194,6 +194,7 @@ fun ExtendScreen(
             Toast.LENGTH_SHORT
         ).show()
         val intent = Intent(context, BillActivity::class.java)
+        intent.putExtra("object", extendViewModel.getBill())
         context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()

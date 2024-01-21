@@ -8,11 +8,13 @@ import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.UnitAdapter
 import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.User
+import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.CreditTenantRepository
 import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.data.repository.UserRepository
+import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.generateDateNow
 import amat.kelolakost.getLimitDay
 import amat.kelolakost.ui.common.UiState
@@ -76,6 +78,9 @@ class MoveViewModel(
         MutableStateFlow(ValidationResult(false, ""))
     val isDownPaymentValid: StateFlow<ValidationResult>
         get() = _isDownPaymentValid
+
+    private val _billEntity: MutableStateFlow<BillEntity> =
+        MutableStateFlow(BillEntity())
 
     init {
         getUser()
@@ -368,6 +373,13 @@ class MoveViewModel(
                         isFullPayment = moveUi.value.isFullPayment
                     )
 
+                    _billEntity.value = BillEntity(
+                        kostName = moveUi.value.kostName,
+                        createAt = dateToDisplayMidFormat(cashFlow.createAt),
+                        nominal = currencyFormatterStringViewZero(cashFlow.nominal),
+                        note = cashFlow.note
+                    )
+
                     _isMoveSuccess.value = ValidationResult(false)
                 }
             } catch (e: Exception) {
@@ -376,6 +388,9 @@ class MoveViewModel(
         }
     }
 
+    fun getBill(): BillEntity {
+        return _billEntity.value
+    }
 
     fun checkLimitApp(): Boolean {
         return try {

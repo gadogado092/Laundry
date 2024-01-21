@@ -8,6 +8,7 @@ import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.CreditTenant
 import amat.kelolakost.data.UnitHome
 import amat.kelolakost.data.User
+import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.CashFlowRepository
@@ -74,6 +75,9 @@ class ExtendViewModel(
         MutableStateFlow(ValidationResult(true, ""))
     val isExtendSuccess: StateFlow<ValidationResult>
         get() = _isExtendSuccess
+
+    private val _billEntity: MutableStateFlow<BillEntity> =
+        MutableStateFlow(BillEntity())
 
     init {
         getUser()
@@ -339,12 +343,23 @@ class ExtendViewModel(
                     noteAdditionalCost = extendUi.value.noteAdditionalCost
                 )
 
+                _billEntity.value = BillEntity(
+                    kostName = extendUi.value.kostName,
+                    createAt = dateToDisplayMidFormat(cashFlow.createAt),
+                    nominal = currencyFormatterStringViewZero(cashFlow.nominal),
+                    note = cashFlow.note
+                )
+
                 _isExtendSuccess.value = ValidationResult(false)
             }
         } catch (e: Exception) {
             _isExtendSuccess.value = ValidationResult(true, e.message.toString())
         }
 
+    }
+
+    fun getBill(): BillEntity {
+        return _billEntity.value
     }
 
     fun setPaymentMethod(value: Boolean) {

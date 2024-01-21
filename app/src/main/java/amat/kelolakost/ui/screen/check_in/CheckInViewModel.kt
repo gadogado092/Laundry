@@ -10,6 +10,7 @@ import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Tenant
 import amat.kelolakost.data.UnitAdapter
 import amat.kelolakost.data.User
+import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.data.entity.PriceDuration
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.CashFlowRepository
@@ -59,6 +60,9 @@ class CheckInViewModel(
             )
         )
     val checkInUi: StateFlow<CheckInUi> get() = _checkInUi
+
+    private val _billEntity: MutableStateFlow<BillEntity> =
+        MutableStateFlow(BillEntity())
 
     private val _isTenantSelectedValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
@@ -640,12 +644,23 @@ class CheckInViewModel(
                     guaranteeCost = checkInUi.value.guaranteeCost
                 )
 
+                _billEntity.value = BillEntity(
+                    kostName = checkInUi.value.kostName,
+                    createAt = dateToDisplayMidFormat(cashFlow.createAt),
+                    nominal = currencyFormatterStringViewZero(cashFlow.nominal),
+                    note = cashFlow.note
+                )
+
                 _isCheckInSuccess.value = ValidationResult(false)
             }
         } catch (e: Exception) {
             _isCheckInSuccess.value = ValidationResult(true, e.message.toString())
         }
 
+    }
+
+    fun getBill(): BillEntity {
+        return _billEntity.value
     }
 
     fun checkLimitApp(): Boolean {

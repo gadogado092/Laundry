@@ -4,12 +4,15 @@ import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.ColorYellow
 import amat.kelolakost.ui.theme.FontBlack
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.ui.graphics.Color
+import java.io.Serializable
 import java.net.URLEncoder
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -345,5 +348,13 @@ fun dateDialogToRoomFormat(dateString: String): String {
 
     val fmtOut = SimpleDateFormat("yyyy-MM-dd")
     return fmtOut.format(date as Date)
+}
+
+fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz: Class<T>): T
+{
+    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        activity.intent.getSerializableExtra(name, clazz)!!
+    else
+        activity.intent.getSerializableExtra(name) as T
 }
 
