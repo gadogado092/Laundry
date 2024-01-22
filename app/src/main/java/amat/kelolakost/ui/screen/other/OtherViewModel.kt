@@ -124,7 +124,8 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
         }
 
         val passwordMd5 =
-            generateMd5(stateUi.value.kode + stateUi.value.qty).substring(0, 4).uppercase()
+            generateMd5((stateUi.value.kode + stateUi.value.qty).lowercase()).substring(0, 4)
+                .uppercase()
         Log.d("saya", passwordMd5)
 
         if (stateUi.value.extendPassword != passwordMd5) {
@@ -142,9 +143,8 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
                         newLimit = stateUi.value.newLimit,
                         newKey = key
                     )
-                    _isProsesSuccess.value = ValidationResult(false)
                     _stateUi.value = stateUi.value.copy(qty = 1, extendPassword = "")
-                    refreshUI()
+                    _isProsesSuccess.value = ValidationResult(false)
                 }
             } catch (e: Exception) {
                 _isProsesSuccess.value =
