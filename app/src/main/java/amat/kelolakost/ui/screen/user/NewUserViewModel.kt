@@ -58,9 +58,11 @@ class NewUserViewModel(
     val kost: StateFlow<Kost>
         get() = _kost
 
-    private val _startToMain: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val startToMain: StateFlow<Boolean>
-        get() = _startToMain
+    private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesSuccess: StateFlow<ValidationResult>
+        get() = _isProsesSuccess
 
     private val _isUserNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
@@ -89,6 +91,7 @@ class NewUserViewModel(
         get() = _isKostAddressValid
 
     fun setName(value: String) {
+        clearError()
         _user.value = _user.value.copy(name = value)
         if (_user.value.name.trim().isEmpty()) {
             _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
@@ -98,6 +101,7 @@ class NewUserViewModel(
     }
 
     fun setNumberPhone(value: String) {
+        clearError()
         _user.value = _user.value.copy(numberPhone = value)
 
         if (_user.value.numberPhone.trim().isEmpty()) {
@@ -110,6 +114,7 @@ class NewUserViewModel(
     }
 
     fun setEmail(value: String) {
+        clearError()
         _user.value = _user.value.copy(email = value)
 
         if (_user.value.email.trim().isEmpty()) {
@@ -122,6 +127,7 @@ class NewUserViewModel(
     }
 
     fun setKostName(value: String) {
+        clearError()
         _kost.value = _kost.value.copy(name = value)
         if (_kost.value.name.trim().isEmpty()) {
             _isKostNameValid.value = ValidationResult(true, "Nama Kost Tidak Boleh Kosong")
@@ -131,6 +137,7 @@ class NewUserViewModel(
     }
 
     fun setKostAddress(value: String) {
+        clearError()
         _kost.value = _kost.value.copy(address = value)
         if (_kost.value.address.trim().isEmpty()) {
             _isKostAddressValid.value = ValidationResult(true, "Alamat Kost Tidak Boleh Kosong")
@@ -140,52 +147,73 @@ class NewUserViewModel(
     }
 
     fun setNote(value: String) {
+        clearError()
         _kost.value = _kost.value.copy(note = value)
     }
 
     fun setTypeWa(value: String) {
+        clearError()
         _user.value = _user.value.copy(typeWa = value)
     }
 
     fun setBankName(value: String) {
+        clearError()
         _user.value = _user.value.copy(bankName = value)
     }
 
     fun setAccountNumber(value: String) {
+        clearError()
         _user.value = _user.value.copy(accountNumber = value)
     }
 
     fun setAccountOwnerName(value: String) {
+        clearError()
         _user.value = _user.value.copy(accountOwnerName = value)
     }
 
     fun setNoteBank(value: String) {
+        clearError()
         _user.value = _user.value.copy(note = value)
     }
 
     fun prosesRegistration() {
+        clearError()
         if (_user.value.name.trim().isEmpty()) {
             _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            _isProsesSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            return
         }
 
         if (_user.value.numberPhone.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
+            _isProsesSuccess.value = ValidationResult(true, "Nomor Harus Terisi")
+            return
         } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
+            _isProsesSuccess.value = ValidationResult(true, "Nomor Belum Benar")
+            return
         }
 
         if (_user.value.email.trim().isEmpty()) {
             _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
+            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
+            return
         } else if (!isEmailValid(_user.value.email.trim())) {
             _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
+            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
+            return
         }
 
         if (_kost.value.name.trim().isEmpty()) {
             _isKostNameValid.value = ValidationResult(true, "Nama Kost Tidak Boleh Kosong")
+            _isProsesSuccess.value = ValidationResult(true, "Nama Kost Tidak Boleh Kosong")
+            return
         }
 
         if (_kost.value.address.trim().isEmpty()) {
             _isKostAddressValid.value = ValidationResult(true, "Alamat Kost Tidak Boleh Kosong")
+            _isProsesSuccess.value = ValidationResult(true, "Alamat Kost Tidak Boleh Kosong")
+            return
         }
 
         if (!_isUserNameValid.value.isError
@@ -337,11 +365,15 @@ class NewUserViewModel(
             )
             unitStatusRepository.insert(listStatus)
 
-            _startToMain.value = true
+            _isProsesSuccess.value = ValidationResult(false)
         } catch (e: Exception) {
-            _startToMain.value = false
+            _isProsesSuccess.value = ValidationResult(true, e.message.toString())
         }
 
+    }
+
+    fun clearError() {
+        _isProsesSuccess.value = ValidationResult(true, "")
     }
 
 }

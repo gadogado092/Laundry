@@ -42,16 +42,19 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     val isUserEmailValid: StateFlow<ValidationResult>
         get() = _isUserEmailValid
 
+    private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesSuccess: StateFlow<ValidationResult>
+        get() = _isProsesSuccess
+
     fun setTypeWa(value: String) {
+        clearError()
         _user.value = _user.value.copy(typeWa = value)
     }
 
-    private val _isUpdateSuccess: MutableStateFlow<Boolean> =
-        MutableStateFlow(false)
-    val isUpdateSuccess: StateFlow<Boolean>
-        get() = _isUpdateSuccess
-
     fun setName(value: String) {
+        clearError()
         _user.value = _user.value.copy(name = value)
         if (_user.value.name.trim().isEmpty()) {
             _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
@@ -61,6 +64,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun setNumberPhone(value: String) {
+        clearError()
         _user.value = _user.value.copy(numberPhone = value)
 
         if (_user.value.numberPhone.trim().isEmpty()) {
@@ -73,6 +77,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun setEmail(value: String) {
+        clearError()
         _user.value = _user.value.copy(email = value)
 
         if (_user.value.email.trim().isEmpty()) {
@@ -85,18 +90,22 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun setBankName(value: String) {
+        clearError()
         _user.value = _user.value.copy(bankName = value)
     }
 
     fun setAccountNumber(value: String) {
+        clearError()
         _user.value = _user.value.copy(accountNumber = value)
     }
 
     fun setAccountOwnerName(value: String) {
+        clearError()
         _user.value = _user.value.copy(accountOwnerName = value)
     }
 
     fun setNoteBank(value: String) {
+        clearError()
         _user.value = _user.value.copy(note = value)
     }
 
@@ -115,20 +124,31 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun prosesUpdate() {
+        clearError()
         if (_user.value.name.trim().isEmpty()) {
             _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            _isProsesSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            return
         }
 
         if (_user.value.numberPhone.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
+            _isProsesSuccess.value = ValidationResult(true, "Nomor Harus Terisi")
+            return
         } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
+            _isProsesSuccess.value = ValidationResult(true, "Nomor Belum Benar")
+            return
         }
 
         if (_user.value.email.trim().isEmpty()) {
             _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
+            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
+            return
         } else if (!isEmailValid(_user.value.email.trim())) {
             _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
+            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
+            return
         }
 
         if (!_isUserNameValid.value.isError
@@ -143,8 +163,16 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     private suspend fun updateKost(user: User) {
-        userRepository.updateUser(user)
-        _isUpdateSuccess.value = true
+        try {
+            userRepository.updateUser(user)
+            _isProsesSuccess.value = ValidationResult(false)
+        }catch (e:Exception){
+            _isProsesSuccess.value = ValidationResult(true, e.message.toString())
+        }
+    }
+
+    fun clearError() {
+        _isProsesSuccess.value = ValidationResult(true, "")
     }
 }
 

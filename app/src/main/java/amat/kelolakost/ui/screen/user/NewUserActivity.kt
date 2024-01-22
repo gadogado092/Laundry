@@ -81,12 +81,22 @@ fun NewUserScreen() {
             )
         )
 
-    if (userViewModel.startToMain.collectAsState().value) {
-        Toast.makeText(context, "Pendaftaran Berhasil Dilakukan", Toast.LENGTH_SHORT).show()
+    if (!userViewModel.isProsesSuccess.collectAsState().value.isError) {
+        Toast.makeText(context, "Pendaftaran Berhasil Dilakukan", Toast.LENGTH_SHORT)
+            .show()
         val activity = (context as? Activity)
         val intentMainActivity = Intent(context, MainActivity::class.java)
         context.startActivity(intentMainActivity)
         activity?.finish()
+    } else {
+        if (userViewModel.isProsesSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                userViewModel.isProsesSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
     }
 
     Column {

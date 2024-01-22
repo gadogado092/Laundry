@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.screen.other
 
 import amat.kelolakost.data.User
+import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,14 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
     val typeWa: StateFlow<String>
         get() = _typeWa
 
+    private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesSuccess: StateFlow<ValidationResult>
+        get() = _isProsesSuccess
+
     fun getKostInit() {
+        clearError()
         viewModelScope.launch {
             _stateUser.value = UiState.Loading
             val data = repository.getUser()
@@ -30,6 +38,10 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
             _typeWa.value = data[0].typeWa
         }
 
+    }
+
+    fun clearError() {
+        _isProsesSuccess.value = ValidationResult(true, "")
     }
 
 }

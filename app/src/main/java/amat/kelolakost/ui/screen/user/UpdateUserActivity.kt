@@ -79,15 +79,20 @@ fun UpdateUserScreen(
     val updateUserViewModel: UpdateUserViewModel =
         viewModel(factory = UpdateUserViewModelFactory(Injection.provideUserRepository(context)))
 
-    if (updateUserViewModel.isUpdateSuccess.collectAsState().value) {
-        Toast.makeText(
-            context,
-            stringResource(id = R.string.success_update_data),
-            Toast.LENGTH_SHORT
-        )
+    if (!updateUserViewModel.isProsesSuccess.collectAsState().value.isError) {
+        Toast.makeText(context, stringResource(id = R.string.success_update_data), Toast.LENGTH_SHORT)
             .show()
         val activity = (context as? Activity)
         activity?.finish()
+    } else {
+        if (updateUserViewModel.isProsesSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                updateUserViewModel.isProsesSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
     }
 
     OnLifecycleEvent { owner, event ->
