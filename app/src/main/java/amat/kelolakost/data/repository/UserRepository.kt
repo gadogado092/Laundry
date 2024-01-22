@@ -25,6 +25,10 @@ class UserRepository(private val userDao: UserDao) {
         userDao.update(user)
     }
 
+    suspend fun extendApp(userId: String, newLimit: String, newKey: String) {
+        userDao.extendApp(userId, newLimit, newKey)
+    }
+
     companion object {
         @Volatile
         private var instance: UserRepository? = null

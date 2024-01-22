@@ -7,20 +7,34 @@ import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.OtherMenuItem
+import amat.kelolakost.ui.component.SimpleQuantityTextField
+import amat.kelolakost.ui.theme.ErrorColor
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
-import android.net.Uri
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.BookOnline
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Reorder
@@ -30,8 +44,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -41,7 +57,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun OtherScreen(
     context: Context,
     modifier: Modifier = Modifier,
-    onClickExtend: () -> Unit,
+    onClickCsExtend: (String) -> Unit,
     navigateToBooking: () -> Unit,
     navigateCreditTenant: () -> Unit,
     navigateToKost: () -> Unit,
@@ -66,27 +82,141 @@ fun OtherScreen(
 
     }
 
+    if (!viewModel.isProsesSuccess.collectAsState().value.isError) {
+        Toast.makeText(context, "Perpanjang Berhasil Dilakukan", Toast.LENGTH_SHORT)
+            .show()
+        viewModel.getKostInit()
+    } else {
+        if (viewModel.isProsesSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesSuccess.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
 
     Column {
-        Divider(
-            color = GreyLight,
-            thickness = 8.dp,
-        )
+        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = Modifier.weight(1F)
-            ) {
+            Column(modifier = Modifier.weight(1F)) {
                 Text(
                     text = stringResource(id = R.string.limit_extend),
                     style = TextStyle(fontSize = 12.sp),
                     color = Color.Gray
                 )
+                ContentLimitDate(viewModel)
+            }
+            Column(modifier = Modifier.weight(1F), horizontalAlignment = Alignment.End) {
                 ContentPrice(viewModel)
             }
-            OutlinedButton(onClick = onClickExtend) {
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+        ) {
+            SimpleQuantityTextField(
+                modifier = Modifier.weight(3.5F),
+                value = viewModel.stateUi.collectAsState().value.qty.toString(),
+                onAddClick = {
+                    viewModel.addQuantity()
+                },
+                onMinClick = {
+                    viewModel.minQuantity()
+                }
+            )
+            Spacer(modifier = Modifier.weight(0.3F))
+            OutlinedTextField(
+                modifier = Modifier.weight(6F),
+                value = viewModel.stateUi.collectAsState().value.extendPassword,
+                onValueChange = { newText ->
+                    viewModel.setPassword(newText)
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = TealGreen,
+                    errorBorderColor = ErrorColor
+                ),
+                placeholder = { Text("Password Perpanjang") }
+            )
+        }
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            style = TextStyle(fontSize = 12.sp),
+            text = "Perpanjang pemakaian aplikasi ${viewModel.stateUi.collectAsState().value.qty} Bulan. " +
+                    "Biaya ${currencyFormatterStringViewZero((viewModel.stateUi.collectAsState().value.qty * viewModel.stateUi.collectAsState().value.cost).toString())}" +
+                    "\nBatas Pemakaian setelah perpanjang ${dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.newLimit)}"
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            text = "Support Kami Melalui",
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        )
+        ItemSupport(
+            subtitle = context.getString(R.string.bank),
+            modifier = Modifier.clickable {
+                copyTextToClipboard(
+                    context,
+                    "Rekening Bsi",
+                    context.getString(R.string.rek_bsi)
+                )
+            })
+        ItemSupport(
+            subtitle = context.getString(R.string.ovo),
+            modifier = Modifier.clickable {
+                copyTextToClipboard(
+                    context,
+                    "Nomor Ovo",
+                    context.getString(R.string.number_ovo)
+                )
+            })
+        ItemSupport(
+            subtitle = context.getString(R.string.go_pay),
+            modifier = Modifier.clickable {
+                copyTextToClipboard(
+                    context,
+                    "Nomor Gopay",
+                    context.getString(R.string.number_gopay)
+                )
+            })
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+        ) {
+            OutlinedButton(
+                modifier = Modifier.weight(1F),
+                onClick = {
+                    val note =
+                        "Assalamualaikum... Selamat pagi, siang, sore atau malam..." +
+                                "\nSaya Ingin Perpanjang pemakaian aplikasi ${viewModel.stateUi.value.qty} Bulan. " +
+                                "Biaya ${currencyFormatterStringViewZero((viewModel.stateUi.value.qty * viewModel.stateUi.value.cost).toString())}" +
+                                "\nBatas Pemakaian setelah perpanjang ${
+                                    dateToDisplayMidFormat(
+                                        viewModel.stateUi.value.newLimit
+                                    )
+                                }" +
+                                "\nkode = ${viewModel.stateUi.value.kode}"
+                    onClickCsExtend(note)
+                }) {
+                Text(text = stringResource(id = R.string.cs_extend))
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            OutlinedButton(
+                modifier = Modifier.weight(1F),
+                onClick = {
+                    viewModel.proses()
+                }
+            ) {
                 Text(text = stringResource(id = R.string.extend))
             }
         }
@@ -175,20 +305,24 @@ fun ContentPrice(viewModel: OtherViewModel) {
     viewModel.stateUser.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {
-                Text(text = uiState.errorMessage, style = TextStyle(fontSize = 12.sp))
+                Text(
+                    text = uiState.errorMessage,
+                    style = TextStyle(fontSize = 12.sp),
+                    color = Color.Gray
+                )
                 Text(text = uiState.errorMessage, color = TealGreen)
             }
 
             UiState.Loading -> {
-                Text(text = "Loading", style = TextStyle(fontSize = 12.sp))
+                Text(text = "Loading", style = TextStyle(fontSize = 12.sp), color = Color.Gray)
                 Text(text = "Loading", color = TealGreen)
             }
 
             is UiState.Success -> {
-                val decodedDateTime = Uri.decode(uiState.data.limit)
                 Text(
-                    text = dateToDisplayMidFormat(decodedDateTime),
+                    text = "Kode = ${uiState.data.key}",
                     style = TextStyle(fontSize = 12.sp),
+                    color = Color.Gray
                 )
                 Text(
                     text = currencyFormatterStringViewZero(uiState.data.cost.toString()) + "/Bulan",
@@ -198,4 +332,56 @@ fun ContentPrice(viewModel: OtherViewModel) {
         }
     }
 }
+
+@Composable
+fun ContentLimitDate(viewModel: OtherViewModel) {
+    viewModel.stateUser.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                Text(text = uiState.errorMessage)
+            }
+
+            UiState.Loading -> {
+                Text(text = "Loading")
+            }
+
+            is UiState.Success -> {
+                Text(
+                    text = dateToDisplayMidFormat(uiState.data.limit),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemSupport(
+    modifier: Modifier = Modifier,
+    subtitle: String = "",
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp), Arrangement.SpaceBetween, Alignment.CenterVertically
+    ) {
+        Text(text = subtitle, style = TextStyle(fontSize = 14.sp))
+        Image(
+            modifier = Modifier
+                .padding(2.dp)
+                .size(20.dp),
+            imageVector = Icons.Default.ContentCopy,
+            contentDescription = "",
+            colorFilter = ColorFilter.tint(color = TealGreen)
+        )
+    }
+}
+
+private fun copyTextToClipboard(context: Context, info: String, value: String) {
+    val clipboardManager =
+        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipData = ClipData.newPlainText("text", value)
+    clipboardManager.setPrimaryClip(clipData)
+    Toast.makeText(context, "$info terCopy ke clipboard", Toast.LENGTH_LONG).show()
+}
+
 

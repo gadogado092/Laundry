@@ -4,6 +4,13 @@
     <string name="url_tutorial_app">https://www.youtube.com/</string>
     <string name="message_cs">Hai Customer Service Kelola Lapangan, saya ingin bertanya tentang aplikasi.</string>
 
+    <string name="bank">BSI/Bank Syariah Indonesia 4462441120</string>
+    <string name="rek_bsi">4462441120</string>
+    <string name="number_ovo">085241527504</string>
+    <string name="number_gopay">085241527504</string>
+    <string name="ovo">OVO 085241527504</string>
+    <string name="go_pay">GOPAY 085241527504</string>
+
     <string name="title_new_user">Selamat Datang</string>
     <string name="title_unit">Unit</string>
     <string name="title_tenant">Penyewa</string>
@@ -16,6 +23,7 @@
 
     <string name="limit_extend">Batas pemakaian</string>
     <string name="extend">Perpanjang</string>
+    <string name="cs_extend">Cs Perpanjang</string>
     <string name="update">UPDATE</string>
     <string name="delete">DELETE</string>
     <string name="save">SIMPAN</string>

@@ -64,3 +64,42 @@ fun QuantityTextField(
         )
     }
 }
+
+@Composable
+fun SimpleQuantityTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onAddClick: () -> Unit,
+    onMinClick: () -> Unit,
+) {
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            modifier = Modifier.padding(0.dp),
+            value = value,
+            onValueChange = {},
+            singleLine = true,
+            enabled = false,
+            textStyle = TextStyle(color = FontBlack, textAlign = TextAlign.Center),
+            leadingIcon = {
+                Image(
+                    modifier = Modifier.clickable {
+                        onMinClick()
+                    },
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(GreenDark)
+                )
+            },
+            trailingIcon = {
+                Image(
+                    modifier = Modifier.clickable {
+                        onAddClick()
+                    },
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(GreenDark)
+                )
+            }
+        )
+    }
+}

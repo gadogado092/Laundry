@@ -1,15 +1,21 @@
 package amat.kelolakost.ui.screen.other
 
+import amat.kelolakost.addDateLimitApp
 import amat.kelolakost.data.User
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.UserRepository
+import amat.kelolakost.generateDateNow
+import amat.kelolakost.generateMd5
+import amat.kelolakost.getLimitDay
 import amat.kelolakost.ui.common.UiState
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class OtherViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -23,6 +29,18 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
     val typeWa: StateFlow<String>
         get() = _typeWa
 
+    private val _stateUi: MutableStateFlow<OtherUi> =
+        MutableStateFlow(
+            OtherUi(
+                newLimit = addDateLimitApp(
+                    generateDateNow(),
+                    "Bulan",
+                    1
+                )
+            )
+        )
+    val stateUi: StateFlow<OtherUi> get() = _stateUi
+
     private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
@@ -34,8 +52,104 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             _stateUser.value = UiState.Loading
             val data = repository.getUser()
+            _stateUi.value =
+                stateUi.value.copy(
+                    cost = data[0].cost,
+                    limit = data[0].limit,
+                    kode = data[0].key,
+                    userId = data[0].id
+                )
             _stateUser.value = UiState.Success(data[0])
             _typeWa.value = data[0].typeWa
+            setNewLimit()
+        }
+
+    }
+
+    fun setNewLimit() {
+        clearError()
+        val day = getLimitDay(stateUi.value.limit).toInt()
+        if (day < 0) {
+            _stateUi.value = stateUi.value.copy(
+                newLimit = addDateLimitApp(
+                    generateDateNow(),
+                    "Bulan",
+                    stateUi.value.qty
+                )
+            )
+        } else {
+            _stateUi.value = stateUi.value.copy(
+                newLimit = addDateLimitApp(
+                    stateUi.value.limit,
+                    "Bulan",
+                    stateUi.value.qty
+                )
+            )
+        }
+    }
+
+    fun addQuantity(value: String = "1") {
+        clearError()
+        val qty = stateUi.value.qty + value.toInt()
+        if (stateUi.value.qty < 12) {
+            _stateUi.value = stateUi.value.copy(qty = qty)
+        }
+        refreshUI()
+    }
+
+    fun minQuantity(value: String = "1") {
+        clearError()
+        val qty = stateUi.value.qty - value.toInt()
+        if (stateUi.value.qty > 1) {
+            _stateUi.value = stateUi.value.copy(qty = qty)
+            refreshUI()
+        }
+    }
+
+    fun setPassword(value: String) {
+        clearError()
+        _stateUi.value = stateUi.value.copy(extendPassword = value)
+    }
+
+    fun refreshUI() {
+        setNewLimit()
+    }
+
+    fun proses() {
+        clearError()
+
+        if (stateUi.value.extendPassword.isEmpty()) {
+            _isProsesSuccess.value = ValidationResult(true, "Masukkan Password")
+            return
+        }
+
+        val passwordMd5 =
+            generateMd5(stateUi.value.kode + stateUi.value.qty).substring(0, 4).uppercase()
+        Log.d("saya", passwordMd5)
+
+        if (stateUi.value.extendPassword != passwordMd5) {
+            _isProsesSuccess.value = ValidationResult(true, "Password Salah. Hubungi Cs")
+            return
+        }
+
+        if (stateUi.value.extendPassword == passwordMd5) {
+            try {
+                viewModelScope.launch {
+                    val key = UUID.randomUUID().toString().substring(0, 4).uppercase()
+
+                    repository.extendApp(
+                        userId = stateUi.value.userId,
+                        newLimit = stateUi.value.newLimit,
+                        newKey = key
+                    )
+                    _isProsesSuccess.value = ValidationResult(false)
+                    _stateUi.value = stateUi.value.copy(qty = 1, extendPassword = "")
+                    refreshUI()
+                }
+            } catch (e: Exception) {
+                _isProsesSuccess.value =
+                    ValidationResult(true, "Gagal Perpanjang " + e.message.toString())
+            }
         }
 
     }

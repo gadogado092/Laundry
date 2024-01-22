@@ -13,7 +13,9 @@ import android.util.Log
 import android.util.Patterns
 import androidx.compose.ui.graphics.Color
 import java.io.Serializable
+import java.math.BigInteger
 import java.net.URLEncoder
+import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -21,6 +23,10 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
+fun generateMd5(input: String): String {
+    val md = MessageDigest.getInstance("MD5")
+    return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+}
 fun isEmailValid(emailAddress: String): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
 }
