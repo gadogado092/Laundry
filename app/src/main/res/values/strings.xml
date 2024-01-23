@@ -56,7 +56,7 @@
     <string name="title_history_credit_tenant">Riwayat Pembayaran Piutang</string>
     <string name="title_history">Riwayat Pembayaran</string>
     <string name="title_payment_credit_debit">Pembayaran Hutang Piutang</string>
-    <string name="subtitle_credit_tenant">Lihat data piutang penyewa</string>
+    <string name="subtitle_credit_tenant">Kelola pembayaran angsuran penyewa</string>
     <string name="title_debt_credit">Hutang Piutang</string>
     <string name="title_add_debt_credit">Tambah Hutang Piutang</string>
     <string name="title_add_debt_credit_customer">Tambah Pelanggan</string>
