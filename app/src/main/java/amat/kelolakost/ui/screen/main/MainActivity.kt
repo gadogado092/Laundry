@@ -118,7 +118,6 @@ fun MainScreen(
                 CashFlowScreen(context = context)
             }
             composable(Screen.Other.route) {
-                //TODO url_tutorial_app belum dimasukkan
                 val urlTutorial = stringResource(R.string.url_tutorial_app)
                 val numberCs = stringResource(R.string.number_cs)
                 val messageCs = stringResource(R.string.message_cs)
