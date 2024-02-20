@@ -35,7 +35,8 @@ object Injection {
 
     fun provideUnitTypeRepository(context: Context): UnitTypeRepository {
         return UnitTypeRepository.getInstance(
-            KelolaKostRoomDatabase.getDatabase(context).unitTypeDao()
+            KelolaKostRoomDatabase.getDatabase(context).unitTypeDao(),
+            KelolaKostRoomDatabase.getDatabase(context).unitDao()
         )
     }
 

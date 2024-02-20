@@ -90,9 +90,22 @@ class SplashActivity : ComponentActivity() {
 
             //Tampilan
             KelolaKostTheme {
-                SplashScreen("0.0.1")
+                SplashScreen(getVersionName())
             }
 
+        }
+    }
+
+    private fun getVersionName(): String {
+        return try {
+            val packageManager = packageManager
+            val packageInfo = packageManager.getPackageInfo(
+                packageName, 0
+            )
+            val versionName = packageInfo.versionName
+            versionName
+        } catch (e: Exception) {
+            "${e.message}"
         }
     }
 

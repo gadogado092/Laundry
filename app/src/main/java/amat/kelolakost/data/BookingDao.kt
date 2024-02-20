@@ -141,4 +141,13 @@ interface BookingDao {
         deleteBooking(bookingId)
     }
 
+    @Query(
+        "SELECT * " +
+                "FROM Booking " +
+                "WHERE Booking.isDelete=0 AND Booking.id!=0 AND Booking.unitId=:unitId " +
+                "ORDER BY name ASC"
+    )
+    //for delete unit
+    suspend fun getBookingByUnit(unitId: String): List<Booking>
+
 }

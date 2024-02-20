@@ -22,5 +22,8 @@ interface UnitTypeDao {
     fun getDetail(id: String): Flow<UnitType>
 
     @Update
-    suspend fun update(kost: UnitType)
+    suspend fun update(unitType: UnitType)
+
+    @Query("UPDATE UnitType SET isDelete=1 WHERE id=:unitTypeId")
+    suspend fun deleteUnitType(unitTypeId: String)
 }

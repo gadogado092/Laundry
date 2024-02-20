@@ -54,6 +54,11 @@ class BookingRepository(private val bookingDao: BookingDao) {
         )
     }
 
+    //for delete unit
+    suspend fun getBookingByUnit(unitId: String): List<Booking> {
+        return bookingDao.getBookingByUnit(unitId)
+    }
+
     companion object {
         @Volatile
         private var instance: BookingRepository? = null

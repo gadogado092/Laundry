@@ -1,10 +1,12 @@
 package amat.kelolakost.ui.screen.unit
 
+import amat.kelolakost.data.Booking
 import amat.kelolakost.data.Kost
 import amat.kelolakost.data.Unit
 import amat.kelolakost.data.UnitDetail
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.entity.ValidationResult
+import amat.kelolakost.data.repository.BookingRepository
 import amat.kelolakost.data.repository.KostRepository
 import amat.kelolakost.data.repository.UnitRepository
 import amat.kelolakost.data.repository.UnitTypeRepository
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 class UpdateUnitViewModel(
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
-    private val unitTypeRepository: UnitTypeRepository
+    private val unitTypeRepository: UnitTypeRepository,
+    private val bookingRepository: BookingRepository
 ) : ViewModel() {
 
     private val _stateUnitUi: MutableStateFlow<UiState<UnitDetail>> =
@@ -71,6 +74,8 @@ class UpdateUnitViewModel(
     val isUpdateSuccess: StateFlow<ValidationResult>
         get() = _isUpdateSuccess
 
+    var listBooking = mutableListOf<Booking>()
+
     fun getDetail(id: String) {
         viewModelScope.launch {
             _stateUnitUi.value = UiState.Loading
@@ -95,6 +100,8 @@ class UpdateUnitViewModel(
                         isDelete = data.isDelete
                     )
                 }
+
+            getBooking()
 
         }
     }
@@ -216,19 +223,64 @@ class UpdateUnitViewModel(
         }
 
     }
+
+    fun isCanDelete(): Boolean {
+        _stateListKost.value = UiState.Error("")
+        _stateListUnitType.value = UiState.Error("")
+        //check booking unit id... isDelete=0
+        if (listBooking.isNotEmpty()) {
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Unit Masih Dibooking")
+            return false
+        }
+
+        //check status unit
+        if (unitUi.value.unitStatusId != 2) {
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Status Unit Harus Kosong")
+            return false
+        }
+
+        return true
+    }
+
+    fun deleteUnit() {
+        try {
+            viewModelScope.launch {
+                unitRepository.deleteUnit(_unitUi.value.id)
+                _isUpdateSuccess.value = ValidationResult(false)
+            }
+        } catch (e: Exception) {
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Gagal Menghapus Unit ${e.message}")
+        }
+    }
+
+    //for delete unit
+    fun getBooking() {
+        viewModelScope.launch {
+            listBooking = bookingRepository.getBookingByUnit(unitUi.value.id).toMutableList()
+        }
+    }
 }
 
 class UpdateUnitViewModelFactory(
     private val unitRepository: UnitRepository,
     private val kostRepository: KostRepository,
-    private val unitTypeRepository: UnitTypeRepository
+    private val unitTypeRepository: UnitTypeRepository,
+    private val bookingRepository: BookingRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(UpdateUnitViewModel::class.java)) {
-            return UpdateUnitViewModel(unitRepository, kostRepository, unitTypeRepository) as T
+            return UpdateUnitViewModel(
+                unitRepository,
+                kostRepository,
+                unitTypeRepository,
+                bookingRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

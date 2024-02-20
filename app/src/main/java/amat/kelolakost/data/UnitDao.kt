@@ -120,4 +120,16 @@ interface UnitDao {
     )
     suspend fun getPriceUnit(unitId: String): UnitAdapter
 
+    @Query("UPDATE Unit SET isDelete=1 WHERE id=:unitId")
+    suspend fun deleteUnit(unitId: String)
+
+    @Query(
+        "SELECT * " +
+                "FROM Unit " +
+                "WHERE Unit.isDelete=0 AND Unit.id!=0 AND Unit.unitTypeId=:unitTypeId " +
+                "ORDER BY name ASC"
+    )
+    //for delete unit type
+    suspend fun getUnitByUnitType(unitTypeId: String): List<Unit>
+
 }

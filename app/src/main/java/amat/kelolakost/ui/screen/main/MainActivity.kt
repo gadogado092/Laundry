@@ -250,6 +250,7 @@ fun BottomBar(
                         Text(
                             item.title,
                             color = if (currentRoute == item.screen.route) FontWhite else GreyLight2,
+                            maxLines = 1
                         )
                     },
                     selected = currentRoute == item.screen.route,

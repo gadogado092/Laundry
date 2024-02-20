@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.unit_type
 import amat.kelolakost.cleanCurrencyFormatter
 import amat.kelolakost.currencyFormatterString
 import amat.kelolakost.currencyFormatterStringViewZero
+import amat.kelolakost.data.Unit
 import amat.kelolakost.data.UnitType
 import amat.kelolakost.data.entity.ValidationResult
 import amat.kelolakost.data.repository.UnitTypeRepository
@@ -36,6 +37,8 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
         MutableStateFlow(ValidationResult(true, ""))
     val isUpdateSuccess: StateFlow<ValidationResult>
         get() = _isUpdateSuccess
+
+    var listUnit = mutableListOf<Unit>()
 
     fun setName(value: String) {
         _isUpdateSuccess.value = ValidationResult(true, "")
@@ -152,6 +155,7 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
                             priceGuarantee = currencyFormatterStringViewZero(data.priceGuarantee.toString()),
                             isDelete = data.isDelete
                         )
+                    getListUnit()
                 }
         }
     }
@@ -204,6 +208,37 @@ class UpdateUnitTypeViewModel(private val unitTypeRepository: UnitTypeRepository
     private suspend fun updateUnitType(unitType: UnitType) {
         unitTypeRepository.updateUnitType(unitType)
         _isUpdateSuccess.value = ValidationResult(false)
+    }
+
+    fun isCanDelete():Boolean {
+        _isUpdateSuccess.value = ValidationResult(true, "")
+        //check unit yang masih menggunakan type
+        if (listUnit.isNotEmpty()) {
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Tipe Unit Masih Digunakan ${listUnit[0].name}")
+            return false
+        }
+
+        return true
+    }
+
+    fun deleteUnitType() {
+        try {
+            viewModelScope.launch {
+                unitTypeRepository.deleteUnitType(_unitTypeUi.value.id)
+                _isUpdateSuccess.value = ValidationResult(false)
+            }
+        } catch (e: Exception) {
+            _isUpdateSuccess.value =
+                ValidationResult(true, "Gagal Menghapus Tipe Unit ${e.message}")
+        }
+    }
+
+    //for delete
+    private fun getListUnit() {
+        viewModelScope.launch {
+            listUnit = unitTypeRepository.getUnitByUnitType(_unitTypeUi.value.id).toMutableList()
+        }
     }
 }
 

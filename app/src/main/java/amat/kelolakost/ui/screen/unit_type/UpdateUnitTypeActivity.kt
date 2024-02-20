@@ -7,10 +7,14 @@ import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
+import amat.kelolakost.ui.theme.GreyLight
+import amat.kelolakost.ui.theme.GreyLight3
 import amat.kelolakost.ui.theme.KelolaKostTheme
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +33,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -47,6 +53,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class UpdateUnitTypeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,12 +87,18 @@ fun UpdateUnitTypeScreen(
     id: String,
 ) {
     val updateUnitTypeViewModel: UpdateUnitTypeViewModel =
-        viewModel(factory = UpdateUnitTypeViewModelFactory(Injection.provideUnitTypeRepository(context)))
+        viewModel(
+            factory = UpdateUnitTypeViewModelFactory(
+                Injection.provideUnitTypeRepository(
+                    context
+                )
+            )
+        )
 
     if (!updateUnitTypeViewModel.isUpdateSuccess.collectAsState().value.isError) {
         Toast.makeText(
             context,
-            stringResource(id = R.string.success_update_data),
+            "Proses Sukses",
             Toast.LENGTH_SHORT
         )
             .show()
@@ -281,19 +294,21 @@ fun UpdateUnitTypeScreen(
                     .padding(top = 8.dp)
             )
             {
-//                Button(
-//                    modifier = Modifier
-//                        .weight(1F),
-//                    onClick = {
-//                        //TODO check relasi sebelum delete
-//                    },
-//                    colors = ButtonDefaults.buttonColors(
-//                        backgroundColor = GreyLight
-//                    )
-//                ) {
-//                    Text(text = stringResource(id = R.string.delete), color = GreyLight3)
-//                }
-//                Spacer(modifier = Modifier.width(16.dp))
+                OutlinedButton(
+                    modifier = Modifier
+                        .weight(1F),
+                    onClick = {
+                        if (updateUnitTypeViewModel.isCanDelete()) {
+                            showBottomConfirm(context, updateUnitTypeViewModel)
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = GreyLight
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.delete), color = GreyLight3)
+                }
+                Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     modifier = Modifier
                         .weight(1F),
@@ -308,4 +323,26 @@ fun UpdateUnitTypeScreen(
 
         }
     }
+}
+
+private fun showBottomConfirm(
+    context: Context,
+    updateUnitTypeViewModel: UpdateUnitTypeViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Lanjutkan Hapus Tipe Unit?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        updateUnitTypeViewModel.deleteUnitType()
+    }
+    bottomSheetDialog.show()
+
 }
