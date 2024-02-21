@@ -120,7 +120,8 @@ fun MainScreen(
             composable(Screen.Other.route) {
                 val urlTutorial = stringResource(R.string.url_tutorial_app)
                 val numberCs = stringResource(R.string.number_cs)
-                val messageCs = stringResource(R.string.message_cs)
+                val messageCs =
+                    stringResource(R.string.message_cs, stringResource(R.string.app_name))
                 OtherScreen(
                     context = context,
                     onClickCsExtend = {

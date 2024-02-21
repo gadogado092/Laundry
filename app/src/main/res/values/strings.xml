@@ -2,7 +2,7 @@
     <string name="app_name">Kelola Kost</string>
     <string name="number_cs">+6285241527504</string>
     <string name="url_tutorial_app">https://www.youtube.com/playlist?list=PLUs9BkKMLf4RpbKcMC3s-3UuDBlNHnbVh</string>
-    <string name="message_cs">Hai Customer Service Kelola Lapangan, saya ingin bertanya tentang aplikasi.</string>
+    <string name="message_cs">Hai Customer Service %1$s, saya ingin bertanya tentang aplikasi.</string>
 
     <string name="bank">BSI/Bank Syariah Indonesia 4462441120</string>
     <string name="rek_bsi">4462441120</string>
