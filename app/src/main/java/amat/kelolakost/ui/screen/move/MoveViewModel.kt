@@ -282,12 +282,19 @@ class MoveViewModel(
                     return false
                 }
             }
+
+            if (moveUi.value.totalPayment.toBigInteger() < 0.toBigInteger()){
+                _isMoveSuccess.value =
+                    ValidationResult(true, "Simpan Dana Tidak Boleh Minus")
+                return false
+            }
+
         }
 
         return true
     }
 
-    fun prosesCheckOut() {
+    fun prosesMove() {
         clearError()
         viewModelScope.launch {
             try {

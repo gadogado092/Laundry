@@ -229,6 +229,12 @@ class ExtendViewModel(
             }
         }
 
+        if (extendUi.value.totalPayment.toBigInteger() < 0.toBigInteger()){
+            _isExtendSuccess.value =
+                ValidationResult(true, "Simpan Dana Tidak Boleh Minus")
+            return false
+        }
+
         return true
     }
 

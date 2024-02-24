@@ -12,8 +12,8 @@ android {
         applicationId = "amat.kelolakost"
         minSdk = 24
         targetSdk = 33
-        versionCode = 5
-        versionName = "1.0.5"
+        versionCode = 6
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -91,4 +91,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation ("pub.devrel:easypermissions:3.0.0")
+
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

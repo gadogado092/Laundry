@@ -11,7 +11,7 @@ interface CustomerCreditDebitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(customerCreditDebit: CustomerCreditDebit)
 
-    @Query("SELECT * FROM CustomerCreditDebit")
+    @Query("SELECT * FROM CustomerCreditDebit WHERE isDelete=0 AND id!=0")
     suspend fun getAllCustomerCreditDebit(): List<CustomerCreditDebit>
 
     @Update

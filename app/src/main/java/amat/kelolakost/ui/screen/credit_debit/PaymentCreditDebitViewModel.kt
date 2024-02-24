@@ -148,6 +148,13 @@ class PaymentCreditDebitViewModel(
                 return false
             }
         }
+
+        if (stateUi.value.totalPayment.toBigInteger() < 0.toBigInteger()){
+            _isProsesSuccess.value =
+                ValidationResult(true, "Dana Tidak Boleh Minus")
+            return false
+        }
+
         return true
     }
 

@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/spinner_background">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageView16"
                     android:layout_width="64dp"
                     android:layout_height="64dp"

@@ -772,7 +772,7 @@ private fun showBottomConfirm(
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
-        moveViewModel.prosesCheckOut()
+        moveViewModel.prosesMove()
     }
     bottomSheetDialog.show()
 

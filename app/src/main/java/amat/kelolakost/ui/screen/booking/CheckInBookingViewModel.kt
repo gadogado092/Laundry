@@ -418,6 +418,12 @@ class CheckInBookingViewModel(
             return false
         }
 
+        if (checkInUi.value.totalPayment.toBigInteger() < 0.toBigInteger()){
+            _isCheckInSuccess.value =
+                ValidationResult(true, "Simpan Dana Tidak Boleh Minus")
+            return false
+        }
+
         return true
     }
 
