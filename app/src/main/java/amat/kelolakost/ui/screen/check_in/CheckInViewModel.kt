@@ -64,6 +64,9 @@ class CheckInViewModel(
     private val _billEntity: MutableStateFlow<BillEntity> =
         MutableStateFlow(BillEntity())
 
+    val billEntity: StateFlow<BillEntity>
+        get() = _billEntity
+
     private val _isTenantSelectedValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
     val isTenantSelectedValid: StateFlow<ValidationResult>
@@ -139,10 +142,14 @@ class CheckInViewModel(
         }
     }
 
-    fun setTenantSelected(id: String, name: String) {
+    fun setTenantSelected(id: String, name: String, tenantNumberPhone: String) {
         _isTenantSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
-        _checkInUi.value = _checkInUi.value.copy(tenantId = id, tenantName = name)
+        _checkInUi.value = _checkInUi.value.copy(
+            tenantId = id,
+            tenantName = name,
+            tenantNumberPhone = tenantNumberPhone
+        )
         _stateListTenant.value = UiState.Error("")
     }
 
@@ -648,7 +655,9 @@ class CheckInViewModel(
                     kostName = checkInUi.value.kostName,
                     createAt = dateToDisplayMidFormat(cashFlow.createAt),
                     nominal = currencyFormatterStringViewZero(cashFlow.nominal),
-                    note = cashFlow.note
+                    note = cashFlow.note,
+                    typeWa = user.value.typeWa,
+                    tenantNumberPhone = checkInUi.value.tenantNumberPhone
                 )
 
                 _isCheckInSuccess.value = ValidationResult(false)
@@ -657,10 +666,6 @@ class CheckInViewModel(
             _isCheckInSuccess.value = ValidationResult(true, e.message.toString())
         }
 
-    }
-
-    fun getBill(): BillEntity {
-        return _billEntity.value
     }
 
     fun checkLimitApp(): Boolean {

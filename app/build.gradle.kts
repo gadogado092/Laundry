@@ -89,4 +89,6 @@ dependencies {
 
     //coil load image from internet
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    implementation ("pub.devrel:easypermissions:3.0.0")
 }

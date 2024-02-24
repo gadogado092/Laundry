@@ -82,6 +82,9 @@ class MoveViewModel(
     private val _billEntity: MutableStateFlow<BillEntity> =
         MutableStateFlow(BillEntity())
 
+    val billEntity: StateFlow<BillEntity>
+        get() = _billEntity
+
     init {
         getUser()
     }
@@ -117,7 +120,8 @@ class MoveViewModel(
                     kostName = data.kostName,
                     limitCheckOut = data.limitCheckOut,
                     currentDebtTenant = totalDebt,
-                    moveDate = generateDateNow()
+                    moveDate = generateDateNow(),
+                    tenantNumberPhone = data.tenantNumberPhone
                 )
 
             } catch (e: Exception) {
@@ -377,7 +381,9 @@ class MoveViewModel(
                         kostName = moveUi.value.kostName,
                         createAt = dateToDisplayMidFormat(cashFlow.createAt),
                         nominal = currencyFormatterStringViewZero(cashFlow.nominal),
-                        note = cashFlow.note
+                        note = cashFlow.note,
+                        typeWa = user.value.typeWa,
+                        tenantNumberPhone = moveUi.value.tenantNumberPhone
                     )
 
                     _isMoveSuccess.value = ValidationResult(false)
@@ -386,10 +392,6 @@ class MoveViewModel(
                 _isMoveSuccess.value = ValidationResult(true, e.message.toString())
             }
         }
-    }
-
-    fun getBill(): BillEntity {
-        return _billEntity.value
     }
 
     fun checkLimitApp(): Boolean {

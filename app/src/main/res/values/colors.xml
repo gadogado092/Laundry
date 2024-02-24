@@ -33,4 +33,10 @@
     <color name="teal_green">#128C7E</color>
     <color name="light_green">#25D366</color>
 
+    <color name="colorGreySlow">#ECECEC</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorPrimaryFont2">#17356F</color>
+    <color name="colorPrimaryFont">#CB000000</color>
+    <color name="colorBlack">#121212</color>
+
 </resources>

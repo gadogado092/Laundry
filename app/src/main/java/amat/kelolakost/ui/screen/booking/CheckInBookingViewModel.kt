@@ -107,6 +107,9 @@ class CheckInBookingViewModel(
     private val _billEntity: MutableStateFlow<BillEntity> =
         MutableStateFlow(BillEntity())
 
+    val billEntity: StateFlow<BillEntity>
+        get() = _billEntity
+
     init {
         getUser()
         Log.d("saya", "init")
@@ -158,10 +161,11 @@ class CheckInBookingViewModel(
         }
     }
 
-    fun setTenantSelected(id: String, name: String) {
+    fun setTenantSelected(id: String, name: String, numberPhone: String) {
         _isTenantSelectedValid.value = ValidationResult(true, "")
         _isCheckInSuccess.value = ValidationResult(true, "")
-        _checkInUi.value = _checkInUi.value.copy(tenantId = id, tenantName = name)
+        _checkInUi.value =
+            _checkInUi.value.copy(tenantId = id, tenantName = name, tenantNumberPhone = numberPhone)
         _stateListTenant.value = UiState.Error("")
     }
 
@@ -469,7 +473,11 @@ class CheckInBookingViewModel(
                                 }"
 
                     if (cleanCurrencyFormatter(checkInUi.value.nominalBooking) != 0) {
-                        noteCashFlow += " - Nominal Booking ${currencyFormatterStringViewZero(checkInUi.value.nominalBooking)}"
+                        noteCashFlow += " - Nominal Booking ${
+                            currencyFormatterStringViewZero(
+                                checkInUi.value.nominalBooking
+                            )
+                        }"
                     }
 
                     if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
@@ -499,7 +507,11 @@ class CheckInBookingViewModel(
                                 }"
 
                     if (cleanCurrencyFormatter(checkInUi.value.nominalBooking) != 0) {
-                        noteCashFlow += " - Nominal Booking ${currencyFormatterStringViewZero(checkInUi.value.nominalBooking)}"
+                        noteCashFlow += " - Nominal Booking ${
+                            currencyFormatterStringViewZero(
+                                checkInUi.value.nominalBooking
+                            )
+                        }"
                     }
 
                     if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
@@ -528,7 +540,11 @@ class CheckInBookingViewModel(
                                 }"
 
                     if (cleanCurrencyFormatter(checkInUi.value.nominalBooking) != 0) {
-                        noteCashFlow += " - Nominal Booking ${currencyFormatterStringViewZero(checkInUi.value.nominalBooking)}"
+                        noteCashFlow += " - Nominal Booking ${
+                            currencyFormatterStringViewZero(
+                                checkInUi.value.nominalBooking
+                            )
+                        }"
                     }
 
                     if (cleanCurrencyFormatter(checkInUi.value.additionalCost) != 0) {
@@ -562,7 +578,9 @@ class CheckInBookingViewModel(
                     kostName = checkInUi.value.kostName,
                     createAt = dateToDisplayMidFormat(cashFlow.createAt),
                     nominal = currencyFormatterStringViewZero(cashFlow.nominal),
-                    note = cashFlow.note
+                    note = cashFlow.note,
+                    typeWa = user.value.typeWa,
+                    tenantNumberPhone = checkInUi.value.tenantNumberPhone
                 )
 
                 _isCheckInSuccess.value = ValidationResult(false)
@@ -571,10 +589,6 @@ class CheckInBookingViewModel(
             _isCheckInSuccess.value = ValidationResult(true, e.message.toString())
         }
 
-    }
-
-    fun getBill(): BillEntity {
-        return _billEntity.value
     }
 
     fun checkLimitApp(): Boolean {

@@ -18,7 +18,7 @@ import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
-import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.TealGreen
@@ -67,6 +67,7 @@ fun CashFlowScreen(
         viewModel(
             factory = CashFlowViewModelFactory(
                 Injection.provideCashFlowRepository(context),
+                Injection.provideUserRepository(context)
             )
         )
 
@@ -152,9 +153,12 @@ fun CashFlowScreen(
 
                     is UiState.Success -> {
                         ListCashFLow(uiState.data,
-                            onItemClick = {billEntity->
-                                val intent = Intent(context, BillActivity::class.java)
-                                intent.putExtra("object", billEntity)
+                            onItemClick = { billEntity ->
+                                val intent = Intent(context, BillActivityXml::class.java)
+                                intent.putExtra(
+                                    "object",
+                                    billEntity.copy(typeWa = viewModel.typeWa.value)
+                                )
                                 context.startActivity(intent)
                             })
                     }

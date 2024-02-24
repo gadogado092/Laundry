@@ -25,7 +25,7 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
-import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.screen.kost.AddKostActivity
 import amat.kelolakost.ui.screen.tenant.AddTenantActivity
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
@@ -98,6 +98,7 @@ class CheckInActivity : ComponentActivity() {
         val intent = intent
         val tenantId = intent.getStringExtra("tenantId")
         val tenantName = intent.getStringExtra("tenantName")
+        val tenantNumberPhone = intent.getStringExtra("tenantNumberPhone")
         val kostId = intent.getStringExtra("kostId")
         val kostName = intent.getStringExtra("kostName")
         val unitId = intent.getStringExtra("unitId")
@@ -113,6 +114,7 @@ class CheckInActivity : ComponentActivity() {
             KelolaKostTheme {
                 var tenantIdScreen = ""
                 var tenantNameScreen = ""
+                var tenantNumberPhoneScreen = ""
                 var kostIdScreen = ""
                 var kostNameScreen = ""
                 var unitIdScreen = ""
@@ -122,9 +124,10 @@ class CheckInActivity : ComponentActivity() {
                 var priceGuaranteeScreen = ""
                 var unitTypeNameScreen = ""
 
-                if (tenantName != null && tenantId != null) {
+                if (tenantName != null && tenantId != null && tenantNumberPhone != null) {
                     tenantIdScreen = tenantId
                     tenantNameScreen = tenantName
+                    tenantNumberPhoneScreen = tenantNumberPhone
                 }
                 if (kostName != null && kostId != null) {
                     kostIdScreen = kostId
@@ -147,7 +150,7 @@ class CheckInActivity : ComponentActivity() {
                     priceGuaranteeScreen = priceGuarantee
                 }
 
-                if (unitTypeName!=null){
+                if (unitTypeName != null) {
                     unitTypeNameScreen = unitTypeName
                 }
 
@@ -158,6 +161,7 @@ class CheckInActivity : ComponentActivity() {
                     unitName = unitNameScreen,
                     tenantId = tenantIdScreen,
                     tenantName = tenantNameScreen,
+                    tenantNumberPhone = tenantNumberPhoneScreen,
                     kostId = kostIdScreen,
                     kostName = kostNameScreen,
                     price = priceScreen,
@@ -183,6 +187,7 @@ fun CheckInScreen(
     modifier: Modifier = Modifier,
     tenantId: String = "",
     tenantName: String = "",
+    tenantNumberPhone: String = "",
     kostId: String = "",
     kostName: String = "",
     unitId: String = "",
@@ -209,8 +214,8 @@ fun CheckInScreen(
         // do stuff on event
         when (event) {
             Lifecycle.Event.ON_CREATE -> {
-                if (tenantId != "" && tenantName != "") {
-                    checkInViewModel.setTenantSelected(tenantId, tenantName)
+                if (tenantId != "" && tenantName != "" && tenantNumberPhone != "") {
+                    checkInViewModel.setTenantSelected(tenantId, tenantName, tenantNumberPhone)
                 }
                 if (kostId != "" && kostName != "") {
                     checkInViewModel.setKostSelected(kostId, kostName)
@@ -361,8 +366,9 @@ fun CheckInScreen(
     if (!checkInViewModel.isCheckInSuccess.collectAsState().value.isError) {
         Toast.makeText(context, stringResource(id = R.string.success_check_in), Toast.LENGTH_SHORT)
             .show()
-        val intent = Intent(context, BillActivity::class.java)
-        intent.putExtra("object", checkInViewModel.getBill())
+        val intent = Intent(context, BillActivityXml::class.java)
+        val bill = checkInViewModel.billEntity.collectAsState().value
+        intent.putExtra("object", bill)
         context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()
@@ -587,7 +593,9 @@ fun CheckInScreen(
                 thickness = 2.dp
             )
 
-            Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)) {
                 Text(
                     text = stringResource(id = R.string.payment_via),
                     style = TextStyle(color = FontBlack),
@@ -641,7 +649,9 @@ fun CheckInScreen(
                 isEnable = true
             )
 
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)) {
                 Text(
                     text = stringResource(id = R.string.payment_method),
                     style = TextStyle(color = FontBlack),
@@ -846,7 +856,7 @@ fun showBottomSheetTenant(
     }
 
     val adapter = TenantAdapter {
-        checkInViewModel.setTenantSelected(it.id, it.name)
+        checkInViewModel.setTenantSelected(it.id, it.name, it.numberPhone)
         bottomSheetDialog.dismiss()
     }
 

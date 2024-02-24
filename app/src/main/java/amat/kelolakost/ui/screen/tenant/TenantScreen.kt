@@ -107,10 +107,11 @@ fun TenantScreen(
                                 intent.putExtra("id", it)
                                 context.startActivity(intent)
                             },
-                            onClickCheckIn = { id, name ->
+                            onClickCheckIn = { id, name, numberPhone ->
                                 val intent = Intent(context, CheckInActivity::class.java)
                                 intent.putExtra("tenantId", id)
                                 intent.putExtra("tenantName", name)
+                                intent.putExtra("tenantNumberPhone", numberPhone)
                                 context.startActivity(intent)
                             })
                     }
@@ -164,7 +165,7 @@ fun ListTenantView(
     listData: List<TenantHome>,
     tenantViewModel: TenantViewModel,
     onItemClick: (String) -> Unit,
-    onClickCheckIn: (String, String) -> Unit
+    onClickCheckIn: (String, String, String) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(

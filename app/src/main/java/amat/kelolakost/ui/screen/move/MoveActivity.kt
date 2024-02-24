@@ -13,7 +13,7 @@ import amat.kelolakost.ui.component.ComboBox
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
-import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.screen.unit.AddUnitActivity
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
@@ -163,8 +163,9 @@ fun MoveScreen(
         Toast.makeText(context, stringResource(id = R.string.success_move_unit), Toast.LENGTH_SHORT)
             .show()
         if (moveViewModel.moveUi.collectAsState().value.moveType != "Gratis") {
-            val intent = Intent(context, BillActivity::class.java)
-            intent.putExtra("object", moveViewModel.getBill())
+            val intent = Intent(context, BillActivityXml::class.java)
+            val bill = moveViewModel.billEntity.collectAsState().value
+            intent.putExtra("object", bill)
             context.startActivity(intent)
         }
         val activity = (context as? Activity)

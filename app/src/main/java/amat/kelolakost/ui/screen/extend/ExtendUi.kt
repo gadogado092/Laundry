@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.extend
 data class ExtendUi(
     val tenantId: String = "",
     val tenantName: String = "",
+    val tenantNumberPhone: String = "",
     val kostId: String = "",
     val kostName: String = "",
     val unitId: String = "",

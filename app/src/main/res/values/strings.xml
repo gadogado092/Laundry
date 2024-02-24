@@ -131,4 +131,9 @@
     <string name="subtitle_select_price">Pilih Harga dan Durasi</string>
     <string name="message_date_range_invalid">Tanggal awal dan akhir tidak sesuai</string>
     <string name="info_limit">Hai batas penggunaan aplikasi telah berakhir. Silahkan lakukan perpanjangan pada menu other/lainnya</string>
+
+    <string name="support_by">Support by <b>JuraganKost.id</b></string>
+
+    <string name="download">Download</string>
+    <string name="share">Share</string>
 </resources>

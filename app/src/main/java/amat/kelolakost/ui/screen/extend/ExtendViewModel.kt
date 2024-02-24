@@ -21,6 +21,7 @@ import amat.kelolakost.generateDateNow
 import amat.kelolakost.generateTextDuration
 import amat.kelolakost.getLimitDay
 import amat.kelolakost.ui.common.UiState
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -79,6 +80,9 @@ class ExtendViewModel(
     private val _billEntity: MutableStateFlow<BillEntity> =
         MutableStateFlow(BillEntity())
 
+    val billEntity: StateFlow<BillEntity>
+        get() = _billEntity
+
     init {
         getUser()
         _extendUi.value = extendUi.value.copy(createAt = generateDateNow())
@@ -116,7 +120,8 @@ class ExtendViewModel(
                     limitCheckOut = data.limitCheckOut,
                     additionalCost = currencyFormatterStringViewZero(data.additionalCost.toString()),
                     noteAdditionalCost = data.noteAdditionalCost,
-                    currentDebtTenant = totalDebt
+                    currentDebtTenant = totalDebt,
+                    tenantNumberPhone = data.tenantNumberPhone
                 )
 
                 if (price != "" && duration != "") {
@@ -347,8 +352,13 @@ class ExtendViewModel(
                     kostName = extendUi.value.kostName,
                     createAt = dateToDisplayMidFormat(cashFlow.createAt),
                     nominal = currencyFormatterStringViewZero(cashFlow.nominal),
-                    note = cashFlow.note
+                    note = cashFlow.note,
+                    typeWa = user.value.typeWa,
+                    tenantNumberPhone = extendUi.value.tenantNumberPhone
                 )
+
+                Log.d("saya", "cashflow" + cashFlow.note)
+                Log.d("saya", "bill" + _billEntity.value.note)
 
                 _isExtendSuccess.value = ValidationResult(false)
             }
@@ -356,10 +366,6 @@ class ExtendViewModel(
             _isExtendSuccess.value = ValidationResult(true, e.message.toString())
         }
 
-    }
-
-    fun getBill(): BillEntity {
-        return _billEntity.value
     }
 
     fun setPaymentMethod(value: Boolean) {

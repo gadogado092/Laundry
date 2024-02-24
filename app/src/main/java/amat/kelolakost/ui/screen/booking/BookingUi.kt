@@ -29,6 +29,7 @@ data class CheckInBookingUi(
 
     val tenantId: String = "",
     val tenantName: String = "",
+    val tenantNumberPhone: String = "",
     val kostId: String = "",
     val kostName: String = "",
     val unitId: String = "",

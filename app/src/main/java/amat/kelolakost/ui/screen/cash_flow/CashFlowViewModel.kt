@@ -4,6 +4,7 @@ import amat.kelolakost.calenderSelect
 import amat.kelolakost.data.CashFlow
 import amat.kelolakost.data.entity.Sum
 import amat.kelolakost.data.repository.CashFlowRepository
+import amat.kelolakost.data.repository.UserRepository
 import amat.kelolakost.dateDialogToRoomFormat
 import amat.kelolakost.ui.common.UiState
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,8 @@ import java.util.Calendar
 import java.util.Date
 
 class CashFlowViewModel(
-    private val cashFlowRepository: CashFlowRepository
+    private val cashFlowRepository: CashFlowRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _stateCashFLowUi: MutableStateFlow<CashFLowUi> =
@@ -44,6 +46,11 @@ class CashFlowViewModel(
     val stateTotalOutcome: StateFlow<UiState<Sum>>
         get() = _stateTotalOutcome
 
+    private val _typeWa: MutableStateFlow<String> =
+        MutableStateFlow("")
+    val typeWa: StateFlow<String>
+        get() = _typeWa
+
     init {
         //start date
         val calendarStart = Calendar.getInstance()
@@ -54,6 +61,16 @@ class CashFlowViewModel(
         calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         setInitDate(calendarStart.time, calendarEnd.time)
+
+        initTypeWa()
+    }
+
+    private fun initTypeWa(){
+        viewModelScope.launch {
+            val data = userRepository.getUser()
+            _typeWa.value = data[0].typeWa
+        }
+
     }
 
     fun setInitDate(startDate: Date, dateEnd: Date) {
@@ -135,13 +152,14 @@ class CashFlowViewModel(
 
 class CashFlowViewModelFactory(
     private val cashFlowRepository: CashFlowRepository,
+    private val userRepository: UserRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CashFlowViewModel::class.java)) {
-            return CashFlowViewModel(cashFlowRepository) as T
+            return CashFlowViewModel(cashFlowRepository, userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

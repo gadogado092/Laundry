@@ -45,7 +45,7 @@ fun TenantItem(
     onClickWa: () -> Unit,
     onClickPhone: () -> Unit,
     onClickSms: () -> Unit,
-    onClickCheckIn: (String, String) -> Unit,
+    onClickCheckIn: (String, String, String) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -107,7 +107,7 @@ fun TenantItem(
                     IconTenant(
                         id = R.drawable.check_in,
                         modifier = Modifier
-                            .clickable { onClickCheckIn(id, name) }
+                            .clickable { onClickCheckIn(id, name, numberPhone) }
                             .align(Bottom)
                     )
                 }

@@ -25,7 +25,7 @@ import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
 import amat.kelolakost.ui.component.SubBooking
-import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.screen.tenant.AddTenantActivity
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
@@ -216,8 +216,9 @@ fun CheckInScreen(
     if (!checkInViewModel.isCheckInSuccess.collectAsState().value.isError) {
         Toast.makeText(context, stringResource(id = R.string.success_check_in), Toast.LENGTH_SHORT)
             .show()
-        val intent = Intent(context, BillActivity::class.java)
-        intent.putExtra("object", checkInViewModel.getBill())
+        val intent = Intent(context, BillActivityXml::class.java)
+        val bill = checkInViewModel.billEntity.collectAsState().value
+        intent.putExtra("object", bill)
         context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()
@@ -540,9 +541,11 @@ fun ContentCheckInBooking(checkInViewModel: CheckInBookingViewModel, context: Co
             thickness = 2.dp
         )
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
             Text(
                 text = stringResource(id = R.string.payment_via),
                 style = TextStyle(color = FontBlack),
@@ -596,9 +599,11 @@ fun ContentCheckInBooking(checkInViewModel: CheckInBookingViewModel, context: Co
             isEnable = true
         )
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
             Text(
                 text = stringResource(id = R.string.payment_method),
                 style = TextStyle(color = FontBlack),
@@ -758,7 +763,7 @@ fun showBottomSheetTenant(
     }
 
     val adapter = TenantAdapter {
-        checkInViewModel.setTenantSelected(it.id, it.name)
+        checkInViewModel.setTenantSelected(it.id, it.name, it.numberPhone)
         bottomSheetDialog.dismiss()
     }
 

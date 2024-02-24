@@ -6,5 +6,7 @@ data class BillEntity(
     val createAt: String = "",
     var nominal: String = "",
     var note: String = "",
-    var kostName: String = ""
-): Serializable
+    var kostName: String = "",
+    var typeWa: String = "Standard",
+    var tenantNumberPhone: String = ""
+) : Serializable

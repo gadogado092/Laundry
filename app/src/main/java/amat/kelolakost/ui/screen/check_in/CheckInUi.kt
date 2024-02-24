@@ -3,6 +3,7 @@ package amat.kelolakost.ui.screen.check_in
 data class CheckInUi(
     val tenantId: String = "",
     val tenantName: String = "",
+    val tenantNumberPhone: String = "",
     val kostId: String = "",
     val kostName: String = "",
     val unitId: String = "",

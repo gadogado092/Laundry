@@ -20,7 +20,7 @@ import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
 import amat.kelolakost.ui.component.QuantityTextField
-import amat.kelolakost.ui.screen.bill.BillActivity
+import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.theme.ColorRed
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
@@ -193,8 +193,9 @@ fun ExtendScreen(
             stringResource(id = R.string.success_extend_rent),
             Toast.LENGTH_SHORT
         ).show()
-        val intent = Intent(context, BillActivity::class.java)
-        intent.putExtra("object", extendViewModel.getBill())
+        val intent = Intent(context, BillActivityXml::class.java)
+        val bill = extendViewModel.billEntity.collectAsState().value
+        intent.putExtra("object", bill)
         context.startActivity(intent)
         val activity = (context as? Activity)
         activity?.finish()
@@ -440,7 +441,9 @@ fun ExtendScreen(
                 thickness = 2.dp
             )
 
-            Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)) {
                 Text(
                     text = stringResource(id = R.string.payment_via),
                     style = TextStyle(color = FontBlack),
