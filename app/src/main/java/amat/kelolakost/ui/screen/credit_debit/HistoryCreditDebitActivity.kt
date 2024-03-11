@@ -53,7 +53,7 @@ class HistoryCreditDebitActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             KelolaKostTheme {
-                HistoryCreditTenantScreen(context = context, creditDebitId = creditDebitId)
+                HistoryCreditDebitScreen(context = context, creditDebitId = creditDebitId)
             }
         }
 
@@ -66,7 +66,7 @@ class HistoryCreditDebitActivity : ComponentActivity() {
 }
 
 @Composable
-fun HistoryCreditTenantScreen(
+fun HistoryCreditDebitScreen(
     modifier: Modifier = Modifier,
     context: Context,
     creditDebitId: String?,

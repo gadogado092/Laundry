@@ -116,7 +116,7 @@ fun AddCreditDebitScreen(
             UiState.Loading -> {
                 Toast.makeText(
                     context,
-                    "Loading Data Penyewa/Tenant",
+                    "Loading Data Pelanggan",
                     Toast.LENGTH_SHORT
                 ).show()
             }
