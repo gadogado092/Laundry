@@ -242,7 +242,7 @@ class ExtendViewModel(
         clearError()
         try {
             viewModelScope.launch {
-                _isExtendSuccess.value = ValidationResult(false)
+                _isExtendSuccess.value = ValidationResult(true, "")
                 val cashFlowid = UUID.randomUUID()
                 val createAt = generateDateNow()
 

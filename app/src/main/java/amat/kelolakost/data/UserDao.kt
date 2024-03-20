@@ -24,6 +24,9 @@ interface UserDao {
     @Query("SELECT * FROM User LIMIT 1")
     fun getDetail(): Flow<User>
 
+    @Query("SELECT * FROM User LIMIT 1")
+    suspend fun getProfile(): User
+
     @Query("UPDATE User SET `limit`=:newLimit, `key`=:newKey  WHERE id=:userId")
     suspend fun extendApp(userId: String, newLimit: String, newKey: String)
 }

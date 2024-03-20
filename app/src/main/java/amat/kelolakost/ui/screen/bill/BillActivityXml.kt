@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.databinding.ActivityBillBinding
+import amat.kelolakost.di.Injection
 import amat.kelolakost.getSerializable
 import amat.kelolakost.sendWhatsApp
 import android.Manifest
@@ -21,6 +22,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -46,6 +48,11 @@ class BillActivityXml : AppCompatActivity() {
     var billEntity = BillEntity()
     private var type = ""
 
+    private val myViewModel: BillViewModel by viewModels {
+        BillViewModelFactory(Injection.provideUserRepository(this))
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityBillBinding.inflate(layoutInflater)
@@ -56,7 +63,8 @@ class BillActivityXml : AppCompatActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         billEntity = getSerializable(this, "object", BillEntity::class.java)
-        binding.textKostName.text = if (billEntity.kostName.isEmpty()) "Kelola Kost" else billEntity.kostName
+        binding.textKostName.text =
+            if (billEntity.kostName.isEmpty()) "Kelola Kost" else billEntity.kostName
         binding.textDate.text = billEntity.createAt
         binding.textNominal.text = currencyFormatterStringViewZero(billEntity.nominal)
         binding.textNote.text = billEntity.note
@@ -83,7 +91,8 @@ class BillActivityXml : AppCompatActivity() {
         }
 
         binding.buttonTextSms.setOnClickListener {
-            val message = "Tanggal ${billEntity.createAt} \nNominal ${billEntity.nominal} \nKeterangan ${billEntity.note}"
+            val message =
+                "Tanggal ${billEntity.createAt} \nNominal ${billEntity.nominal} \nKeterangan ${billEntity.note}"
             val messageReport =
                 "Assalamualaikum...\nSelamat Pagi, Siang, Sore atau Malam...\n\nInfo Laporan $message"
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -96,13 +105,15 @@ class BillActivityXml : AppCompatActivity() {
         }
 
         binding.buttonTextWa.setOnClickListener {
-            val message = "Tanggal ${billEntity.createAt} \nNominal ${billEntity.nominal} \nKeterangan ${billEntity.note}"
+            val message =
+                "Tanggal ${billEntity.createAt} \nNominal ${billEntity.nominal} \nKeterangan ${billEntity.note}"
             val messageReport =
                 "Assalamualaikum...\nSelamat Pagi, Siang, Sore atau Malam...\n\nInfo Laporan $message"
             sendWhatsApp(
                 it.context,
                 billEntity.tenantNumberPhone,
-                messageReport
+                messageReport,
+                myViewModel.typeWa.value
             )
         }
     }

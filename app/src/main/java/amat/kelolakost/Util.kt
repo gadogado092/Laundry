@@ -27,6 +27,7 @@ fun generateMd5(input: String): String {
     val md = MessageDigest.getInstance("MD5")
     return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
 }
+
 fun isEmailValid(emailAddress: String): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
 }
@@ -181,7 +182,7 @@ fun sendWhatsApp(c: Context, phone: String, message: String, typeWa: String = "S
         Log.d("myLog", packageManager.toString())
 
         val url = "https://wa.me/" + str + "?text=" + URLEncoder.encode(message, "UTF-8")
-        if (typeWa == "Standard") {
+        if (typeWa == "Standard" || typeWa == "") {
             i.setPackage("com.whatsapp")
         } else if (typeWa == "Business") {
             i.setPackage("com.whatsapp.w4b")
@@ -356,9 +357,8 @@ fun dateDialogToRoomFormat(dateString: String): String {
     return fmtOut.format(date as Date)
 }
 
-fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz: Class<T>): T
-{
-    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz: Class<T>): T {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         activity.intent.getSerializableExtra(name, clazz)!!
     else
         activity.intent.getSerializableExtra(name) as T

@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.screen.main
 
 import amat.kelolakost.R
+import amat.kelolakost.di.Injection
 import amat.kelolakost.sendWhatsApp
 import amat.kelolakost.ui.navigation.NavigationItem
 import amat.kelolakost.ui.navigation.Screen
@@ -22,7 +23,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -54,6 +55,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -73,12 +75,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val context = LocalContext.current
+
+    val myViewModel: MainViewModel =
+        viewModel(
+            factory = MainViewModelFactory(
+                Injection.provideUserRepository(context)
+            )
+        )
 
     Scaffold(
         bottomBar = {
@@ -125,11 +134,11 @@ fun MainScreen(
                 OtherScreen(
                     context = context,
                     onClickCsExtend = {
-                        Log.d("saya", "dddd")
                         sendWhatsApp(
                             context,
                             numberCs,
-                            it
+                            it,
+                            myViewModel.typeWa.value
                         )
                     },
                     navigateToBooking = {
@@ -172,21 +181,12 @@ fun MainScreen(
                         }
                     },
                     onClickCostumerService = {
-                        if (it == "") {
-                            sendWhatsApp(
-                                context,
-                                numberCs,
-                                messageCs
-                            )
-                        } else {
-                            sendWhatsApp(
-                                context,
-                                numberCs,
-                                messageCs,
-                                typeWa = it
-                            )
-                        }
-
+                        sendWhatsApp(
+                            context,
+                            numberCs,
+                            messageCs,
+                            typeWa = it,
+                        )
                     },
                 )
             }

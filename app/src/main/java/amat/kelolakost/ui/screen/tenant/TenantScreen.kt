@@ -297,24 +297,21 @@ fun sendWa(context: Context, viewModel: TenantViewModel, tenant: TenantHome) {
             if (user.note != "") {
                 note = "\n${user.note}"
             }
-            if (day.toInt() == 0) {
-                body =
-                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda tinggal *Hari ini* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+            body = if (day.toInt() == 0) {
+                "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda tinggal *Hari ini* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
 
             } else if (day.toInt() < 0) {
-                body =
-                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda lewat *${
-                        abs(
-                            day.toInt()
-                        )
-                    } Hari* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+                "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda lewat *${
+                    abs(
+                        day.toInt()
+                    )
+                } Hari* - unit ${tenant.unitName}. Silahkan lakukan pembayaran.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
             } else {
-                body =
-                    "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda *$day Hari lagi* - Unit ${tenant.unitName}. Silahkan lakukan pembayaran sebelum jatuh tempo.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
+                "Bpk/Ibu bersama ini kami sampaikan masa berlaku sewa Anda *$day Hari lagi* - Unit ${tenant.unitName}. Silahkan lakukan pembayaran sebelum jatuh tempo.$bankInfo$note\n\nTerima Kasih\n\nDari Pengelola\n${user.name}"
             }
-            sendWhatsApp(context, tenant.numberPhone, body)
+            sendWhatsApp(context, tenant.numberPhone, body, viewModel.user.value.typeWa)
         } else {
-            sendWhatsApp(context, tenant.numberPhone, "")
+            sendWhatsApp(context, tenant.numberPhone, "", viewModel.user.value.typeWa)
         }
     } catch (e: Exception) {
         Toast.makeText(context, "Kirim WA gagal ${e.message}", Toast.LENGTH_SHORT).show()
