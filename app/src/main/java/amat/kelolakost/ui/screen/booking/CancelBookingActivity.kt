@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -193,10 +194,11 @@ fun ContentCancelBooking(myViewModel: CancelBookingViewModel, context: Context) 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         val data = myViewModel.getData()
+        Spacer(modifier = Modifier.height(8.dp))
         InformationBox {
             Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
                 Row(

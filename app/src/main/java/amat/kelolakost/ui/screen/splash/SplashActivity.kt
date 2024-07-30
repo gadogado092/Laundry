@@ -41,7 +41,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
@@ -66,7 +65,6 @@ class SplashActivity : ComponentActivity() {
 
                         viewModel.getAllUser().observe(this@SplashActivity) {
                             lifecycleScope.launch {
-                                delay(2000)
                                 if (it.isEmpty()) {
                                     launch(context = Dispatchers.Main) {
                                         startActivity(intentOnboardActivity)

@@ -177,10 +177,10 @@ fun AddCreditDebitScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-
+            Spacer(modifier = Modifier.height(8.dp))
             ComboBox(
                 title = stringResource(id = R.string.subtitle_customer),
                 value = myViewModel.stateUi.collectAsState().value.customerCreditDebitName,

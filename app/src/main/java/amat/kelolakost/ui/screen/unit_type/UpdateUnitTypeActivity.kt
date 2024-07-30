@@ -154,9 +154,10 @@ fun UpdateUnitTypeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
             MyOutlinedTextField(
                 label = "Nama Tipe",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
