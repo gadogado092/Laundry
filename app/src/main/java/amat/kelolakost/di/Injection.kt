@@ -1,6 +1,7 @@
 package amat.kelolakost.di
 
 import amat.kelolakost.data.KelolaKostRoomDatabase
+import amat.kelolakost.data.repository.BackUpRepository
 import amat.kelolakost.data.repository.BookingRepository
 import amat.kelolakost.data.repository.CashFlowRepository
 import amat.kelolakost.data.repository.CreditDebitRepository
@@ -79,6 +80,13 @@ object Injection {
     fun provideCustomerCreditDebitRepository(context: Context): CustomerCreditDebitRepository {
         return CustomerCreditDebitRepository.getInstance(
             KelolaKostRoomDatabase.getDatabase(context).customerCreditDebitDao()
+        )
+    }
+
+    fun provideBackUpRepository(context: Context): BackUpRepository {
+        return BackUpRepository.getInstance(
+            KelolaKostRoomDatabase.getDatabase(context).userDao(),
+            KelolaKostRoomDatabase.getDatabase(context).kostDao()
         )
     }
 

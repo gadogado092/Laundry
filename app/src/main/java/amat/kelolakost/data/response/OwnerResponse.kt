@@ -1,0 +1,18 @@
+package amat.kelolakost.data.response
+
+import com.google.gson.annotations.SerializedName
+
+data class AccountBackupResponse(
+    @SerializedName("token") val token: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("number_wa") val numberWa: String,
+    @SerializedName("email") val email: String
+)
+
+data class LastBackupResponse(
+    @SerializedName("last_backup") val lastBackUp: String
+)
+
+data class OfflineResponse(
+    @SerializedName("file") val file: String
+)

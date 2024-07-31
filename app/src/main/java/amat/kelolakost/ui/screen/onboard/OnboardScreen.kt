@@ -1,11 +1,15 @@
 package amat.kelolakost.ui.screen.onboard
 
+import amat.kelolakost.AccountBackupPreference
 import amat.kelolakost.R
+import amat.kelolakost.ui.screen.back_up.BackUpActivity
+import amat.kelolakost.ui.screen.back_up.LoginActivity
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_IMAGE_VIEW
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_NAV_BUTTON
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_TAG_ROW
 import amat.kelolakost.ui.screen.user.NewUserActivity
+import amat.kelolakost.ui.theme.GreenDark
 import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -19,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -177,18 +182,59 @@ fun OnBoardNavButton(
     onCompleteClicked: () -> Unit,
     onNextClicked: () -> Unit
 ) {
-    Button(
-        onClick = {
-            if (currentPage < noOfPages - 1) {
-                onNextClicked()
-            } else {
-                onCompleteClicked()
+
+    val context = LocalContext.current
+
+    if (currentPage < noOfPages - 1) {
+        Button(
+            onClick = {
+                if (currentPage < noOfPages - 1) {
+                    onNextClicked()
+                } else {
+                    onCompleteClicked()
+                }
+            }, modifier = modifier
+                .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
+                .fillMaxWidth(0.6F)
+        ) {
+            Text(text = "Selanjutnya")
+        }
+    } else {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            TextButton(
+                onClick = {
+                    val accountBackupPreference = AccountBackupPreference(context).getAccount()
+                    if (accountBackupPreference.isLogin) {
+                        val activity = (context as? Activity)
+                        val intent = Intent(context, BackUpActivity::class.java)
+                        context.startActivity(intent)
+                        activity?.finish()
+                    } else {
+                        val activity = (context as? Activity)
+                        val intent = Intent(context, LoginActivity::class.java)
+                        context.startActivity(intent)
+                        activity?.finish()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                Text(text = "Restore Data", color = GreenDark)
             }
-        }, modifier = modifier
-            .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
-            .fillMaxWidth(0.6F)
-    ) {
-        Text(text = if (currentPage < noOfPages - 1) "Selanjutnya" else "Coba Sekarang")
+            Button(
+                onClick = {
+                    if (currentPage < noOfPages - 1) {
+                        onNextClicked()
+                    } else {
+                        onCompleteClicked()
+                    }
+                }, modifier = modifier
+                    .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
+                    .fillMaxWidth(0.6F)
+            ) {
+                Text(text = "Coba Sekarang")
+            }
+        }
     }
 }
 

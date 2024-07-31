@@ -93,4 +93,12 @@ dependencies {
     implementation ("pub.devrel:easypermissions:3.0.0")
 
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+    // Retrofit for network requests
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    implementation ("com.loopj.android:android-async-http:1.4.11")
 }

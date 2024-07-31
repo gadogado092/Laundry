@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
@@ -25,6 +26,7 @@ fun MyOutlinedTextField(
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
@@ -33,6 +35,7 @@ fun MyOutlinedTextField(
             modifier = modifier,
             value = value,
             keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             isError = isError,
             label = { Text(text = label, color = FontBlack) },
             singleLine = singleLine,
@@ -59,6 +62,7 @@ fun MyOutlinedTextFieldCurrency(
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     isError: Boolean = false,
     currencyValue: String = "",
     errorMessage: String = ""
@@ -68,6 +72,7 @@ fun MyOutlinedTextFieldCurrency(
             modifier = modifier,
             value = value,
             keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             isError = isError,
             label = { Text(text = label, color = FontBlack) },
             singleLine = singleLine,

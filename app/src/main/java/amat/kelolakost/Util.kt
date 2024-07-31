@@ -39,6 +39,26 @@ fun isNumberPhoneValid(numberPhone: String): Boolean {
     return false
 }
 
+fun checkIsEmailValid(emailAddress: String): Boolean {
+    return Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
+}
+
+fun checkIsNumberPhoneValid(numberPhone: String): Boolean {
+    if (!Pattern.matches("[a-zA-Z]+", numberPhone)) {
+        return numberPhone.length in 7..13
+    }
+    return false
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateUniversalToDisplay(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("dd MMM yyyy")
+    return fmtOut.format(date as Date)
+}
+
 @SuppressLint("SimpleDateFormat")
 fun generateDateTimeNow(): String {
     val c = Calendar.getInstance()

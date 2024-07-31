@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.screen.other
 
+import amat.kelolakost.AccountBackupPreference
 import amat.kelolakost.R
 import amat.kelolakost.currencyFormatterStringViewZero
 import amat.kelolakost.dateToDisplayMidFormat
@@ -8,12 +9,16 @@ import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
 import amat.kelolakost.ui.component.OtherMenuItem
 import amat.kelolakost.ui.component.SimpleQuantityTextField
+import amat.kelolakost.ui.screen.back_up.BackUpActivity
+import amat.kelolakost.ui.screen.back_up.LoginActivity
 import amat.kelolakost.ui.theme.ErrorColor
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -37,6 +42,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.BookOnline
+import androidx.compose.material.icons.filled.CloudCircle
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.ListAlt
@@ -230,6 +236,26 @@ fun OtherScreen(
         Divider(
             color = GreyLight,
             thickness = 8.dp,
+        )
+        OtherMenuItem(
+            Icons.Default.CloudCircle,
+            "Backup & Restore Online",
+            "Backup data Kost secara berkala",
+            modifier = Modifier
+                .clickable {
+                    val accountBackupPreference = AccountBackupPreference(context).getAccount()
+                    if (accountBackupPreference.isLogin){
+                        val activity = (context as? Activity)
+                        val intent = Intent(context, BackUpActivity::class.java)
+                        context.startActivity(intent)
+                        activity?.finish()
+                    }else{
+                        val activity = (context as? Activity)
+                        val intent = Intent(context, LoginActivity::class.java)
+                        context.startActivity(intent)
+                        activity?.finish()
+                    }
+                },
         )
         OtherMenuItem(
             Icons.Default.BookOnline,
