@@ -21,6 +21,9 @@ interface UnitTypeDao {
     @Query("SELECT * FROM UnitType WHERE id = :id")
     fun getDetail(id: String): Flow<UnitType>
 
+    @Query("SELECT * FROM UnitType")
+    suspend fun getListUnitType(): List<UnitType>
+
     @Update
     suspend fun update(unitType: UnitType)
 

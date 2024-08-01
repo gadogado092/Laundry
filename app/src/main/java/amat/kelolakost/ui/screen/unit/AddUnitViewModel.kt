@@ -27,7 +27,7 @@ class AddUnitViewModel(
                 kostId = "0",
                 kostName = "Pilih Kost",
                 unitTypeId = "0",
-                unitTypeName = "Pilih Tipe Kamar/Lapangan"
+                unitTypeName = "Pilih Tipe Kamar/Unit"
             )
         )
     val unitUi: StateFlow<UnitUi>

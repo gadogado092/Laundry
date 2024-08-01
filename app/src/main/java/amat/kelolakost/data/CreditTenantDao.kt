@@ -28,6 +28,11 @@ interface CreditTenantDao {
     suspend fun getAllCreditTenant(tenantId: String): List<CreditTenant>
 
     @Query(
+        "SELECT * FROM CreditTenant"
+    )
+    suspend fun getListCreditTenant(): List<CreditTenant>
+
+    @Query(
         "SELECT CreditTenant.id AS creditTenantId, CreditTenant.note AS note, Tenant.id AS tenantId, Tenant.name AS tenantName, Tenant.numberPhone AS tenantNumberPhone, CreditTenant.remainingDebt AS remainingDebt, " +
                 " Unit.id AS unitId, Kost.id AS kostId " +
                 "FROM CreditTenant " +

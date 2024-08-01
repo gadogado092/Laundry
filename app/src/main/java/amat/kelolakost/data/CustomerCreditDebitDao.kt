@@ -14,6 +14,9 @@ interface CustomerCreditDebitDao {
     @Query("SELECT * FROM CustomerCreditDebit WHERE isDelete=0 AND id!=0")
     suspend fun getAllCustomerCreditDebit(): List<CustomerCreditDebit>
 
+    @Query("SELECT * FROM CustomerCreditDebit")
+    suspend fun getListCustomerCreditDebit(): List<CustomerCreditDebit>
+
     @Update
     suspend fun update(customerCreditDebit: CustomerCreditDebit)
 

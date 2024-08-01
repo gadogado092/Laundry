@@ -39,6 +39,11 @@ interface BookingDao {
     )
     suspend fun getBooking(bookingId: String): BookingHome
 
+    @Query(
+        "SELECT * FROM Booking"
+    )
+    suspend fun getListBooking(): List<Booking>
+
     @Update
     suspend fun update(booking: Booking)
 

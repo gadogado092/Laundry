@@ -18,7 +18,11 @@ import cz.msebera.android.httpclient.Header
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
 
 class BackUpViewModel(
     private val repository: BackUpRepository,
@@ -43,22 +47,72 @@ class BackUpViewModel(
         get() = _stateUi
 
     val typeUser = "jkn"
-    val tableProduct = "tableProduct"
-    private val idProduct = "idProduct"
-    private val codeProduct = "codeProduct"
-    private val nameProduct = "nameProduct"
-    private val imageUrl = "imageUrl"
-    private val sellPrice = "sellPrice"
-    private val buyPrice = "buyPrice"
-    private val stock = "stock"
-    private val stockWarning = "stockWarning"
-    private val idUnit = "idUnit"
-    private val idCategory = "idCategory"
-    private val isDelete = "isDelete"
+    val tableUser = "tableUser"
+    private val columnId = "id"
+    private val columnName = "name"
+    private val columnNumberPhone = "numberPhone"
+    private val columnEmail = "email"
+    private val columnTypeWa = "typeWa"
+    private val columnBankName = "bankName"
+    private val columnAccountNumber = "accountNumber"
+    private val columnAccountOwnerName = "accountOwnerName"
+    private val columnNote = "note"
+    private val columnLimit = "limit"
+    private val columnCost = "cost"
+    private val columnKey = "key"
+    private val columnCreateAt = "createAt"
 
-    val tableProductUnit = "tableProductUnit"
-    private val idProductUnit = "idProductUnit"
-    private val nameProductUnit = "nameProductUnit"
+    val tableKost = "tableKost"
+    private val columnAddress = "address"
+    private val columnIsDelete = "isDelete"
+
+    val tableUnitStatus = "tableUnitStatus"
+
+    val tableUnitType = "tableUnitype"
+    private val columnPriceDay = "priceDay"
+    private val columnPriceWeek = "priceWeek"
+    private val columnPriceMonth = "priceMonth"
+    private val columnPriceThreeMonth = "priceThreeMonth"
+    private val columnPriceSixMonth = "priceSixMonth"
+    private val columnPriceYear = "priceYear"
+    private val columnPriceGuarantee = "priceGuarantee"
+
+    val tableUnit = "tableUnit"
+    private val columnNoteMaintenance = "noteMaintenance"
+    private val columnUnitTypeId = "unitTypeId"
+    private val columnUnitStatusId = "unitStatusId"
+    private val columnTenantId = "tenantId"
+    private val columnKostId = "kostId"
+    private val columnBookingId = "bookingId"
+
+    val tableTenant = "tableTenant"
+    private val columnGender = "gender"
+    private val columnLimitCheckOut = "limitCheckOut"
+    private val columnAdditionalCost = "additionalCost"
+    private val columnNoteAdditionalCost = "noteAdditionalCost"
+    private val columnGuaranteeCost = "guaranteeCost"
+    private val columnUnitId = "unitId"
+
+    val tableCashFlow = "tableCashFlow"
+    private val columnNominal = "nominal"
+    private val columnTypePayment = "typePayment"
+    private val columnType = "type"
+    private val columnCreditTenantId = "creditTenantId"
+    private val columnCreditDebitId = "creditDebitId"
+
+    val tableBooking = "tableBooking"
+    private val columnPlanCheckIn = "planCheckIn"
+
+    val tableCreditTenant = "tableCreditTenant"
+    private val columnRemainingDebt = "remainingDebt"
+
+    val tableCreditDebit = "tableCreditDebit"
+    private val columnStatus = "status"
+    private val columnRemaining = "remaining"
+    private val columnCustomerCreditDebitId = "customerCreditDebitId"
+    private val columnDueDate = "dueDate"
+
+    val tableCustomerCreditDebit = "tableCustomerCreditDebit"
 
     init {
         val data = accountBackupPreference.getAccount()
@@ -71,92 +125,259 @@ class BackUpViewModel(
 
         viewModelScope.launch {
             try {
-                //TODO get database
-//                val dataProduct = repository.getAllProduct()
-//                val dataProductJSON = JSONArray()
-//                dataProduct.forEach {
-//                    val data = JSONObject()
-//                    data.put(idProduct, it.id)
-//                    data.put(codeProduct, it.code)
-//                    data.put(nameProduct, it.name)
-//                    data.put(imageUrl, it.imageUrl)
-//                    data.put(sellPrice, it.sellPrice)
-//                    data.put(buyPrice, it.buyPrice)
-//                    data.put(stock, it.stock)
-//                    data.put(stockWarning, it.stockWarning)
-//                    data.put(idUnit, it.idUnit)
-//                    data.put(idCategory, it.idCategory)
-//                    data.put(isDelete, it.isDelete)
-//                    dataProductJSON.put(data)
-//                }
-//
-//                val dataProductUnit = repository.getAllProductUnit()
-//                val dataProductUnitJSON = JSONArray()
-//                dataProductUnit.forEach {
-//                    val data = JSONObject()
-//                    data.put(idProductUnit, it.id)
-//                    data.put(nameProductUnit, it.name)
-//                    data.put(isDelete, it.isDelete)
-//                    dataProductUnitJSON.put(data)
-//                }
-//
-//                //Collect Data
-//                val dataCollect = JSONObject()
-//                dataCollect.put(tableProduct, dataProductJSON)
-//                dataCollect.put(tableProductUnit, dataProductUnitJSON)
-//
-//                //Create File
-//                val outputDir: File = context.cacheDir
-//                val outputFile = File.createTempFile("backup", ".txt", outputDir)
-//                val fileWriter = FileWriter(outputFile)
-//                val bufferedWriter = BufferedWriter(fileWriter)
-//                bufferedWriter.write(dataCollect.toString())
-//                bufferedWriter.close()
-//
-//                Log.d("myloggg", "path file " + outputFile.path)
-//
-//                val params = RequestParams()
-//                params.put("back_up", outputFile)
-//                params.put("type_user", typeUser)
-//
-//                val client = AsyncHttpClient()
-//                val baseUrl = "http://apix.juragankost.id/api/"
-//                client.addHeader("Authorization", stateUi.value.token)
-//                client.setTimeout(20000)
-//                client.post(
-//                    baseUrl + "offline/userks/backup",
-//                    params,
-//                    object : AsyncHttpResponseHandler() {
-//                        override fun onSuccess(
-//                            statusCode: Int,
-//                            headers: Array<out Header>,
-//                            responseBody: ByteArray
-//                        ) {
-//                            val result = String(responseBody)
-//                            val gson = Gson()
-//                            val response = gson.fromJson(result, ResponseModel::class.java)
-//
-//                            if (response.status) {
-//                                _isProsesValid.value = ValidationResult.Success(response.message)
-//                            } else {
-//                                if (response.message == "Silahkan Login Kembali") {
-//                                    accountBackupPreference.logOut()
-//                                }
-//                                _isProsesValid.value =
-//                                    ValidationResult.Error(response.message)
-//                            }
-//                        }
-//
-//                        override fun onFailure(
-//                            statusCode: Int,
-//                            headers: Array<out Header>?,
-//                            responseBody: ByteArray?,
-//                            error: Throwable?
-//                        ) {
-//                            _isProsesValid.value =
-//                                ValidationResult.Error("Proses Backup Gagal ${error.toString()}")
-//                        }
-//                    })
+                //Data User
+                val dataUser = repository.getUser()
+                val dataUserJson = JSONArray()
+                dataUser.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNumberPhone, it.numberPhone)
+                    data.put(columnEmail, it.email)
+                    data.put(columnTypeWa, it.typeWa)
+                    data.put(columnBankName, it.bankName)
+                    data.put(columnAccountNumber, it.accountNumber)
+                    data.put(columnAccountOwnerName, it.accountOwnerName)
+                    data.put(columnNote, it.note)
+                    data.put(columnLimit, it.limit)
+                    data.put(columnCost, it.cost)
+                    data.put(columnKey, it.key)
+                    data.put(columnCreateAt, it.createAt)
+                    dataUserJson.put(data)
+                }
+
+                //Data Kost
+                val dataKost = repository.getKostList()
+                val dataKostJson = JSONArray()
+                dataKost.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnAddress, it.address)
+                    data.put(columnNote, it.note)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataKostJson.put(data)
+                }
+
+                //Data UnitStatus
+                val dataUnitStatus = repository.getUnitStatus()
+                val dataUnitStatusJson = JSONArray()
+                dataUnitStatus.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    dataUnitStatusJson.put(data)
+                }
+
+                //Data UnitType
+                val dataUnitType = repository.getListUnitType()
+                val dataUnitTypeJson = JSONArray()
+                dataUnitType.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNote, it.note)
+                    data.put(columnPriceDay, it.priceDay)
+                    data.put(columnPriceWeek, it.priceWeek)
+                    data.put(columnPriceMonth, it.priceMonth)
+                    data.put(columnPriceThreeMonth, it.priceThreeMonth)
+                    data.put(columnPriceSixMonth, it.priceSixMonth)
+                    data.put(columnPriceYear, it.priceYear)
+                    data.put(columnPriceGuarantee, it.priceGuarantee)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataUnitTypeJson.put(data)
+                }
+
+                //Data Unit
+                val dataUnit = repository.getListUnit()
+                val dataUnitJson = JSONArray()
+                dataUnit.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNote, it.note)
+                    data.put(columnNoteMaintenance, it.noteMaintenance)
+                    data.put(columnUnitTypeId, it.unitTypeId)
+                    data.put(columnUnitStatusId, it.unitStatusId)
+                    data.put(columnTenantId, it.tenantId)
+                    data.put(columnKostId, it.kostId)
+                    data.put(columnBookingId, it.bookingId)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataUnitJson.put(data)
+                }
+
+                //Data Tenant
+                val dataTenant = repository.getListTenant()
+                val dataTenantJson = JSONArray()
+                dataTenant.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNumberPhone, it.numberPhone)
+                    data.put(columnEmail, it.email)
+                    data.put(columnGender, it.gender)
+                    data.put(columnAddress, it.address)
+                    data.put(columnNote, it.note)
+                    data.put(columnLimitCheckOut, it.limitCheckOut)
+                    data.put(columnAdditionalCost, it.additionalCost)
+                    data.put(columnNoteAdditionalCost, it.noteAdditionalCost)
+                    data.put(columnGuaranteeCost, it.guaranteeCost)
+                    data.put(columnUnitId, it.unitId)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataTenantJson.put(data)
+                }
+
+                //Data CashFlow
+                val dataCashFlow = repository.getListCashFlow()
+                val dataCashFlowJson = JSONArray()
+                dataCashFlow.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnNote, it.note)
+                    data.put(columnNominal, it.nominal)
+                    data.put(columnTypePayment, it.typePayment)
+                    data.put(columnType, it.type)
+                    data.put(columnCreditTenantId, it.creditTenantId)
+                    data.put(columnCreditDebitId, it.creditDebitId)
+                    data.put(columnUnitId, it.unitId)
+                    data.put(columnTenantId, it.tenantId)
+                    data.put(columnKostId, it.kostId)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataCashFlowJson.put(data)
+                }
+
+                //Data Booking
+                val dataBooking = repository.getListBooking()
+                val dataBookingJson = JSONArray()
+                dataBooking.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNumberPhone, it.numberPhone)
+                    data.put(columnNote, it.note)
+                    data.put(columnNominal, it.nominal)
+                    data.put(columnPlanCheckIn, it.planCheckIn)
+                    data.put(columnUnitId, it.unitId)
+                    data.put(columnKostId, it.kostId)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataBookingJson.put(data)
+                }
+
+                //Data Credit Tenant
+                val dataCreditTenant = repository.getListCreditTenant()
+                val dataCreditTenantJson = JSONArray()
+                dataCreditTenant.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnNote, it.note)
+                    data.put(columnTenantId, it.tenantId)
+                    data.put(columnRemainingDebt, it.remainingDebt)
+                    data.put(columnKostId, it.kostId)
+                    data.put(columnUnitId, it.unitId)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataCreditTenantJson.put(data)
+                }
+
+                //Data CreditDebit
+                val dataCreditDebit = repository.getListCreditDebit()
+                val dataCreditDebitJson = JSONArray()
+                dataCreditDebit.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnNote, it.note)
+                    data.put(columnStatus, it.status)
+                    data.put(columnRemaining, it.remaining)
+                    data.put(columnCustomerCreditDebitId, it.customerCreditDebitId)
+                    data.put(columnDueDate, it.dueDate)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataCreditDebitJson.put(data)
+                }
+
+                //Data CustomerCreditDebit
+                val dataCustomerCreditDebit = repository.getListCustomerCreditDebit()
+                val dataCustomerCreditDebitJson = JSONArray()
+                dataCustomerCreditDebit.forEach {
+                    val data = JSONObject()
+                    data.put(columnId, it.id)
+                    data.put(columnName, it.name)
+                    data.put(columnNumberPhone, it.numberPhone)
+                    data.put(columnNote, it.note)
+                    data.put(columnEmail, it.email)
+                    data.put(columnCreateAt, it.createAt)
+                    data.put(columnIsDelete, it.isDelete)
+                    dataCustomerCreditDebitJson.put(data)
+                }
+
+                //Collect Data
+                val dataCollect = JSONObject()
+                dataCollect.put(tableUser, dataUserJson)
+                dataCollect.put(tableKost, dataKostJson)
+                dataCollect.put(tableUnitStatus, dataUnitStatusJson)
+                dataCollect.put(tableUnitType, dataUnitTypeJson)
+                dataCollect.put(tableUnit, dataUnitJson)
+                dataCollect.put(tableTenant, dataTenantJson)
+                dataCollect.put(tableCashFlow, dataCashFlowJson)
+                dataCollect.put(tableBooking, dataBookingJson)
+                dataCollect.put(tableCreditTenant, dataCreditTenantJson)
+                dataCollect.put(tableCreditDebit, dataCreditDebitJson)
+                dataCollect.put(tableCustomerCreditDebit, dataCustomerCreditDebitJson)
+
+                //Create File
+                val outputDir: File = context.cacheDir
+                val outputFile = File.createTempFile("backup", ".txt", outputDir)
+                val fileWriter = FileWriter(outputFile)
+                val bufferedWriter = BufferedWriter(fileWriter)
+                bufferedWriter.write(dataCollect.toString())
+                bufferedWriter.close()
+
+                val params = RequestParams()
+                params.put("back_up", outputFile)
+                params.put("type_user", typeUser)
+
+                val client = AsyncHttpClient()
+                val baseUrl = "http://apix.juragankost.id/api/"
+                client.addHeader("Authorization", stateUi.value.token)
+                client.setTimeout(20000)
+                client.post(
+                    baseUrl + "offline/userks/backup",
+                    params,
+                    object : AsyncHttpResponseHandler() {
+                        override fun onSuccess(
+                            statusCode: Int,
+                            headers: Array<out Header>,
+                            responseBody: ByteArray
+                        ) {
+                            val result = String(responseBody)
+                            val gson = Gson()
+                            val response = gson.fromJson(result, ResponseModel::class.java)
+
+                            if (response.status) {
+                                _isProsesValid.value = ValidationResult.Success(response.message)
+                            } else {
+                                if (response.message == "Silahkan Login Kembali") {
+                                    accountBackupPreference.logOut()
+                                }
+                                _isProsesValid.value =
+                                    ValidationResult.Error(response.message)
+                            }
+                        }
+
+                        override fun onFailure(
+                            statusCode: Int,
+                            headers: Array<out Header>?,
+                            responseBody: ByteArray?,
+                            error: Throwable?
+                        ) {
+                            _isProsesValid.value =
+                                ValidationResult.Error("Proses Backup Gagal ${error.toString()}")
+                        }
+                    })
 
             } catch (e: Exception) {
                 Log.e("myloggg", e.message.toString())

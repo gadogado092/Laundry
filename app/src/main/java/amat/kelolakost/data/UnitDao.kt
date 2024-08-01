@@ -132,4 +132,9 @@ interface UnitDao {
     //for delete unit type
     suspend fun getUnitByUnitType(unitTypeId: String): List<Unit>
 
+    @Query(
+        "SELECT * FROM Unit"
+    )
+    suspend fun getListUnit(): List<Unit>
+
 }

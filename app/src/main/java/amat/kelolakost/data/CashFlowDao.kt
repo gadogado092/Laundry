@@ -13,15 +13,22 @@ interface CashFlowDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cashFlow: CashFlow)
 
-    @Query("SELECT * FROM CashFlow " +
-            "WHERE isDelete=0 AND creditTenantId=:creditTenantId " +
-            "ORDER BY createAt DESC")
-    suspend fun getCreditTenantHistory(creditTenantId:String): List<CashFlow>
+    @Query(
+        "SELECT * FROM CashFlow " +
+                "WHERE isDelete=0 AND creditTenantId=:creditTenantId " +
+                "ORDER BY createAt DESC"
+    )
+    suspend fun getCreditTenantHistory(creditTenantId: String): List<CashFlow>
 
-    @Query("SELECT * FROM CashFlow " +
-            "WHERE isDelete=0 AND creditDebitId=:creditDebitId " +
-            "ORDER BY createAt DESC")
-    suspend fun getCreditDebitHistory(creditDebitId:String): List<CashFlow>
+    @Query(
+        "SELECT * FROM CashFlow " +
+                "WHERE isDelete=0 AND creditDebitId=:creditDebitId " +
+                "ORDER BY createAt DESC"
+    )
+    suspend fun getCreditDebitHistory(creditDebitId: String): List<CashFlow>
+
+    @Query("SELECT * FROM CashFlow ")
+    suspend fun getListCashFlow(): List<CashFlow>
 
     @Update
     suspend fun update(cashFlow: CashFlow)

@@ -18,6 +18,9 @@ interface TenantDao {
     @Query("SELECT * FROM Tenant WHERE isDelete=0 AND id!=0")
     suspend fun getAllTenantActive(): List<Tenant>
 
+    @Query("SELECT * FROM Tenant")
+    suspend fun getListTenant(): List<Tenant>
+
     @Query(
         "SELECT Tenant.id AS id, Tenant.name AS name, Tenant.numberPhone AS numberPhone, Tenant.limitCheckOut AS limitCheckOut, " +
                 "Unit.id AS unitId, Unit.name AS unitName, " +

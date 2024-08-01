@@ -8,7 +8,7 @@ data class CreditDebit(
     @PrimaryKey
     val id: String,
     val note: String,
-    //type 0=hutang 1=piutang
+    //status 0=hutang 1=piutang
     val status: Int,
     val remaining: Int,
     val customerCreditDebitId: String,

@@ -21,6 +21,9 @@ interface KostDao {
     @Query("SELECT * FROM Kost WHERE isDelete=0 AND id!=0")
     suspend fun getKost(): List<Kost>
 
+    @Query("SELECT * FROM Kost")
+    suspend fun getKostList(): List<Kost>
+
     @Update
     suspend fun update(kost: Kost)
 

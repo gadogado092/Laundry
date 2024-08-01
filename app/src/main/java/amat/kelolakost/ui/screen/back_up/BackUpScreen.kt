@@ -135,11 +135,11 @@ fun BackUpScreen() {
 
             is ValidationResult.Success -> {
                 val data = uiState.data
-                val dataProduct = data.getJSONArray(viewModel.tableProduct)
-                val dataProductUnit = data.getJSONArray(viewModel.tableProductUnit)
-                val message = "Jumlah Data Master..." +
-                        "\n\t*Data Produk ${dataProduct.length()}" +
-                        "\n\t*Data Satuan ${dataProductUnit.length()}" +
+                val dataUser = data.getJSONArray(viewModel.tableUser)
+                val dataKost = data.getJSONArray(viewModel.tableKost)
+                val message = "Jumlah Data..." +
+                        "\n\t*Data User ${dataUser.length()}" +
+                        "\n\t*Data Kost ${dataKost.length()-1}" +
                         "\nLanjutkan Restore?"
 
                 showBottomRestore(context, viewModel, message, data)
@@ -274,10 +274,10 @@ private fun showBottomRestore(
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
-    val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textMessage = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
     val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
-    title?.text = message
+    textMessage?.text = message
     buttonOk?.text = "Ok"
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()

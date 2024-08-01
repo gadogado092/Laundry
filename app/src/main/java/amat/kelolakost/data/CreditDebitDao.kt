@@ -32,6 +32,11 @@ interface CreditDebitDao {
     )
     suspend fun getDetailCreditDebit(creditDebitId: String): CreditDebitHome
 
+    @Query(
+        "SELECT * FROM CreditDebit"
+    )
+    suspend fun getListCreditDebit(): List<CreditDebit>
+
     @Update
     suspend fun update(credit: CreditDebit)
 

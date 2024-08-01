@@ -86,7 +86,16 @@ object Injection {
     fun provideBackUpRepository(context: Context): BackUpRepository {
         return BackUpRepository.getInstance(
             KelolaKostRoomDatabase.getDatabase(context).userDao(),
-            KelolaKostRoomDatabase.getDatabase(context).kostDao()
+            KelolaKostRoomDatabase.getDatabase(context).kostDao(),
+            KelolaKostRoomDatabase.getDatabase(context).unitStatusDao(),
+            KelolaKostRoomDatabase.getDatabase(context).unitTypeDao(),
+            KelolaKostRoomDatabase.getDatabase(context).unitDao(),
+            KelolaKostRoomDatabase.getDatabase(context).tenantDao(),
+            KelolaKostRoomDatabase.getDatabase(context).cashFlowDao(),
+            KelolaKostRoomDatabase.getDatabase(context).bookingDao(),
+            KelolaKostRoomDatabase.getDatabase(context).creditTenantDao(),
+            KelolaKostRoomDatabase.getDatabase(context).creditDao(),
+            KelolaKostRoomDatabase.getDatabase(context).customerCreditDebitDao()
         )
     }
 
