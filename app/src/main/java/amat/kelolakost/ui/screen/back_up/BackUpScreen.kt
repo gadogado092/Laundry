@@ -9,6 +9,7 @@ import amat.kelolakost.ui.common.ValidationResult
 import amat.kelolakost.ui.component.LoadingDialog
 import amat.kelolakost.ui.component.OtherMenuItem
 import amat.kelolakost.ui.screen.main.MainActivity
+import amat.kelolakost.ui.screen.splash.SplashActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.GreyLight
@@ -234,7 +235,7 @@ fun BackUpScreen() {
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
             onClick = {
                 val activity = (context as? Activity)
-                val intent = Intent(context, MainActivity::class.java)
+                val intent = Intent(context, SplashActivity::class.java)
                 context.startActivity(intent)
                 activity?.finish()
             }) {
