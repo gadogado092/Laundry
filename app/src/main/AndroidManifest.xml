@@ -110,8 +110,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.bill.BillActivityXml"
-            android:theme="@style/Theme.Bill"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.Bill" />
         <activity
             android:name=".ui.screen.extend.ExtendActivity"
             android:exported="true"
@@ -211,27 +211,32 @@
         <activity
             android:name=".ui.screen.back_up.BackUpActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.RegisterActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.ForgetPasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.ChangePasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.KelolaKost"
+            android:windowSoftInputMode="adjustResize" />
 
 
     </application>
