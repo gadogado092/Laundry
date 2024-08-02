@@ -135,12 +135,14 @@ fun BackUpScreen() {
 
             is ValidationResult.Success -> {
                 val data = uiState.data
-                val dataUser = data.getJSONArray(viewModel.tableUser)
+                val dataUnit = data.getJSONArray(viewModel.tableUnit)
                 val dataKost = data.getJSONArray(viewModel.tableKost)
-                val message = "Jumlah Data..." +
-                        "\n\t*Data User ${dataUser.length()}" +
-                        "\n\t*Data Kost ${dataKost.length()-1}" +
-                        "\nLanjutkan Restore?"
+                val dataCashFlow = data.getJSONArray(viewModel.tableCashFlow)
+                val message = "Sekilas Jumlah Data..." +
+                        "\n\t*Data Kost ${dataKost.length() - 1}" +
+                        "\n\t*Data Unit/Kamar ${dataUnit.length() - 1}" +
+                        "\n\t*Data Alur Kas ${dataCashFlow.length()}" +
+                        "\nSemua Data Sebelumnya Akan Terhapus... Tetap Lanjutkan Restore?"
 
                 showBottomRestore(context, viewModel, message, data)
             }
@@ -187,7 +189,7 @@ fun BackUpScreen() {
             "Proses ini akan menyimpan data offline ke penyimpanan online dan mengganti data penyimpanan online sebelumnya",
             modifier = Modifier
                 .clickable {
-                    viewModel.backUp(context)
+                    showBottomBackup(context, viewModel)
                 },
         )
 
@@ -282,6 +284,24 @@ private fun showBottomRestore(
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
         viewModel.insertDataRestore(data)
+    }
+    bottomSheetDialog.show()
+}
+
+private fun showBottomBackup(
+    context: Context,
+    viewModel: BackUpViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val textMessage = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    textMessage?.text = "Yakin Lanjutkan Proses Backup Data?"
+    buttonOk?.text = "Ok"
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.backUp(context)
     }
     bottomSheetDialog.show()
 }

@@ -92,17 +92,34 @@ class BackUpRepository(
     suspend fun getListCustomerCreditDebit(): List<CustomerCreditDebit> {
         return customerCreditDebitDao.getListCustomerCreditDebit()
     }
-//
-//    suspend fun prosesInsertRestore(
-//        dataProduct: List<Product>,
-//        dataProductUnit: List<ProductUnit>
-//    ) {
-//        productDao.prosesInsertRestore(dataProduct, dataProductUnit)
-//    }
-//
-//    suspend fun getAllProductUnit(): List<ProductUnit> {
-//        return productUnitDao.getAllProductUnit()
-//    }
+
+    suspend fun prosesInsertRestore(
+        dataUser: List<User>,
+        dataKost: List<Kost>,
+        dataUnitStatus: List<UnitStatus>,
+        dataUnitType: List<UnitType>,
+        dataUnit: List<Unit>,
+        dataTenant: List<Tenant>,
+        dataCashFlow: List<CashFlow>,
+        dataBooking: List<Booking>,
+        dataCreditTenant: List<CreditTenant>,
+        dataCreditDebit: List<CreditDebit>,
+        dataCustomerCreditDebit: List<CustomerCreditDebit>
+    ) {
+        userDao.prosesInsertRestore(
+            dataUser,
+            dataKost,
+            dataUnitStatus,
+            dataUnitType,
+            dataUnit,
+            dataTenant,
+            dataCashFlow,
+            dataBooking,
+            dataCreditTenant,
+            dataCreditDebit,
+            dataCustomerCreditDebit
+        )
+    }
 
     companion object {
         @Volatile

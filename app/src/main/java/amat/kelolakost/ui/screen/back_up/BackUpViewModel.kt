@@ -1,6 +1,17 @@
 package amat.kelolakost.ui.screen.back_up
 
 import amat.kelolakost.AccountBackupPreference
+import amat.kelolakost.data.Booking
+import amat.kelolakost.data.CashFlow
+import amat.kelolakost.data.CreditDebit
+import amat.kelolakost.data.CreditTenant
+import amat.kelolakost.data.CustomerCreditDebit
+import amat.kelolakost.data.Kost
+import amat.kelolakost.data.Tenant
+import amat.kelolakost.data.Unit
+import amat.kelolakost.data.UnitStatus
+import amat.kelolakost.data.UnitType
+import amat.kelolakost.data.User
 import amat.kelolakost.data.repository.BackUpRepository
 import amat.kelolakost.data.response.LastBackupResponse
 import amat.kelolakost.data.response.OfflineResponse
@@ -415,7 +426,6 @@ class BackUpViewModel(
                                     gson.fromJson(response.data, OfflineResponse::class.java)
                                 val file = restoreResponse.file
                                 val data = JSONObject(file)
-                                //TODO insert to database
                                 _isProsesRestoreValid.value =
                                     ValidationResult.Success(data)
                             } else {
@@ -448,43 +458,232 @@ class BackUpViewModel(
         viewModelScope.launch {
             try {
 
-//                val dataProduct = data.getJSONArray(tableProduct)
-//                val listProduct = mutableListOf<Product>()
-//                for (i in 0 until dataProduct.length()) {
-//                    val jsonObject = dataProduct.getJSONObject(i)
-//                    listProduct.add(
-//                        Product(
-//                            id = jsonObject.getInt(idProduct),
-//                            code = jsonObject.getString(codeProduct),
-//                            name = jsonObject.getString(nameProduct),
-//                            imageUrl = jsonObject.getString(imageUrl),
-//                            sellPrice = jsonObject.getInt(sellPrice),
-//                            buyPrice = jsonObject.getInt(buyPrice),
-//                            stock = jsonObject.getInt(stock),
-//                            stockWarning = jsonObject.getInt(stockWarning),
-//                            idUnit = jsonObject.getInt(idUnit),
-//                            idCategory = jsonObject.getInt(idCategory),
-//                            isDelete = jsonObject.getInt(isDelete)
-//                        )
-//                    )
-//                }
-//
-//                val dataProductUnit = data.getJSONArray(tableProductUnit)
-//                val listProductUnit = mutableListOf<ProductUnit>()
-//                for (i in 0 until dataProductUnit.length()) {
-//                    val jsonObject = dataProductUnit.getJSONObject(i)
-//                    listProductUnit.add(
-//                        ProductUnit(
-//                            id = jsonObject.getInt(idProductUnit),
-//                            name = jsonObject.getString(nameProductUnit),
-//                            isDelete = jsonObject.getInt(isDelete)
-//                        )
-//                    )
-//                }
-//
-//                repository.prosesInsertRestore(listProduct, listProductUnit)
-//
-//                _isProsesValid.value = ValidationResult.Success("Proses Insert Data Restore Sukses")
+                val dataUser = data.getJSONArray(tableUser)
+                val listUser = mutableListOf<User>()
+                for (i in 0 until dataUser.length()) {
+                    val jsonObject = dataUser.getJSONObject(i)
+                    listUser.add(
+                        User(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            numberPhone = jsonObject.getString(columnNumberPhone),
+                            email = jsonObject.getString(columnEmail),
+                            typeWa = jsonObject.getString(columnTypeWa),
+                            bankName = jsonObject.getString(columnBankName),
+                            accountNumber = jsonObject.getString(columnAccountNumber),
+                            accountOwnerName = jsonObject.getString(columnAccountOwnerName),
+                            note = jsonObject.getString(columnNote),
+                            limit = jsonObject.getString(columnLimit),
+                            cost = jsonObject.getInt(columnCost),
+                            key = jsonObject.getString(columnKey),
+                            createAt = jsonObject.getString(columnCreateAt)
+                        )
+                    )
+                }
+
+                val dataKost = data.getJSONArray(tableKost)
+                val listKost = mutableListOf<Kost>()
+                for (i in 0 until dataKost.length()) {
+                    val jsonObject = dataKost.getJSONObject(i)
+                    listKost.add(
+                        Kost(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            address = jsonObject.getString(columnAddress),
+                            note = jsonObject.getString(columnNote),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataUnitStatus = data.getJSONArray(tableUnitStatus)
+                val listUnitStatus = mutableListOf<UnitStatus>()
+                for (i in 0 until dataUnitStatus.length()) {
+                    val jsonObject = dataUnitStatus.getJSONObject(i)
+                    listUnitStatus.add(
+                        UnitStatus(
+                            id = jsonObject.getInt(columnId),
+                            name = jsonObject.getString(columnName)
+                        )
+                    )
+                }
+
+                val dataUnitType = data.getJSONArray(tableUnitType)
+                val listUnitType = mutableListOf<UnitType>()
+                for (i in 0 until dataUnitType.length()) {
+                    val jsonObject = dataUnitType.getJSONObject(i)
+                    listUnitType.add(
+                        UnitType(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            note = jsonObject.getString(columnNote),
+                            priceDay = jsonObject.getInt(columnPriceDay),
+                            priceWeek = jsonObject.getInt(columnPriceWeek),
+                            priceMonth = jsonObject.getInt(columnPriceMonth),
+                            priceThreeMonth = jsonObject.getInt(columnPriceThreeMonth),
+                            priceSixMonth = jsonObject.getInt(columnPriceSixMonth),
+                            priceYear = jsonObject.getInt(columnPriceYear),
+                            priceGuarantee = jsonObject.getInt(columnPriceGuarantee),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataUnit = data.getJSONArray(tableUnit)
+                val listUnit = mutableListOf<Unit>()
+                for (i in 0 until dataUnit.length()) {
+                    val jsonObject = dataUnit.getJSONObject(i)
+                    listUnit.add(
+                        Unit(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            note = jsonObject.getString(columnNote),
+                            noteMaintenance = jsonObject.getString(columnNoteMaintenance),
+                            unitTypeId = jsonObject.getString(columnUnitTypeId),
+                            unitStatusId = jsonObject.getInt(columnUnitStatusId),
+                            tenantId = jsonObject.getString(columnTenantId),
+                            kostId = jsonObject.getString(columnKostId),
+                            bookingId = jsonObject.getString(columnBookingId),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataTenant = data.getJSONArray(tableTenant)
+                val listTenant = mutableListOf<Tenant>()
+                for (i in 0 until dataTenant.length()) {
+                    val jsonObject = dataTenant.getJSONObject(i)
+                    listTenant.add(
+                        Tenant(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            numberPhone = jsonObject.getString(columnNumberPhone),
+                            email = jsonObject.getString(columnEmail),
+                            gender = jsonObject.getBoolean(columnGender),
+                            address = jsonObject.getString(columnAddress),
+                            note = jsonObject.getString(columnNote),
+                            limitCheckOut = jsonObject.getString(columnLimitCheckOut),
+                            additionalCost = jsonObject.getInt(columnAdditionalCost),
+                            noteAdditionalCost = jsonObject.getString(columnNoteAdditionalCost),
+                            guaranteeCost = jsonObject.getInt(columnGuaranteeCost),
+                            unitId = jsonObject.getString(columnUnitId),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataCashFlow = data.getJSONArray(tableCashFlow)
+                val listCashFlow = mutableListOf<CashFlow>()
+                for (i in 0 until dataCashFlow.length()) {
+                    val jsonObject = dataCashFlow.getJSONObject(i)
+                    listCashFlow.add(
+                        CashFlow(
+                            id = jsonObject.getString(columnId),
+                            note = jsonObject.getString(columnNote),
+                            nominal = jsonObject.getString(columnNominal),
+                            typePayment = jsonObject.getInt(columnTypePayment),
+                            type = jsonObject.getInt(columnType),
+                            creditTenantId = jsonObject.getString(columnCreditTenantId),
+                            creditDebitId = jsonObject.getString(columnCreditDebitId),
+                            unitId = jsonObject.getString(columnUnitId),
+                            tenantId = jsonObject.getString(columnTenantId),
+                            kostId = jsonObject.getString(columnKostId),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataBooking = data.getJSONArray(tableBooking)
+                val listBooking = mutableListOf<Booking>()
+                for (i in 0 until dataBooking.length()) {
+                    val jsonObject = dataBooking.getJSONObject(i)
+                    listBooking.add(
+                        Booking(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            numberPhone = jsonObject.getString(columnNumberPhone),
+                            note = jsonObject.getString(columnNote),
+                            nominal = jsonObject.getString(columnNominal),
+                            planCheckIn = jsonObject.getString(columnPlanCheckIn),
+                            unitId = jsonObject.getString(columnUnitId),
+                            kostId = jsonObject.getString(columnKostId),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataCreditTenant = data.getJSONArray(tableCreditTenant)
+                val listCreditTenant = mutableListOf<CreditTenant>()
+                for (i in 0 until dataCreditTenant.length()) {
+                    val jsonObject = dataCreditTenant.getJSONObject(i)
+                    listCreditTenant.add(
+                        CreditTenant(
+                            id = jsonObject.getString(columnId),
+                            note = jsonObject.getString(columnNote),
+                            tenantId = jsonObject.getString(columnTenantId),
+                            remainingDebt = jsonObject.getInt(columnRemainingDebt),
+                            kostId = jsonObject.getString(columnKostId),
+                            unitId = jsonObject.getString(columnUnitId),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataCreditDebit = data.getJSONArray(tableCreditDebit)
+                val listCreditDebit = mutableListOf<CreditDebit>()
+                for (i in 0 until dataCreditDebit.length()) {
+                    val jsonObject = dataCreditDebit.getJSONObject(i)
+                    listCreditDebit.add(
+                        CreditDebit(
+                            id = jsonObject.getString(columnId),
+                            note = jsonObject.getString(columnNote),
+                            status = jsonObject.getInt(columnStatus),
+                            remaining = jsonObject.getInt(columnRemaining),
+                            customerCreditDebitId = jsonObject.getString(columnCustomerCreditDebitId),
+                            dueDate = jsonObject.getString(columnDueDate),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                val dataCustomerCreditDebit = data.getJSONArray(tableCustomerCreditDebit)
+                val listCustomerCreditDebit = mutableListOf<CustomerCreditDebit>()
+                for (i in 0 until dataCustomerCreditDebit.length()) {
+                    val jsonObject = dataCustomerCreditDebit.getJSONObject(i)
+                    listCustomerCreditDebit.add(
+                        CustomerCreditDebit(
+                            id = jsonObject.getString(columnId),
+                            name = jsonObject.getString(columnName),
+                            numberPhone = jsonObject.getString(columnNumberPhone),
+                            note = jsonObject.getString(columnNote),
+                            email = jsonObject.getString(columnEmail),
+                            createAt = jsonObject.getString(columnCreateAt),
+                            isDelete = jsonObject.getBoolean(columnIsDelete)
+                        )
+                    )
+                }
+
+                repository.prosesInsertRestore(
+                    listUser,
+                    listKost,
+                    listUnitStatus,
+                    listUnitType,
+                    listUnit,
+                    listTenant,
+                    listCashFlow,
+                    listBooking,
+                    listCreditTenant,
+                    listCreditDebit,
+                    listCustomerCreditDebit
+                )
+
+                _isProsesValid.value = ValidationResult.Success("Proses Insert Data Restore Sukses")
 
             } catch (e: Exception) {
                 _isProsesValid.value =
