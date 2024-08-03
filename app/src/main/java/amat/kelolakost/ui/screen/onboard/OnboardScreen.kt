@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -84,7 +86,7 @@ fun OnboardScreen() {
     ) {
         OnBoardImageView(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.7f)
                 .fillMaxWidth(),
             currentPage = onboardPages[currentPage.value]
         )
@@ -156,7 +158,7 @@ fun OnBoardDetails(
     modifier: Modifier = Modifier, currentPage: OnboardPage
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         Text(
             text = currentPage.title,
@@ -228,9 +230,10 @@ fun OnBoardNavButton(
                     } else {
                         onCompleteClicked()
                     }
-                }, modifier = modifier
+                },
+                modifier = modifier
                     .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
-                    .fillMaxWidth(0.6F)
+                    .fillMaxWidth(0.6F),
             ) {
                 Text(text = "Coba Sekarang")
             }

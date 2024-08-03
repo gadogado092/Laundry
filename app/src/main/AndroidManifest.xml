@@ -44,6 +44,7 @@
         <activity
             android:name=".ui.screen.onboard.OnboardActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.KelolaKost" />
 
         <activity
