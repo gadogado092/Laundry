@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.data.entity.BillEntity
 import amat.kelolakost.getSerializable
 import amat.kelolakost.ui.component.InformationBox
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -127,7 +128,11 @@ fun BillScreen(
                         )
                         Text(
                             text = if (billEntity.kostName.isEmpty()) "Kelola Kost" else billEntity.kostName,
-                            style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                            style = TextStyle(
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 18.sp,
+                                color = FontBlack
+                            )
                         )
                         Row(
                             modifier = Modifier
@@ -137,14 +142,22 @@ fun BillScreen(
                         ) {
                             Text(
                                 text = billEntity.nominal,
-                                style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 16.sp,
+                                    color = FontBlack
+                                )
                             )
                             Text(
                                 text = billEntity.createAt,
-                                style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 16.sp,
+                                    color = FontBlack
+                                )
                             )
                         }
-                        Text(text = billEntity.note, textAlign = TextAlign.Justify)
+                        Text(text = billEntity.note, textAlign = TextAlign.Justify, color = FontBlack)
                     }
                 }
             }

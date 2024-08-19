@@ -8,6 +8,7 @@ import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.InformationBox
 import amat.kelolakost.ui.component.LoadingLayout
 import amat.kelolakost.ui.component.MyOutlinedTextField
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -205,7 +206,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
             errorMessage = updateUserViewModel.isUserEmailValid.collectAsState().value.errorMessage
         )
         Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Tipe Whatsapp")
+            Text(text = "Tipe Whatsapp", color = FontBlack)
             Row(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier
@@ -219,7 +220,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
                         selected = ("Standard" == updateUserViewModel.user.collectAsState().value.typeWa),
                         onClick = { updateUserViewModel.setTypeWa("Standard") }
                     )
-                    Text(text = "Standard")
+                    Text(text = "Standard", color = FontBlack)
                 }
                 Row(
                     modifier = Modifier
@@ -233,7 +234,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
                         selected = ("Business" == updateUserViewModel.user.collectAsState().value.typeWa),
                         onClick = { updateUserViewModel.setTypeWa("Business") }
                     )
-                    Text(text = "Business")
+                    Text(text = "Business", color = FontBlack)
                 }
             }
         }

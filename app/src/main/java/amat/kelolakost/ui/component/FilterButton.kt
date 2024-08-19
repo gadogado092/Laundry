@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.component
 
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -33,6 +34,7 @@ fun FilterButton(
         ) {
             Text(
                 text = title,
+                color = FontBlack,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(horizontal = 2.dp),

@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.component
 
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,7 @@ fun ItemIconText(
             colorFilter = ColorFilter.tint(color = TealGreen)
         )
         Text(
-            text = title, style = TextStyle(fontSize = 16.sp), maxLines = 1,
+            text = title, style = TextStyle(fontSize = 16.sp, color = FontBlack), maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
     }

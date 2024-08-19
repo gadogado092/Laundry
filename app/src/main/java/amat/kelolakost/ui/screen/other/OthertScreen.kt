@@ -12,6 +12,7 @@ import amat.kelolakost.ui.component.SimpleQuantityTextField
 import amat.kelolakost.ui.screen.back_up.BackUpActivity
 import amat.kelolakost.ui.screen.back_up.LoginActivity
 import amat.kelolakost.ui.theme.ErrorColor
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import amat.kelolakost.ui.theme.TealGreen
 import android.app.Activity
@@ -106,7 +107,7 @@ fun OtherScreen(
         }
     }
 
-
+    //START UI
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -156,12 +157,12 @@ fun OtherScreen(
                     focusedBorderColor = TealGreen,
                     errorBorderColor = ErrorColor
                 ),
-                placeholder = { Text("Password Perpanjang") }
+                placeholder = { Text("Password Perpanjang", color = FontBlack) }
             )
         }
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
-            style = TextStyle(fontSize = 12.sp),
+            style = TextStyle(fontSize = 12.sp, color = FontBlack),
             text = "Perpanjang pemakaian aplikasi ${viewModel.stateUi.collectAsState().value.qty} Bulan. " +
                     "Biaya ${currencyFormatterStringViewZero((viewModel.stateUi.collectAsState().value.qty * viewModel.stateUi.collectAsState().value.cost).toString())}" +
                     "\nBatas Pemakaian setelah perpanjang ${dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.newLimit)}"
@@ -171,7 +172,7 @@ fun OtherScreen(
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
             text = "Support Kami Melalui",
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color= FontBlack)
         )
         ItemSupport(
             subtitle = context.getString(R.string.bank),
@@ -221,7 +222,7 @@ fun OtherScreen(
                                 "\nkode = ${viewModel.stateUi.value.kode}"
                     onClickCsExtend(note)
                 }) {
-                Text(text = stringResource(id = R.string.cs_extend))
+                Text(text = stringResource(id = R.string.cs_extend), color = FontBlack)
             }
             Spacer(modifier = Modifier.width(16.dp))
             OutlinedButton(
@@ -230,7 +231,7 @@ fun OtherScreen(
                     viewModel.proses()
                 }
             ) {
-                Text(text = stringResource(id = R.string.extend))
+                Text(text = stringResource(id = R.string.extend), color = FontBlack)
             }
         }
         Divider(
@@ -244,12 +245,12 @@ fun OtherScreen(
             modifier = Modifier
                 .clickable {
                     val accountBackupPreference = AccountBackupPreference(context).getAccount()
-                    if (accountBackupPreference.isLogin){
+                    if (accountBackupPreference.isLogin) {
                         val activity = (context as? Activity)
                         val intent = Intent(context, BackUpActivity::class.java)
                         context.startActivity(intent)
                         activity?.finish()
-                    }else{
+                    } else {
                         val activity = (context as? Activity)
                         val intent = Intent(context, LoginActivity::class.java)
                         context.startActivity(intent)
@@ -371,16 +372,16 @@ fun ContentLimitDate(viewModel: OtherViewModel) {
     viewModel.stateUser.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {
-                Text(text = uiState.errorMessage)
+                Text(text = uiState.errorMessage, color = FontBlack)
             }
 
             UiState.Loading -> {
-                Text(text = "Loading")
+                Text(text = "Loading", color = FontBlack)
             }
 
             is UiState.Success -> {
                 Text(
-                    text = dateToDisplayMidFormat(uiState.data.limit),
+                    text = dateToDisplayMidFormat(uiState.data.limit), color = FontBlack
                 )
             }
         }
@@ -397,7 +398,7 @@ fun ItemSupport(
             .fillMaxWidth()
             .padding(horizontal = 8.dp), Arrangement.SpaceBetween, Alignment.CenterVertically
     ) {
-        Text(text = subtitle, style = TextStyle(fontSize = 14.sp))
+        Text(text = subtitle, style = TextStyle(fontSize = 14.sp), color = FontBlack)
         Image(
             modifier = Modifier
                 .padding(2.dp)

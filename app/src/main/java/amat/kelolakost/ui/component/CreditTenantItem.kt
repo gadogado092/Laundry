@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.component
 
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +21,20 @@ fun CreditTenantItem(
     modifier: Modifier = Modifier,
     tenantName: String,
     total: String,
-    tenantNumberPhone: String) {
+    tenantNumberPhone: String
+) {
     Column(modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
             ItemTitle(text = tenantName)
             ItemIconText(imageVector = Icons.Default.PhoneIphone, title = tenantNumberPhone)
-            Text(text = total, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium))
+            Text(
+                text = total,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = FontBlack
+                )
+            )
         }
         Divider(
             color = GreyLight,

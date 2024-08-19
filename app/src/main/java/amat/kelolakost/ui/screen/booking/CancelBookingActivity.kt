@@ -228,15 +228,15 @@ fun ContentCancelBooking(myViewModel: CancelBookingViewModel, context: Context) 
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Rencana Check-In")
-                    Text(text = dateToDisplayMidFormat(data.planCheckIn))
+                    Text(text = "Rencana Check-In", color = FontBlack)
+                    Text(text = dateToDisplayMidFormat(data.planCheckIn), color = FontBlack)
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Uang Booking")
-                    Text(text = currencyFormatterStringViewZero(data.nominalBooking))
+                    Text(text = "Uang Booking", color = FontBlack)
+                    Text(text = currencyFormatterStringViewZero(data.nominalBooking), color = FontBlack)
                 }
             }
         }

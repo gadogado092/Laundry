@@ -184,7 +184,7 @@ fun ContentHeaderCreditTenant(
         Text(
             text = stringResource(
                 id = R.string.note_empty_data
-            )
+            ), color = FontBlack
         )
     } else {
         Column(modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)) {
@@ -226,7 +226,7 @@ fun ContentHeaderCreditTenant(
                             intent.putExtra("creditTenantId", creditTenantId)
                             context.startActivity(intent)
                         },
-                        onClickRemove = {creditTenantId->
+                        onClickRemove = { creditTenantId ->
                             showBottomConfirm(context, myViewModel, creditTenantId)
                         }
                     )
@@ -250,7 +250,7 @@ fun ListCreditTenant(
                     text = stringResource(
                         id = R.string.note_empty_data,
                         ""
-                    )
+                    ), color = FontBlack
                 )
             }
         )
@@ -274,7 +274,7 @@ fun ListCreditTenant(
 private fun showBottomConfirm(
     context: Context,
     detailCreditTenantViewModel: DetailCreditTenantViewModel,
-    creditTenantId:String,
+    creditTenantId: String,
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)

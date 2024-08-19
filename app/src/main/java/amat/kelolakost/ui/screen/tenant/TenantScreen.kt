@@ -174,7 +174,8 @@ fun ListTenantView(
                     text = stringResource(
                         id = R.string.note_empty_data,
                         "Penyewa"
-                    )
+                    ),
+                    color = FontBlack
                 )
             }
         )

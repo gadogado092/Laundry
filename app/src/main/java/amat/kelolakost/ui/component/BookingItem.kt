@@ -119,7 +119,7 @@ fun SubBooking(
             colorFilter = ColorFilter.tint(color = TealGreen)
         )
         Text(
-            text = title, style = TextStyle(fontSize = 16.sp)
+            text = title, style = TextStyle(fontSize = 16.sp, color = FontBlack)
         )
     }
 }

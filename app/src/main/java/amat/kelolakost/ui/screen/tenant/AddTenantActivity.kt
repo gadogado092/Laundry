@@ -160,7 +160,7 @@ fun AddTenantScreen(
                 errorMessage = addTenantViewModel.isEmailValid.collectAsState().value.errorMessage
             )
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Jenis Kelamin")
+                Text(text = "Jenis Kelamin", color = FontBlack)
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
@@ -174,7 +174,7 @@ fun AddTenantScreen(
                             selected = (!addTenantViewModel.tenantUi.collectAsState().value.gender),
                             onClick = { addTenantViewModel.setGender(false) }
                         )
-                        Text(text = "Pria")
+                        Text(text = "Pria", color = FontBlack)
                     }
                     Row(
                         modifier = Modifier
@@ -188,7 +188,7 @@ fun AddTenantScreen(
                             selected = (addTenantViewModel.tenantUi.collectAsState().value.gender),
                             onClick = { addTenantViewModel.setGender(true) }
                         )
-                        Text(text = "Wanita")
+                        Text(text = "Wanita", color = FontBlack)
                     }
                 }
             }

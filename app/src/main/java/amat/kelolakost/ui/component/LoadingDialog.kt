@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
+import amat.kelolakost.ui.theme.FontBlack
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,7 @@ fun LoadingDialog(
                     strokeWidth = 2.dp
                 )
                 Spacer(Modifier.size(8.dp))
-                Text(text = text)
+                Text(text = text, color = FontBlack)
             }
         }
     }

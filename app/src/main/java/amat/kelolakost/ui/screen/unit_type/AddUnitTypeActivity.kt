@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.component.MyOutlinedTextFieldCurrency
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -158,7 +159,7 @@ fun AddKostScreen(
                 currencyValue = addUnitTypeViewModel.unitTypeUi.collectAsState().value.priceGuarantee
             )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(text = stringResource(id = R.string.subtitle_price_unit))
+            Text(text = stringResource(id = R.string.subtitle_price_unit), color = FontBlack)
             Spacer(modifier = Modifier.height(2.dp))
             MyOutlinedTextFieldCurrency(
                 label = stringResource(id = R.string.subtitle_price_day),

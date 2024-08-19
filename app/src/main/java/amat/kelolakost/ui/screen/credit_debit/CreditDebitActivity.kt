@@ -11,6 +11,7 @@ import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.CreditDebitItem
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -218,7 +219,7 @@ fun ListCreditDebit(
                     text = stringResource(
                         id = R.string.note_empty_data,
                         "Hutang Piutang"
-                    )
+                    ), color = FontBlack
                 )
             }
         )

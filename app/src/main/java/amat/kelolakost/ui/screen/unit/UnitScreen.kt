@@ -120,22 +120,24 @@ fun UnitScreen(
                     }
 
                     is UiState.Success -> {
-                        ListUnitView(listData = uiState.data, onItemClick = {
-                            val intent = Intent(context, UpdateUnitActivity::class.java)
-                            intent.putExtra("id", it)
-                            context.startActivity(intent)
-                        }, onClickCheckIn = { id, name, price, duration, priceGuarantee, unitTypeName ->
-                            val intent = Intent(context, CheckInActivity::class.java)
-                            intent.putExtra("unitId", id)
-                            intent.putExtra("unitName", name)
-                            intent.putExtra("kostId", viewModel.kostSelected.value.id)
-                            intent.putExtra("kostName", viewModel.kostSelected.value.name)
-                            intent.putExtra("price", price)
-                            intent.putExtra("duration", duration)
-                            intent.putExtra("priceGuarantee", priceGuarantee)
-                            intent.putExtra("unitTypeName", unitTypeName)
-                            context.startActivity(intent)
-                        },
+                        ListUnitView(listData = uiState.data,
+                            onItemClick = {
+                                val intent = Intent(context, UpdateUnitActivity::class.java)
+                                intent.putExtra("id", it)
+                                context.startActivity(intent)
+                            },
+                            onClickCheckIn = { id, name, price, duration, priceGuarantee, unitTypeName ->
+                                val intent = Intent(context, CheckInActivity::class.java)
+                                intent.putExtra("unitId", id)
+                                intent.putExtra("unitName", name)
+                                intent.putExtra("kostId", viewModel.kostSelected.value.id)
+                                intent.putExtra("kostName", viewModel.kostSelected.value.name)
+                                intent.putExtra("price", price)
+                                intent.putExtra("duration", duration)
+                                intent.putExtra("priceGuarantee", priceGuarantee)
+                                intent.putExtra("unitTypeName", unitTypeName)
+                                context.startActivity(intent)
+                            },
                             onClickCheckOut = { id ->
                                 val intent = Intent(context, CheckOutActivity::class.java)
                                 intent.putExtra("unitId", id)
@@ -147,11 +149,13 @@ fun UnitScreen(
                                 intent.putExtra("price", price)
                                 intent.putExtra("duration", duration)
                                 context.startActivity(intent)
-                            }, onClickFinishRenovation = { id ->
+                            },
+                            onClickFinishRenovation = { id ->
                                 val intent = Intent(context, FinishRenovationActivity::class.java)
                                 intent.putExtra("unitId", id)
                                 context.startActivity(intent)
-                            }, onClickMove = { id ->
+                            },
+                            onClickMove = { id ->
                                 val intent = Intent(context, MoveActivity::class.java)
                                 intent.putExtra("unitId", id)
                                 context.startActivity(intent)
@@ -203,7 +207,8 @@ fun ListUnitView(
                     text = stringResource(
                         id = R.string.note_empty_data,
                         "Unit/Kamar"
-                    )
+                    ),
+                    color = FontBlack
                 )
             }
         )

@@ -136,7 +136,7 @@ fun SubTenant(
             colorFilter = ColorFilter.tint(color = TealGreen)
         )
         Text(
-            text = title, style = TextStyle(fontSize = 16.sp), maxLines = 1,
+            text = title, style = TextStyle(fontSize = 16.sp, color = FontBlack), maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
     }

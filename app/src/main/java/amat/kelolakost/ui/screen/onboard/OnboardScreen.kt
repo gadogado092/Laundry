@@ -9,6 +9,8 @@ import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_IMAGE_VIEW
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_NAV_BUTTON
 import amat.kelolakost.ui.screen.onboard.Tags.TAG_ONBOARD_TAG_ROW
 import amat.kelolakost.ui.screen.user.NewUserActivity
+import amat.kelolakost.ui.theme.FontBlack
+import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import android.app.Activity
 import android.content.Intent
@@ -164,6 +166,7 @@ fun OnBoardDetails(
             text = currentPage.title,
             style = MaterialTheme.typography.displaySmall,
             textAlign = TextAlign.Center,
+            color = FontBlack,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -171,6 +174,7 @@ fun OnBoardDetails(
             text = currentPage.description,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Justify,
+            color = FontBlack,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -199,7 +203,7 @@ fun OnBoardNavButton(
                 .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
                 .fillMaxWidth(0.6F)
         ) {
-            Text(text = "Selanjutnya")
+            Text(text = "Selanjutnya", color = FontWhite)
         }
     } else {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -235,7 +239,7 @@ fun OnBoardNavButton(
                     .testTag(TAG_ONBOARD_SCREEN_NAV_BUTTON)
                     .fillMaxWidth(0.6F),
             ) {
-                Text(text = "Coba Sekarang")
+                Text(text = "Coba Sekarang", color = FontWhite)
             }
         }
     }

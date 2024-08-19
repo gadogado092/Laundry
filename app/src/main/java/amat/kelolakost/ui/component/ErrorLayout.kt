@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.OutlinedButton
@@ -16,7 +17,7 @@ fun ErrorLayout(modifier: Modifier = Modifier, errorMessage: String, onTryAgainC
         modifier = modifier,
         content = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = errorMessage)
+                Text(text = errorMessage, color= FontBlack)
                 OutlinedButton(onClick = onTryAgainClick) {
                     Text(stringResource(id = R.string.try_again), color = TealGreen)
                 }

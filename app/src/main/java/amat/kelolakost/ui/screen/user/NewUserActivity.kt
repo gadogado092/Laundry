@@ -5,6 +5,7 @@ import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.component.InformationBox
 import amat.kelolakost.ui.component.MyOutlinedTextField
 import amat.kelolakost.ui.screen.main.MainActivity
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -156,7 +157,7 @@ fun NewUserScreen() {
                 errorMessage = userViewModel.isUserEmailValid.collectAsState().value.errorMessage
             )
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Tipe Whatsapp")
+                Text(text = "Tipe Whatsapp", color = FontBlack)
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
@@ -170,7 +171,7 @@ fun NewUserScreen() {
                             selected = ("Standard" == userViewModel.user.collectAsState().value.typeWa),
                             onClick = { userViewModel.setTypeWa("Standard") }
                         )
-                        Text(text = "Standard")
+                        Text(text = "Standard", color = FontBlack)
                     }
                     Row(
                         modifier = Modifier
@@ -184,7 +185,7 @@ fun NewUserScreen() {
                             selected = ("Business" == userViewModel.user.collectAsState().value.typeWa),
                             onClick = { userViewModel.setTypeWa("Business") }
                         )
-                        Text(text = "Business")
+                        Text(text = "Business", color = FontBlack)
                     }
                 }
             }

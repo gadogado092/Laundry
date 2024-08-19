@@ -72,8 +72,8 @@ fun CashFlowItem(
                         )
                     )
                 }
-                Text(text = note, textAlign = TextAlign.Justify,)
-                Text(text = generateTextType(typePayment))
+                Text(text = note, textAlign = TextAlign.Justify, color = FontBlack)
+                Text(text = generateTextType(typePayment), color = FontBlack)
             }
         }
         Divider(

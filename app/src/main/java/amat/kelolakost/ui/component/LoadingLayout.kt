@@ -1,6 +1,7 @@
 package amat.kelolakost.ui.component
 
 import amat.kelolakost.R
+import amat.kelolakost.ui.theme.FontBlack
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +23,7 @@ fun LoadingLayout(modifier: Modifier = Modifier) {
                         .padding(8.dp)
                         .size(50.dp)
                 )
-                Text(text = stringResource(id = R.string.please_wait))
+                Text(text = stringResource(id = R.string.please_wait), color = FontBlack)
             }
         }
     )

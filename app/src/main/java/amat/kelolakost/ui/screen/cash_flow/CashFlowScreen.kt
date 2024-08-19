@@ -96,7 +96,10 @@ fun CashFlowScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = "Saldo Saat Ini", style = TextStyle(fontSize = 12.sp))
+                Text(
+                    text = "Saldo Saat Ini",
+                    style = TextStyle(fontSize = 12.sp, color = FontBlack)
+                )
                 ContentBalance(viewModel)
             }
             viewModel.stateCashFLowUi.collectAsState(initial = CashFLowUi()).value.let { value ->
@@ -197,7 +200,7 @@ fun ListCashFLow(listData: List<CashFlow>, onItemClick: (BillEntity) -> Unit) {
                     text = stringResource(
                         id = R.string.note_empty_data,
                         "Alur Kas"
-                    )
+                    ), color = FontBlack
                 )
             }
         )
@@ -258,7 +261,7 @@ fun ContentBalance(viewModel: CashFlowViewModel) {
                     text = if (uiState.data.total == null) "0" else currencyFormatterStringViewZero(
                         uiState.data.total!!
                     ),
-                    style = TextStyle(fontWeight = FontWeight.Medium)
+                    style = TextStyle(fontWeight = FontWeight.Medium, color= FontBlack)
                 )
             }
         }

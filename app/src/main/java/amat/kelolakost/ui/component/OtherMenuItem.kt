@@ -1,5 +1,6 @@
 package amat.kelolakost.ui.component
 
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.TealGreen
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -38,7 +39,7 @@ fun OtherMenuItem(
                 .weight(1F)
                 .padding(start = 8.dp)
         ) {
-            Text(text = title, style = TextStyle(fontSize = 14.sp))
+            Text(text = title, style = TextStyle(fontSize = 14.sp), color = FontBlack)
             Text(
                 text = subTitle,
                 style = TextStyle(fontSize = 14.sp),
@@ -69,7 +70,7 @@ fun OtherMenuItem(
                 .weight(1F)
                 .padding(start = 8.dp)
         ) {
-            Text(text = title, style = TextStyle(fontSize = 14.sp))
+            Text(text = title, style = TextStyle(fontSize = 14.sp), color = FontBlack)
             Text(
                 text = subTitle,
                 style = TextStyle(fontSize = 14.sp),

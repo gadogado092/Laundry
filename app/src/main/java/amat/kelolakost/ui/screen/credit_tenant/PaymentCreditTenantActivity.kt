@@ -204,7 +204,7 @@ fun ContentPaymentCreditTenant(
         Text(
             text = stringResource(
                 id = R.string.note_empty_data
-            )
+            ), color = FontBlack
         )
     } else {
         Column(

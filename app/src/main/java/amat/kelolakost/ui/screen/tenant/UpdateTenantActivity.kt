@@ -4,6 +4,7 @@ import amat.kelolakost.R
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.component.MyOutlinedTextField
+import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.FontWhite
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.KelolaKostTheme
@@ -183,7 +184,7 @@ fun UpdateTenantScreen(
                 errorMessage = updateTenantViewModel.isEmailValid.collectAsState().value.errorMessage
             )
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Jenis Kelamin")
+                Text(text = "Jenis Kelamin", color = FontBlack)
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
@@ -197,7 +198,7 @@ fun UpdateTenantScreen(
                             selected = (!updateTenantViewModel.tenantUi.collectAsState().value.gender),
                             onClick = { updateTenantViewModel.setGender(false) }
                         )
-                        Text(text = "Pria")
+                        Text(text = "Pria", color = FontBlack)
                     }
                     Row(
                         modifier = Modifier
@@ -211,7 +212,7 @@ fun UpdateTenantScreen(
                             selected = (updateTenantViewModel.tenantUi.collectAsState().value.gender),
                             onClick = { updateTenantViewModel.setGender(true) }
                         )
-                        Text(text = "Wanita")
+                        Text(text = "Wanita", color = FontBlack)
                     }
                 }
             }

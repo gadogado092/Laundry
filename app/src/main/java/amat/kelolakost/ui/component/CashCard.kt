@@ -2,6 +2,7 @@ package amat.kelolakost.ui.component
 
 import amat.kelolakost.ui.theme.ColorIncome
 import amat.kelolakost.ui.theme.ColorRed
+import amat.kelolakost.ui.theme.FontBlack
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ fun CashCard(
             )
             Text(
                 text = nominal,
+                color = FontBlack,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(
