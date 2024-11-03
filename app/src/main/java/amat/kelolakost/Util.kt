@@ -34,7 +34,7 @@ fun isEmailValid(emailAddress: String): Boolean {
 
 fun isNumberPhoneValid(numberPhone: String): Boolean {
     if (!Pattern.matches("[a-zA-Z]+", numberPhone)) {
-        return numberPhone.length in 7..13
+        return numberPhone.length in 7..15
     }
     return false
 }
@@ -45,7 +45,7 @@ fun checkIsEmailValid(emailAddress: String): Boolean {
 
 fun checkIsNumberPhoneValid(numberPhone: String): Boolean {
     if (!Pattern.matches("[a-zA-Z]+", numberPhone)) {
-        return numberPhone.length in 7..13
+        return numberPhone.length in 7..15
     }
     return false
 }

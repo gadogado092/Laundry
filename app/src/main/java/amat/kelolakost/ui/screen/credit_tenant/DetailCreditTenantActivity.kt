@@ -196,7 +196,7 @@ fun ContentHeaderCreditTenant(
             ComboBox(
                 modifier = Modifier.padding(bottom = 8.dp),
                 title = stringResource(id = R.string.subtitle_number_phone),
-                value = data.tenantName
+                value = data.tenantNumberPhone
             )
             ComboBox(
                 modifier = Modifier.padding(bottom = 8.dp),
