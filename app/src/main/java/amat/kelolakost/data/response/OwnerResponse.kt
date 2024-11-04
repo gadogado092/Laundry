@@ -10,7 +10,8 @@ data class AccountBackupResponse(
 )
 
 data class LastBackupResponse(
-    @SerializedName("last_backup") val lastBackUp: String
+    @SerializedName("last_backup") val lastBackUp: String,
+    @SerializedName("token") val token: String
 )
 
 data class OfflineResponse(

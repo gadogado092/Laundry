@@ -52,6 +52,11 @@ class BackUpViewModel(
     val isProsesRestoreValid: StateFlow<ValidationResult<JSONObject>>
         get() = _isProsesRestoreValid
 
+    private val _isProsesCheckTokenValid: MutableStateFlow<ValidationResult<JSONObject>> =
+        MutableStateFlow(ValidationResult.None)
+    val isProsesCheckTokenValid: StateFlow<ValidationResult<JSONObject>>
+        get() = _isProsesCheckTokenValid
+
     private val _stateUi: MutableStateFlow<BackUpUi> =
         MutableStateFlow(BackUpUi())
     val stateUi: StateFlow<BackUpUi>
@@ -707,6 +712,19 @@ class BackUpViewModel(
                     } else {
                         _stateUi.value = stateUi.value.copy(lastBackUp = data.lastBackUp)
                     }
+
+                    //check token cahce
+                    if (data.token != stateUi.value.token) {
+                        logOut()
+                        _isProsesCheckTokenValid.value =
+                            ValidationResult.Error("Dalam Proses Perbaikan... Kode=7073N")
+                    }
+                } else {
+                    if (response.message == "Silahkan Login Kembali") {
+                        logOut()
+                    }
+                    _isProsesCheckTokenValid.value =
+                        ValidationResult.Error(response.message)
                 }
 
             } catch (e: Exception) {
@@ -722,6 +740,7 @@ class BackUpViewModel(
     private fun clearError() {
         _isProsesValid.value = ValidationResult.None
         _isProsesRestoreValid.value = ValidationResult.None
+        _isProsesCheckTokenValid.value = ValidationResult.None
     }
 
 }

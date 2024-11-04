@@ -167,6 +167,25 @@ fun BackUpScreen() {
 
     }
 
+    viewModel.isProsesCheckTokenValid.collectAsState(initial = ValidationResult.None).value.let { uiState ->
+        when (uiState) {
+            is ValidationResult.Error -> {
+                if (uiState.errorMessage == "Silahkan Login Kembali" || uiState.errorMessage == "Dalam Proses Perbaikan... Kode=7073N") {
+                    val activity = (context as? Activity)
+                    val intent = Intent(context, LoginActivity::class.java)
+                    context.startActivity(intent)
+                    activity?.finish()
+                }
+                Toast.makeText(
+                    context,
+                    uiState.errorMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else -> {}
+        }
+    }
+
     //START UI
 
     Column {
