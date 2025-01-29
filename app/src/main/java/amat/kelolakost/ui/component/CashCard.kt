@@ -35,13 +35,13 @@ fun CashCard(
                 colorFilter = ColorFilter.tint(if (type == 0) ColorIncome else ColorRed)
             )
             Text(
-                text = nominal,
-                color = FontBlack,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(
-                        end = 8.dp
-                    ),
+                    text = nominal,
+            color = FontBlack,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(
+                    end = 8.dp
+                ),
             )
         }
     }

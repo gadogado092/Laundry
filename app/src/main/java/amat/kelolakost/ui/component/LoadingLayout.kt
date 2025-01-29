@@ -14,7 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingLayout(modifier: Modifier = Modifier) {
+fun LoadingLayout(
+    modifier: Modifier = Modifier,
+    text: String = stringResource(id = R.string.please_wait)
+) {
     CenterLayout(modifier = modifier,
         content = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -23,7 +26,7 @@ fun LoadingLayout(modifier: Modifier = Modifier) {
                         .padding(8.dp)
                         .size(50.dp)
                 )
-                Text(text = stringResource(id = R.string.please_wait), color = FontBlack)
+                Text(text = text, color = FontBlack)
             }
         }
     )

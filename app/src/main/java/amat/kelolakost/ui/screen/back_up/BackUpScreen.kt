@@ -8,7 +8,6 @@ import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.ValidationResult
 import amat.kelolakost.ui.component.LoadingDialog
 import amat.kelolakost.ui.component.OtherMenuItem
-import amat.kelolakost.ui.screen.main.MainActivity
 import amat.kelolakost.ui.screen.splash.SplashActivity
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark

@@ -12,6 +12,7 @@ import amat.kelolakost.dateToDisplayMidFormat
 import amat.kelolakost.di.Injection
 import amat.kelolakost.ui.common.OnLifecycleEvent
 import amat.kelolakost.ui.common.UiState
+import amat.kelolakost.ui.common.ValidationResult
 import amat.kelolakost.ui.component.CashCard
 import amat.kelolakost.ui.component.CashFlowItem
 import amat.kelolakost.ui.component.CenterLayout
@@ -23,10 +24,15 @@ import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
 import amat.kelolakost.ui.theme.TealGreen
 import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.widget.Button
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,17 +45,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +66,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 @Composable
 fun CashFlowScreen(
@@ -84,6 +94,27 @@ fun CashFlowScreen(
             else -> { /* other stuff */
             }
         }
+    }
+
+    viewModel.stateReport.collectAsState().value.let { uiState ->
+
+        when (uiState) {
+            is ValidationResult.Error -> {
+                Toast.makeText(
+                    context,
+                    "Problem ${uiState.errorMessage}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is ValidationResult.Loading -> LoadingLayout(text = uiState.loadingMessage)
+            is ValidationResult.Success -> {
+                showBottomConfirm(context, uiState.data, viewModel)
+            }
+
+            else -> {}
+        }
+
     }
 
     //START UI
@@ -131,7 +162,35 @@ fun CashFlowScreen(
         ) {
             ContentTotalIncome(viewModel = viewModel)
             ContentTotalOutcome(viewModel = viewModel)
+
+            Card(
+                modifier = modifier
+                    .padding(end = 4.dp)
+                    .clickable {
+                        viewModel.report()
+                    },
+                elevation = 4.dp
+            ) {
+                Row {
+                    Image(
+                        modifier = Modifier.padding(4.dp),
+                        imageVector = Icons.Default.FileDownload,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(color = TealGreen)
+                    )
+                    Text(
+                        text = "Excel",
+                        color = FontBlack,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(
+                                end = 8.dp
+                            ),
+                    )
+                }
+            }
         }
+
         Divider(
             color = TealGreen,
             thickness = 2.dp,
@@ -261,7 +320,7 @@ fun ContentBalance(viewModel: CashFlowViewModel) {
                     text = if (uiState.data.total == null) "0" else currencyFormatterStringViewZero(
                         uiState.data.total!!
                     ),
-                    style = TextStyle(fontWeight = FontWeight.Medium, color= FontBlack)
+                    style = TextStyle(fontWeight = FontWeight.Medium, color = FontBlack)
                 )
             }
         }
@@ -364,4 +423,45 @@ fun showDatePickerEnd(context: Context, viewModel: CashFlowViewModel, dateStart:
     )
     mDatePickerDialog.setMessage("Pilih Tanggal Akhir")
     mDatePickerDialog.show()
+}
+
+private fun showBottomConfirm(
+    context: Context, url: String,
+    viewModel: CashFlowViewModel,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Buka Browser untuk download File?"
+
+    message?.text = messageString
+
+    val baseUrl = "https://apix.juragankost.id"
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        try {
+            val webIntent =
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(baseUrl + url)
+                )
+            context.startActivity(webIntent)
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(
+                context,
+                "Tidak Bisa Akses Tutorial",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+    bottomSheetDialog.show()
+
+    bottomSheetDialog.setOnDismissListener {
+        viewModel.resetReport()
+    }
 }
