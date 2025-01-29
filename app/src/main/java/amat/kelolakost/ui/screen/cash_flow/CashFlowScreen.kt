@@ -19,6 +19,7 @@ import amat.kelolakost.ui.component.CenterLayout
 import amat.kelolakost.ui.component.DateLayout
 import amat.kelolakost.ui.component.ErrorLayout
 import amat.kelolakost.ui.component.LoadingLayout
+import amat.kelolakost.ui.component.LoadingDialog
 import amat.kelolakost.ui.screen.bill.BillActivityXml
 import amat.kelolakost.ui.theme.FontBlack
 import amat.kelolakost.ui.theme.GreenDark
@@ -107,7 +108,10 @@ fun CashFlowScreen(
                 ).show()
             }
 
-            is ValidationResult.Loading -> LoadingLayout(text = uiState.loadingMessage)
+            is ValidationResult.Loading -> LoadingDialog(
+                onDismissRequest = {},
+                text = uiState.loadingMessage
+            )
             is ValidationResult.Success -> {
                 showBottomConfirm(context, uiState.data, viewModel)
             }
