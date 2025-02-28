@@ -1,0 +1,24 @@
+package amat.laundry.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class User(
+    @PrimaryKey
+    val id: String,
+    val name: String,
+    val numberPhone: String,
+    val email: String,
+    val typeWa: String,
+    //info printer
+    val printerName:String,
+    val printerAddress:String,
+    val paperSize:String,
+    val footerNote:String,
+
+    val limit: String,
+    val cost: Int,
+    val key: String,
+    val createAt: String
+)

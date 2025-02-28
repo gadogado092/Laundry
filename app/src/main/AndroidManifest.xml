@@ -22,13 +22,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KelolaKost"
+        android:theme="@style/Theme.Laundry"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".ui.screen.splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost">
+            android:theme="@style/Theme.Laundry">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,77 +39,77 @@
         <activity
             android:name=".ui.screen.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.Laundry" />
 
         <activity
             android:name=".ui.screen.onboard.OnboardActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.KelolaKost" />
+            android:theme="@style/Theme.Laundry" />
 
         <activity
             android:name=".ui.screen.user.NewUserActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.kost.AddKostActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.kost.UpdateKostActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.unit_type.AddUnitTypeActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.unit_type.UpdateUnitTypeActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.user.UpdateUserActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.unit.AddUnitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.tenant.AddTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.tenant.UpdateTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.unit.UpdateUnitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.check_in.CheckInActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.bill.BillActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.bill.BillActivityXml"
@@ -118,127 +118,127 @@
         <activity
             android:name=".ui.screen.extend.ExtendActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.invoice.InvoiceActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.move.MoveActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.check_out.CheckOutActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.booking.BookingActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.finish_renovation.FinishRenovationActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.cash_flow.AddCashFlowActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.booking.AddBookingActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.booking.CancelBookingActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.booking.CheckInBookingActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_tenant.CreditTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_tenant.DetailCreditTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_tenant.PaymentCreditTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_tenant.HistoryCreditTenantActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_debit.CreditDebitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_debit.AddCreditDebitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_debit.AddCreditDebitCustomerActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_debit.HistoryCreditDebitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.screen.credit_debit.PaymentCreditDebitActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.BackUpActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.RegisterActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.ForgetPasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.back_up.ChangePasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.KelolaKost"
+            android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
 

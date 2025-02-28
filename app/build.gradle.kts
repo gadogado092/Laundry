@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "amat.kelolakost"
+    namespace = "amat.laundry"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "amat.kelolakost"
+        applicationId = "amat.laundry"
         minSdk = 24
         targetSdk = 34
         versionCode = 20

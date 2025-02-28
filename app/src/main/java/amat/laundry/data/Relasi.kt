@@ -1,0 +1,1 @@
+package amat.laundry.data
