@@ -111,15 +111,15 @@ fun NewUserScreen() {
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             MyOutlinedTextField(
-                label = "Nama Pemilik",
+                label = "Nama Usaha",
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                value = userViewModel.user.collectAsState().value.name,
+                value = userViewModel.user.collectAsState().value.businessName,
                 onValueChange = {
-                    userViewModel.setName(it)
+                    userViewModel.setBusinessName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
-                isError = userViewModel.isUserNameValid.collectAsState().value.isError,
-                errorMessage = userViewModel.isUserNameValid.collectAsState().value.errorMessage
+                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
             )
 
             MyOutlinedTextField(
@@ -136,16 +136,15 @@ fun NewUserScreen() {
             )
 
             MyOutlinedTextField(
-                label = "Alamat Email",
-                value = userViewModel.user.collectAsState().value.email,
+                label = "Alamat",
+                value = userViewModel.user.collectAsState().value.address,
                 onValueChange = {
-                    userViewModel.setEmail(it)
+                    userViewModel.setAddress(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                isError = userViewModel.isUserEmailValid.collectAsState().value.isError,
-                errorMessage = userViewModel.isUserEmailValid.collectAsState().value.errorMessage
+                isError = userViewModel.isAddressValid.collectAsState().value.isError,
+                errorMessage = userViewModel.isAddressValid.collectAsState().value.errorMessage
             )
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Tipe Whatsapp", color = FontBlack)
@@ -180,82 +179,6 @@ fun NewUserScreen() {
                     }
                 }
             }
-//            MyOutlinedTextField(
-//                label = "Nama Kost/Kontrakan/Penginapan",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.kost.collectAsState().value.name,
-//                onValueChange = {
-//                    userViewModel.setKostName(it)
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                isError = userViewModel.isKostNameValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isKostNameValid.collectAsState().value.errorMessage
-//            )
-
-//            MyOutlinedTextField(
-//                label = "Alamat Kost/Kontrakan/Penginapan",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.kost.collectAsState().value.address,
-//                onValueChange = {
-//                    userViewModel.setKostAddress(it)
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                isError = userViewModel.isKostAddressValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isKostAddressValid.collectAsState().value.errorMessage
-//            )
-//            MyOutlinedTextField(
-//                label = "Keterangan Tambahan",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.kost.collectAsState().value.note,
-//                onValueChange = {
-//                    userViewModel.setNote(it)
-//                },
-//                modifier = Modifier
-//                    .height(120.dp)
-//                    .fillMaxWidth(),
-//                singleLine = false
-//            )
-            InformationBox(value = "Informasi Nama Bank, Nomor Rekening dan Catatan akan muncul saat mengirim penagihan ke penyewa")
-//            MyOutlinedTextField(
-//                label = "Nama Bank / Nama Dompet Digital",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.user.collectAsState().value.bankName,
-//                onValueChange = {
-//                    userViewModel.setBankName(it)
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 8.dp),
-//            )
-//            MyOutlinedTextField(
-//                label = "No.Rekening / No.Account",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.user.collectAsState().value.accountNumber,
-//                onValueChange = {
-//                    userViewModel.setAccountNumber(it)
-//                },
-//                modifier = Modifier.fillMaxWidth(),
-//            )
-//            MyOutlinedTextField(
-//                label = "Nama Pemilik Rekening/Dompet Digital",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.user.collectAsState().value.accountOwnerName,
-//                onValueChange = {
-//                    userViewModel.setAccountOwnerName(it)
-//                },
-//                modifier = Modifier.fillMaxWidth(),
-//            )
-//            MyOutlinedTextField(
-//                label = "Catatan Tambahan",
-//                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                value = userViewModel.user.collectAsState().value.note,
-//                onValueChange = {
-//                    userViewModel.setNoteBank(it)
-//                },
-//                modifier = Modifier.fillMaxWidth(),
-//            )
             Button(
                 onClick = {
                     userViewModel.prosesRegistration()

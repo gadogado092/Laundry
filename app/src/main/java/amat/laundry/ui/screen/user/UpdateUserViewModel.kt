@@ -54,13 +54,13 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun setName(value: String) {
-        clearError()
-        _user.value = _user.value.copy(name = value)
-        if (_user.value.name.trim().isEmpty()) {
-            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
-        } else {
-            _isUserNameValid.value = ValidationResult(false, "")
-        }
+//        clearError()
+//        _user.value = _user.value.copy(name = value)
+//        if (_user.value.name.trim().isEmpty()) {
+//            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+//        } else {
+//            _isUserNameValid.value = ValidationResult(false, "")
+//        }
     }
 
     fun setNumberPhone(value: String) {
@@ -77,16 +77,16 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     }
 
     fun setEmail(value: String) {
-        clearError()
-        _user.value = _user.value.copy(email = value)
-
-        if (_user.value.email.trim().isEmpty()) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-        } else if (!isEmailValid(_user.value.email.trim())) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
-        } else {
-            _isUserEmailValid.value = ValidationResult(false, "")
-        }
+//        clearError()
+//        _user.value = _user.value.copy(email = value)
+//
+//        if (_user.value.email.trim().isEmpty()) {
+//            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
+//        } else if (!isEmailValid(_user.value.email.trim())) {
+//            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
+//        } else {
+//            _isUserEmailValid.value = ValidationResult(false, "")
+//        }
     }
 
     fun getDetail() {
@@ -105,11 +105,11 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
 
     fun prosesUpdate() {
         clearError()
-        if (_user.value.name.trim().isEmpty()) {
-            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
-            _isProsesSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
-            return
-        }
+//        if (_user.value.name.trim().isEmpty()) {
+//            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+//            _isProsesSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+//            return
+//        }
 
         if (_user.value.numberPhone.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
@@ -121,15 +121,15 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
             return
         }
 
-        if (_user.value.email.trim().isEmpty()) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
-            return
-        } else if (!isEmailValid(_user.value.email.trim())) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
-            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
-            return
-        }
+//        if (_user.value.email.trim().isEmpty()) {
+//            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
+//            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
+//            return
+//        } else if (!isEmailValid(_user.value.email.trim())) {
+//            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
+//            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
+//            return
+//        }
 
         if (!_isUserNameValid.value.isError
             && !_isUserNumberPhoneValid.value.isError

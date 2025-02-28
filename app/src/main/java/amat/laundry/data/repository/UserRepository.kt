@@ -1,5 +1,8 @@
 package amat.laundry.data.repository
 
+import amat.laundry.data.Category
+import amat.laundry.data.LaundryStatus
+import amat.laundry.data.Product
 import amat.laundry.data.User
 import amat.laundry.data.UserDao
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +34,15 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun extendApp(userId: String, newLimit: String, newKey: String) {
         userDao.extendApp(userId, newLimit, newKey)
+    }
+
+    suspend fun transactionInsertNewUser(
+        user: User,
+        statusList: List<LaundryStatus>,
+        categoryList: List<Category>,
+        productList: List<Product>
+    ) {
+        userDao.transactionInsertNewUser(user, statusList, categoryList, productList)
     }
 
     companion object {

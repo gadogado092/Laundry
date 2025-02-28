@@ -169,9 +169,9 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MyOutlinedTextField(
-            label = "Nama Pemilik",
+            label = "Nama Usaha",
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-            value = updateUserViewModel.user.collectAsState().value.name,
+            value = updateUserViewModel.user.collectAsState().value.businessName,
             onValueChange = {
                 updateUserViewModel.setName(it)
             },
@@ -195,7 +195,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
 
         MyOutlinedTextField(
             label = "Alamat Email",
-            value = updateUserViewModel.user.collectAsState().value.email,
+            value = updateUserViewModel.user.collectAsState().value.address,
             onValueChange = {
                 updateUserViewModel.setEmail(it)
             },

@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     val id: String,
-    val name: String,
+    val businessName: String,
     val numberPhone: String,
-    val email: String,
+    val address: String,
     val typeWa: String,
     //info printer
     val printerName:String,

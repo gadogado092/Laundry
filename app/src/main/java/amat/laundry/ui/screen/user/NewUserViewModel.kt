@@ -1,11 +1,13 @@
 package amat.laundry.ui.screen.user
 
 import amat.laundry.addDateLimitApp
+import amat.laundry.data.Category
+import amat.laundry.data.LaundryStatus
+import amat.laundry.data.Product
 import amat.laundry.data.User
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.UserRepository
 import amat.laundry.generateDateTimeNow
-import amat.laundry.isEmailValid
 import amat.laundry.isNumberPhoneValid
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +23,23 @@ class NewUserViewModel(
     ViewModel() {
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "Standard", "", "", "", "", "", 25000, "", ""))
+        MutableStateFlow(
+            User(
+                "",
+                "",
+                "",
+                "",
+                "Standard",
+                "",
+                "",
+                "58 mm",
+                "Terima Kasih",
+                "",
+                25000,
+                "",
+                ""
+            )
+        )
     val user: StateFlow<User>
         get() = _user
 
@@ -31,39 +49,34 @@ class NewUserViewModel(
     val isProsesSuccess: StateFlow<ValidationResult>
         get() = _isProsesSuccess
 
-    private val _isUserNameValid: MutableStateFlow<ValidationResult> =
+    private val _isBusinessNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
 
-    val isUserNameValid: StateFlow<ValidationResult>
-        get() = _isUserNameValid
+    val isBusinessNameValid: StateFlow<ValidationResult>
+        get() = _isBusinessNameValid
 
     private val _isUserNumberPhoneValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
     val isUserNumberPhoneValid: StateFlow<ValidationResult>
         get() = _isUserNumberPhoneValid
 
-    private val _isUserEmailValid: MutableStateFlow<ValidationResult> =
+    private val _isAddressValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
-    val isUserEmailValid: StateFlow<ValidationResult>
-        get() = _isUserEmailValid
+    val isAddressValid: StateFlow<ValidationResult>
+        get() = _isAddressValid
 
     private val _isKostNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
     val isKostNameValid: StateFlow<ValidationResult>
         get() = _isKostNameValid
 
-    private val _isKostAddressValid: MutableStateFlow<ValidationResult> =
-        MutableStateFlow(ValidationResult(false, ""))
-    val isKostAddressValid: StateFlow<ValidationResult>
-        get() = _isKostAddressValid
-
-    fun setName(value: String) {
+    fun setBusinessName(value: String) {
         clearError()
-        _user.value = _user.value.copy(name = value)
-        if (_user.value.name.trim().isEmpty()) {
-            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+        _user.value = _user.value.copy(businessName = value)
+        if (_user.value.businessName.trim().isEmpty()) {
+            _isBusinessNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
         } else {
-            _isUserNameValid.value = ValidationResult(false, "")
+            _isBusinessNameValid.value = ValidationResult(false, "")
         }
     }
 
@@ -80,16 +93,14 @@ class NewUserViewModel(
         }
     }
 
-    fun setEmail(value: String) {
+    fun setAddress(value: String) {
         clearError()
-        _user.value = _user.value.copy(email = value)
+        _user.value = _user.value.copy(address = value)
 
-        if (_user.value.email.trim().isEmpty()) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-        } else if (!isEmailValid(_user.value.email.trim())) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
+        if (_user.value.address.trim().isEmpty()) {
+            _isAddressValid.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
         } else {
-            _isUserEmailValid.value = ValidationResult(false, "")
+            _isAddressValid.value = ValidationResult(false, "")
         }
     }
 
@@ -105,8 +116,8 @@ class NewUserViewModel(
 
     fun prosesRegistration() {
         clearError()
-        if (_user.value.name.trim().isEmpty()) {
-            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+        if (_user.value.businessName.trim().isEmpty()) {
+            _isBusinessNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
             _isProsesSuccess.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
             return
         }
@@ -121,25 +132,19 @@ class NewUserViewModel(
             return
         }
 
-        if (_user.value.email.trim().isEmpty()) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
+        if (_user.value.address.trim().isEmpty()) {
+            _isAddressValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
             _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
-            return
-        } else if (!isEmailValid(_user.value.email.trim())) {
-            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
-            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
             return
         }
 
-        if (!_isUserNameValid.value.isError
+        if (!_isBusinessNameValid.value.isError
             && !_isUserNumberPhoneValid.value.isError
-            && !_isUserEmailValid.value.isError
+            && !_isAddressValid.value.isError
             && !_isKostNameValid.value.isError
-            && !_isKostAddressValid.value.isError
         ) {
             viewModelScope.launch {
                 val userId = UUID.randomUUID()
-                val kostId = UUID.randomUUID()
                 val createAt = generateDateTimeNow()
                 val encodedDateTime = addDateLimitApp(createAt, "Bulan", 1)
                 val key = UUID.randomUUID().toString().substring(0, 4).uppercase()
@@ -271,13 +276,38 @@ class NewUserViewModel(
 //
 //            userRepository.insertUser(user)
 //            kostRepository.insertKost(kost)
-//            val listStatus = listOf(
-//                UnitStatus(1, "Terisi"),
-//                UnitStatus(2, "Kosong"),
-//                UnitStatus(3, "Pembersihan"),
-//                UnitStatus(4, "Perbaikan")
-//            )
-//            unitStatusRepository.insert(listStatus)
+
+            val category1Id = UUID.randomUUID()
+            val category2Id = UUID.randomUUID()
+
+            val categoryList = listOf(
+                Category(category1Id.toString(), "Kiloan", "kg"),
+                Category(category2Id.toString(), "Satuan", "buah")
+            )
+
+            val product1Id = UUID.randomUUID()
+            val product2Id = UUID.randomUUID()
+            val product3Id = UUID.randomUUID()
+
+            val productList = listOf(
+                Product(product1Id.toString(), "Laundry Komplit", 10000, category1Id.toString()),
+                Product(
+                    product2Id.toString(),
+                    "Laundry Kilat Komplit",
+                    15000,
+                    category1Id.toString()
+                ),
+                Product(product3Id.toString(), "Karpet", 40000, category2Id.toString()),
+                Product(product3Id.toString(), "Bed Cover", 30000, category2Id.toString())
+            )
+
+            val statusList = listOf(
+                LaundryStatus(1, "Proses"),
+                LaundryStatus(2, "Siap Diambil"),
+                LaundryStatus(3, "Selesai")
+            )
+
+            userRepository.transactionInsertNewUser(user, statusList, categoryList, productList)
 
             _isProsesSuccess.value = ValidationResult(false)
         } catch (e: Exception) {

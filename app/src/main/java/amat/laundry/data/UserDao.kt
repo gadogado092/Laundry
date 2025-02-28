@@ -39,46 +39,28 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: List<User>)
 
+    //NEW USER AREA
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(categoryList: List<Category>)
 
-//    @Transaction
-//    suspend fun prosesInsertRestore(
-//        dataUser: List<User>,
-//        dataKost: List<Kost>,
-//        dataUnitStatus: List<UnitStatus>,
-//        dataUnitType: List<UnitType>,
-//        dataUnit: List<Unit>,
-//        dataTenant: List<Tenant>,
-//        dataCashFlow: List<CashFlow>,
-//        dataBooking: List<Booking>,
-//        dataCreditTenant: List<CreditTenant>,
-//        dataCreditDebit: List<CreditDebit>,
-//        dataCustomerCreditDebit: List<CustomerCreditDebit>
-//    ) {
-//        //DELETE
-//        deleteAllUser()
-//        deleteAllKost()
-//        deleteAllUnitStatus()
-//        deleteAllUnitType()
-//        deleteAllUnit()
-//        deleteAllTenant()
-//        deleteAllCashFlow()
-//        deleteAllBooking()
-//        deleteAllCreditTenant()
-//        deleteAllCreditDebit()
-//        deleteAllCustomerCreditDebit()
-//
-//        //INSERT
-//        insertUser(dataUser)
-//        insertKost(dataKost)
-//        insertUnitStatus(dataUnitStatus)
-//        insertUnitType(dataUnitType)
-//        insertUnit(dataUnit)
-//        insertTenant(dataTenant)
-//        insertCashFlow(dataCashFlow)
-//        insertBooking(dataBooking)
-//        insertCreditTenant(dataCreditTenant)
-//        insertCreditDebit(dataCreditDebit)
-//        insertCustomerCreditDebit(dataCustomerCreditDebit)
-//
-//    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStatus(statusList: List<LaundryStatus>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProduct(productList: List<Product>)
+
+    @Transaction
+    suspend fun transactionInsertNewUser(
+        user: User,
+        statusList: List<LaundryStatus>,
+        categoryList: List<Category>,
+        productList: List<Product>
+    ) {
+        //INSERT
+        insert(user)
+        insertStatus(statusList)
+        insertCategory(categoryList)
+        insertProduct(productList)
+
+    }
 }
