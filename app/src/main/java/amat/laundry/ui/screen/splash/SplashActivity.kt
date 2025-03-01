@@ -133,13 +133,13 @@ class SplashActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Kelola Kost",
+                        text = "La-Undry",
                         color = FontBlack,
                         fontWeight = FontWeight.Bold,
                         style = TextStyle(fontSize = 20.sp),
                     )
                     Text(
-                        text = "Lebih Mudah Kelola Kost",
+                        text = "Lebih Mudah Kelola Laundry",
                         color = GreenDark,
                         style = TextStyle(fontSize = 16.sp),
                     )
