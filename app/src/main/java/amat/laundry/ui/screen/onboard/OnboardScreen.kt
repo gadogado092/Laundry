@@ -50,17 +50,17 @@ val onboardPagesList = listOf(
     OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Selamat Datang",
-        description = "Aplikasi KeKost merupakan aplikasi pembukuan untuk pemilik usaha kost atau kontrakan maupun penginapan berskala kecil yang dilengkapi dengan fungsi utama membantu dalam memantau ketersediaan kamar, jatuh tempo pembayaran, mencatat identitas penyewa, pembayaran kamar, laporan pemasukkan dan pengeluaran. Kekost berbasis offline atau data tersimpan pada smartphone pengguna, sehingga dapat digunakan tanpa jaringan internet"
+        description = "Aplikasi La-Undry merupakan aplikasi pembukuan untuk pemilik usaha laundry berskala kecil yang dilengkapi dengan fungsi utama membantu dalam memantau pakaian yang sementara diproses, siap diambil maupun selesai, mencatat identitas pelanggan, pembayaran, laporan pemasukkan dan pengeluaran. La-Undry berbasis offline atau data tersimpan pada smartphone pengguna, sehingga dapat digunakan tanpa jaringan internet"
     ), OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Jelajahi Fitur Menarik",
-        description = "Data Penyewa, tanggal check out \r\nData kamar, Harga per Hari Sampai per Tahun" +
-                "\r\nSupport Tipe Kamar\r\nSupport Multi Kost\r\nSistem Booking Kamar\r\nData Transaksi Alur Kas lebih teratur" +
-                "\r\nPembayaran Penyewa teratur\r\nPengelolaan Hutang Piutang"
+        description = "Data Pelanggan yang loyal \r\nData layanan yang tersedia" +
+                "\r\nSupport..." +
+                "\r\nPembayaran..."
     ), OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Ketentuan KeKost",
-        description = "*  Penyimpanan berbasis Offline\r\n* Pembayaran antara penyewa dan pengelola secara langsung tidak melalui aplikasi KeKost\r\n* Pay As You Go KeKost mulai dari 25.000/Bulan"
+        description = "*  Penyimpanan berbasis Offline\r\n* Tambahkan Printer Kasir Pada Menu Lainnya\r\n* Pay As You Go KeKost mulai dari 25.000/Bulan"
     )
 )
 

@@ -5,6 +5,9 @@ import amat.laundry.di.Injection
 import amat.laundry.sendWhatsApp
 import amat.laundry.ui.navigation.NavigationItem
 import amat.laundry.ui.navigation.Screen
+import amat.laundry.ui.screen.home.HomeScreen
+import amat.laundry.ui.screen.other.OtherScreen
+import amat.laundry.ui.screen.transaction.TransactionScreen
 import amat.laundry.ui.screen.user.UpdateUserActivity
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
@@ -26,6 +29,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bed
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalLaundryService
 import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.People
@@ -56,68 +61,62 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Text(text = "MainActivity")
+                    MainScreen()
                 }
             }
         }
     }
 }
 
-//@Composable
-//fun MainScreen(
-//    modifier: Modifier = Modifier,
-//    navController: NavHostController = rememberNavController()
-//) {
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentRoute = navBackStackEntry?.destination?.route
-//
-//    val context = LocalContext.current
-//
-//    val myViewModel: MainViewModel =
-//        viewModel(
-//            factory = MainViewModelFactory(
-//                Injection.provideUserRepository(context)
-//            )
-//        )
-//
-//    Scaffold(
-//        bottomBar = {
-//            when (currentRoute) {
-//                Screen.Unit.route -> {
-//                    BottomBar(navController)
-//                }
-//
-//                Screen.Tenant.route -> {
-//                    BottomBar(navController)
-//                }
-//
-//                Screen.CashFlow.route -> {
-//                    BottomBar(navController)
-//                }
-//
-//                Screen.Other.route -> {
-//                    BottomBar(navController)
-//                }
-//            }
-//        },
-//        modifier = modifier
-//    )
-//    { innerPadding ->
-//        NavHost(
-//            navController = navController,
-//            startDestination = Screen.Unit.route,
-//            modifier = Modifier.padding(innerPadding)
-//        ) {
-//            composable(Screen.Unit.route) {
-//                UnitScreen(context = context)
-//            }
-//            composable(Screen.Tenant.route) {
-//                TenantScreen(context = context)
-//            }
-//            composable(Screen.CashFlow.route) {
-//                CashFlowScreen(context = context)
-//            }
-//            composable(Screen.Other.route) {
+@Composable
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val context = LocalContext.current
+
+    val myViewModel: MainViewModel =
+        viewModel(
+            factory = MainViewModelFactory(
+                Injection.provideUserRepository(context)
+            )
+        )
+
+    Scaffold(
+        bottomBar = {
+            when (currentRoute) {
+                Screen.Home.route -> {
+                    BottomBar(navController)
+                }
+
+                Screen.Transaction.route -> {
+                    BottomBar(navController)
+                }
+
+                Screen.Other.route -> {
+                    BottomBar(navController)
+                }
+            }
+        },
+        modifier = modifier
+    )
+    { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.Home.route) {
+                HomeScreen(context = context)
+            }
+            composable(Screen.Transaction.route) {
+                TransactionScreen(context = context)
+            }
+            composable(Screen.Other.route) {
+                OtherScreen(context = context)
 //                val urlTutorial = stringResource(R.string.url_tutorial_app)
 //                val numberCs = stringResource(R.string.number_cs)
 //                val messageCs =
@@ -180,85 +179,70 @@ class MainActivity : ComponentActivity() {
 //                        )
 //                    },
 //                )
-//            }
-//            composable(Screen.Kost.route) {
-//                KostScreen(context = context, navigateBack = {
-//                    navController.navigateUp()
-//                })
-//            }
-//            composable(Screen.UnitType.route) {
-//                UnitTypeScreen(context = context, navigateBack = {
-//                    navController.navigateUp()
-//                })
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun BottomBar(
-//    navController: NavHostController,
-//    modifier: Modifier = Modifier,
-//) {
-//    BottomNavigation(
-//        modifier = modifier
-//    ) {
-//        val navBackStackEntry by navController.currentBackStackEntryAsState()
-//        val currentRoute = navBackStackEntry?.destination?.route
-//
-//        val navigationItems = listOf(
-//            NavigationItem(
-//                title = stringResource(R.string.title_unit),
-//                icon = Icons.Default.Bed,
-//                screen = Screen.Unit
-//            ),
-//            NavigationItem(
-//                title = stringResource(R.string.title_tenant),
-//                icon = Icons.Default.People,
-//                screen = Screen.Tenant,
-//            ),
-//            NavigationItem(
-//                title = stringResource(R.string.title_cash_flow),
-//                icon = Icons.Default.Loop,
-//                screen = Screen.CashFlow,
-//            ),
-//            NavigationItem(
-//                title = stringResource(R.string.title_other),
-//                icon = Icons.Default.Menu,
-//                screen = Screen.Other,
-//            ),
-//        )
-//
-//        BottomNavigation {
-//            navigationItems.map { item ->
-//                BottomNavigationItem(
-//                    icon = {
-//                        Icon(
-//                            imageVector = item.icon,
-//                            contentDescription = item.title
-//                        )
-//                    },
-//                    label = {
-//                        Text(
-//                            item.title,
-//                            color = if (currentRoute == item.screen.route) FontWhite else GreyLight2,
-//                            maxLines = 1
-//                        )
-//                    },
-//                    selected = currentRoute == item.screen.route,
-//                    onClick = {
-//                        navController.navigate(item.screen.route) {
-//                            popUpTo(navController.graph.findStartDestination().id) {
-//                                saveState = true
-//                            }
-//                            restoreState = true
-//                            launchSingleTop = true
-//                        }
-//                    },
-//                    modifier = Modifier.background(GreenDark)
-//                )
-//            }
-//        }
-//
-//    }
-//}
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+) {
+    BottomNavigation(
+        modifier = modifier
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        val navigationItems = listOf(
+            NavigationItem(
+                title = stringResource(R.string.title_home),
+                icon = Icons.Default.Home,
+                screen = Screen.Home
+            ),
+            NavigationItem(
+                title = stringResource(R.string.title_transaction),
+                icon = Icons.Default.LocalLaundryService,
+                screen = Screen.Transaction,
+            ),
+            NavigationItem(
+                title = stringResource(R.string.title_other),
+                icon = Icons.Default.Menu,
+                screen = Screen.Other,
+            ),
+        )
+
+        BottomNavigation {
+            navigationItems.map { item ->
+                BottomNavigationItem(
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.title
+                        )
+                    },
+                    label = {
+                        Text(
+                            item.title,
+                            color = if (currentRoute == item.screen.route) FontWhite else GreyLight2,
+                            maxLines = 1
+                        )
+                    },
+                    selected = currentRoute == item.screen.route,
+                    onClick = {
+                        navController.navigate(item.screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            restoreState = true
+                            launchSingleTop = true
+                        }
+                    },
+                    modifier = Modifier.background(GreenDark)
+                )
+            }
+        }
+
+    }
+}

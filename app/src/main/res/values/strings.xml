@@ -12,10 +12,9 @@
     <string name="go_pay">GOPAY 085241527504</string>
 
     <string name="title_new_user">Selamat Datang</string>
-    <string name="title_unit">Unit</string>
-    <string name="title_tenant">Tenant</string>
-    <string name="title_cash_flow">Kas</string>
-    <string name="title_other">Menu</string>
+    <string name="title_home">Home</string>
+    <string name="title_transaction">Transaksi</string>
+    <string name="title_other">Lainnya</string>
 
     <string name="title_bottom_sheet">Title Bottom Sheet</string>
     <string name="note_empty_data">Data kosong</string>
