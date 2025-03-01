@@ -11,7 +11,7 @@ import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -62,7 +62,7 @@ class UpdateUserActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            KelolaKostTheme {
+            LaundryAppTheme {
                 UpdateUserScreen(context)
             }
         }

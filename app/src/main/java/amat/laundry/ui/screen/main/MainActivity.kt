@@ -12,7 +12,7 @@ import amat.laundry.ui.screen.user.UpdateUserActivity
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight2
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            KelolaKostTheme {
+            LaundryAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

@@ -3,7 +3,7 @@ package amat.laundry.ui.component
 import amat.laundry.ui.theme.FontBlackSoft
 import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.GreyLight3
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -52,7 +52,7 @@ fun FilterItem(
 @Composable
 @Preview(showBackground = true)
 fun FilterItemPreview() {
-    KelolaKostTheme {
+    LaundryAppTheme {
         Row {
             FilterItem(
                 "Semua",

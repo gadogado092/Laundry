@@ -8,7 +8,7 @@ import amat.laundry.ui.screen.main.MainActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -50,7 +50,7 @@ class NewUserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            KelolaKostTheme {
+            LaundryAppTheme {
                 NewUserScreen()
             }
         }

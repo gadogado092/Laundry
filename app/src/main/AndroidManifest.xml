@@ -44,8 +44,8 @@
         <activity
             android:name=".ui.screen.onboard.OnboardActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Laundry" />
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.screen.user.NewUserActivity"
@@ -54,7 +54,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.screen.kost.AddKostActivity"
+            android:name=".ui.screen.transaction.AddTransactionActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />

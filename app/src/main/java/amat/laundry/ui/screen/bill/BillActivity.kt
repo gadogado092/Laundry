@@ -7,7 +7,7 @@ import amat.laundry.ui.component.InformationBox
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -63,7 +63,7 @@ class BillActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            KelolaKostTheme {
+            LaundryAppTheme {
                 BillScreen(
                     context = context,
                     billEntity = billEntity,

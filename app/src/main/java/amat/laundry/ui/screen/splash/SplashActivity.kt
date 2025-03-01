@@ -8,7 +8,7 @@ import amat.laundry.ui.screen.onboard.OnboardActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontGrey
 import amat.laundry.ui.theme.GreenDark
-import amat.laundry.ui.theme.KelolaKostTheme
+import amat.laundry.ui.theme.LaundryAppTheme
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -87,7 +87,7 @@ class SplashActivity : ComponentActivity() {
             }
 
             //Tampilan
-            KelolaKostTheme {
+            LaundryAppTheme {
                 SplashScreen(getVersionName())
             }
 
@@ -160,7 +160,7 @@ class SplashActivity : ComponentActivity() {
     @Composable
     @Preview(showBackground = true)
     fun SplashScreenPreview() {
-        KelolaKostTheme {
+        LaundryAppTheme {
             SplashScreen("0.0.1")
         }
     }
