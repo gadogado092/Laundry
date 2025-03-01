@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         User::class, Category::class, LaundryStatus::class,
-        Product::class, Transaction::class, TransactionDetail::class
+        Product::class, Transaction::class
     ],
     version = 1
 )

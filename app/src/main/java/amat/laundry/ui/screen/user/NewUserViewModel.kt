@@ -33,6 +33,7 @@ class NewUserViewModel(
                 "",
                 "",
                 "58 mm",
+                "La-Undry",
                 "Terima Kasih",
                 "",
                 25000,
@@ -304,7 +305,8 @@ class NewUserViewModel(
             val statusList = listOf(
                 LaundryStatus(1, "Proses"),
                 LaundryStatus(2, "Siap Diambil"),
-                LaundryStatus(3, "Selesai")
+                LaundryStatus(3, "Selesai"),
+                LaundryStatus(4, "Batal")
             )
 
             userRepository.transactionInsertNewUser(user, statusList, categoryList, productList)

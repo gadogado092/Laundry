@@ -60,6 +60,15 @@ fun dateUniversalToDisplay(dateString: String): String {
 }
 
 @SuppressLint("SimpleDateFormat")
+fun dateTimeUniversalToDisplay(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm")
+    return fmtOut.format(date as Date)
+}
+
+@SuppressLint("SimpleDateFormat")
 fun generateDateTimeNow(): String {
     val c = Calendar.getInstance()
     val fmtOut = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

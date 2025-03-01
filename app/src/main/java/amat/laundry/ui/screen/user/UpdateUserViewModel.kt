@@ -22,7 +22,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         get() = _stateInitUser
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "", "", "", "", "", "", 0, "", ""))
+        MutableStateFlow(User("", "", "", "", "", "", "", "", "","", "", 0, "", ""))
     val user: StateFlow<User>
         get() = _user
 

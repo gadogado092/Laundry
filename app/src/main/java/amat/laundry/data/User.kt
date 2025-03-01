@@ -12,10 +12,11 @@ data class User(
     val address: String,
     val typeWa: String,
     //info printer
-    val printerName:String,
-    val printerAddress:String,
-    val paperSize:String,
-    val footerNote:String,
+    val printerName: String,
+    val printerAddress: String,
+    val paperSize: String,
+    val headerNote: String,
+    val footerNote: String,
 
     val limit: String,
     val cost: Int,

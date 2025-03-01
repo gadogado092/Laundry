@@ -10,5 +10,12 @@ data class Transaction(
     val customerName: String,
     val laundryStatusId: Int,
     val isFullPayment: Boolean,
-    val totalPrice: String
+    val createAt: String,
+    val estimateComplete: String,
+
+    val productId: String,
+    val price: String,
+    val qty: Float,
+    val totalPrice: String,
+    val note: String
 )
