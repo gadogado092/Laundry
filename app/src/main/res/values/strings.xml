@@ -72,7 +72,7 @@
     <string name="subtitle_profile">Lihat profil dan pengaturan</string>
 
     <string name="title_add_kost">Tambah Kost</string>
-    <string name="title_add_unit">Tambah Kamar/Unit</string>
+    <string name="title_add_transaction">Tambah Transaksi</string>
     <string name="title_check_in">Check In</string>
     <string name="title_check_out">Check Out</string>
     <string name="title_move_unit">Pindah Kamar/Unit</string>
