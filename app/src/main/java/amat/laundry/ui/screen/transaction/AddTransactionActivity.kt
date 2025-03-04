@@ -1,11 +1,13 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.R
+import amat.laundry.di.Injection
+import amat.laundry.ui.screen.user.NewUserViewModel
+import amat.laundry.ui.screen.user.NewUserViewModelFactory
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
-import amat.laundry.ui.theme.TealGreen
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -15,18 +17,14 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -35,10 +33,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingBasket
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -49,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class AddTransactionActivity : ComponentActivity() {
 
@@ -75,6 +72,15 @@ fun AddTransactionScreen(
     modifier: Modifier = Modifier,
     context: Context
 ) {
+
+    val viewModel: AddTransactionViewModel =
+        viewModel(
+            factory = AddTransactionViewModelFactory(
+                Injection.provideProductRepository(context),
+                Injection.provideCategoryRepository(context)
+            )
+        )
+
     Column {
         TopAppBar(
             title = {
@@ -110,6 +116,7 @@ fun AddTransactionScreen(
                 Text("center")
             }
 
+            //bottom area
             Card(
                 modifier = Modifier
                     .padding(4.dp, 8.dp)

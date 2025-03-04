@@ -171,8 +171,8 @@ class NewUserViewModel(
             val category2Id = UUID.randomUUID()
 
             val categoryList = listOf(
-                Category(category1Id.toString(), "Kiloan", "kg"),
-                Category(category2Id.toString(), "Satuan", "buah")
+                Category(category1Id.toString(), "Kiloan", "kg", false),
+                Category(category2Id.toString(), "Satuan", "buah", false)
             )
 
             val product1Id = UUID.randomUUID()
@@ -180,15 +180,22 @@ class NewUserViewModel(
             val product3Id = UUID.randomUUID()
 
             val productList = listOf(
-                Product(product1Id.toString(), "Laundry Komplit", 10000, category1Id.toString()),
+                Product(
+                    product1Id.toString(),
+                    "Laundry Komplit",
+                    10000,
+                    category1Id.toString(),
+                    false
+                ),
                 Product(
                     product2Id.toString(),
                     "Laundry Kilat Komplit",
                     15000,
-                    category1Id.toString()
+                    category1Id.toString(),
+                    false
                 ),
-                Product(product3Id.toString(), "Karpet", 40000, category2Id.toString()),
-                Product(product3Id.toString(), "Bed Cover", 30000, category2Id.toString())
+                Product(product3Id.toString(), "Karpet", 40000, category2Id.toString(), false),
+                Product(product3Id.toString(), "Bed Cover", 30000, category2Id.toString(), false)
             )
 
             val statusList = listOf(

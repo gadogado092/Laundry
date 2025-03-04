@@ -4,10 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Category(
+data class Cart(
     @PrimaryKey
-    val id: String,
-    val name: String,
-    val unit: String,
-    val isDelete: Boolean
+    val productId: String,
+    val qty: Float
 )

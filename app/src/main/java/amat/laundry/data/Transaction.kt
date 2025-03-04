@@ -12,5 +12,6 @@ data class Transaction(
     val isFullPayment: Boolean,
     val totalPrice: String,
     val note: String,
-    val createAt: String
+    val createAt: String,
+    val isDelete: Boolean
 )

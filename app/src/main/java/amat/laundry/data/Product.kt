@@ -9,5 +9,6 @@ data class Product(
     val id: String,
     val name: String,
     val price: Int,
-    val categoryId: String
+    val categoryId: String,
+    val isDelete: Boolean
 )
