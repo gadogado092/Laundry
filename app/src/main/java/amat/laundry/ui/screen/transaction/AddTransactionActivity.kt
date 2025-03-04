@@ -1,10 +1,14 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.R
+import amat.laundry.data.Category
 import amat.laundry.di.Injection
+import amat.laundry.ui.common.UiState
+import amat.laundry.ui.component.FilterItem
 import amat.laundry.ui.screen.user.NewUserViewModel
 import amat.laundry.ui.screen.user.NewUserViewModelFactory
 import amat.laundry.ui.theme.Blue
+import amat.laundry.ui.theme.ErrorColor
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
@@ -16,8 +20,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +31,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -32,9 +40,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -104,6 +114,19 @@ fun AddTransactionScreen(
                         tint = Color.White
                     )
                 }
+            },
+            actions = {
+                IconButton(
+                    onClick = {
+                        viewModel.deleteAllCart()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "",
+                        tint = ErrorColor
+                    )
+                }
             }
         )
         Column(modifier = Modifier.fillMaxSize()) {
@@ -111,9 +134,8 @@ fun AddTransactionScreen(
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxWidth()
-                    .background(Color.Red)
             ) {
-                Text("center")
+                ContentCategory(viewModel)
             }
 
             //bottom area
@@ -133,18 +155,63 @@ fun AddTransactionScreen(
                     Text("3 Layanan", color = Color.White, fontSize = 16.sp)
                     Row {
                         Text("30.000", color = Color.White, fontSize = 16.sp)
-                        Spacer(Modifier.width(2.dp))
+                        Spacer(Modifier.width(4.dp))
                         Image(
                             imageVector = Icons.Default.ShoppingBasket,
                             contentDescription = "",
                             colorFilter = ColorFilter.tint(
                                 Color.White
                             ),
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp).padding(bottom = 4.dp)
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ContentCategory(viewModel: AddTransactionViewModel) {
+    val categorySelected =
+        viewModel.categorySelected.collectAsState(initial = Category("", "", "", false))
+    viewModel.stateListCategory.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                FilterItem(
+                    title = uiState.errorMessage,
+                    isSelected = false,
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                )
+            }
+
+            UiState.Loading -> {
+                FilterItem(
+                    title = "Loading",
+                    isSelected = false,
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                )
+            }
+
+            is UiState.Success -> {
+                val listStatus: List<Category> = uiState.data
+                LazyRow(contentPadding = PaddingValues(vertical = 4.dp)) {
+                    items(listStatus, key = { it.name }) { item ->
+                        FilterItem(
+                            title = item.name,
+                            isSelected = item.id == categorySelected.value.id,
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
+                                .clickable {
+                                    viewModel.updateCategorySelected(item)
+                                }
+                        )
+                    }
+                }
+            }
+
         }
     }
 }

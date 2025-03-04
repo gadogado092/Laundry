@@ -39,11 +39,11 @@ fun FilterItem(
                 text = title,
                 modifier = Modifier
                     .background(if (isSelected) GreyLight3 else GreyLight)
-                    .padding(horizontal = 14.dp, vertical = 2.dp),
+                    .padding(horizontal = 14.dp, vertical = 4.dp),
                 style = TextStyle(
                     color = if (isSelected) Color.White else FontBlackSoft,
                 ),
-                fontSize = 16.sp
+                fontSize = 18.sp
             )
         }
     )
