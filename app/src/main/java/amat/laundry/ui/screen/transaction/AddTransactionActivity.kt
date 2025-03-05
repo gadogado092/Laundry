@@ -1,14 +1,21 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.R
+import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.Category
+import amat.laundry.data.ProductCart
 import amat.laundry.di.Injection
 import amat.laundry.ui.common.UiState
+import amat.laundry.ui.component.CenterLayout
+import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.FilterItem
+import amat.laundry.ui.component.LoadingLayout
+import amat.laundry.ui.component.ProductCartItem
 import amat.laundry.ui.screen.user.NewUserViewModel
 import amat.laundry.ui.screen.user.NewUserViewModelFactory
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.ErrorColor
+import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
@@ -31,6 +38,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -129,13 +137,39 @@ fun AddTransactionScreen(
                 }
             }
         )
+
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxWidth()
             ) {
+
                 ContentCategory(viewModel)
+
+                viewModel.stateListProductCart.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                    when (uiState) {
+                        is UiState.Error -> {
+                            ErrorLayout(errorMessage = uiState.errorMessage) {
+                                viewModel.getProduct()
+                            }
+                        }
+
+                        UiState.Loading -> {
+                            LoadingLayout()
+                        }
+
+                        is UiState.Success -> {
+                            ListProductView(
+                                listData = uiState.data,
+                                onItemClick = {},
+                                onClickDelete = {}
+                            )
+                        }
+
+                    }
+
+                }
             }
 
             //bottom area
@@ -162,7 +196,9 @@ fun AddTransactionScreen(
                             colorFilter = ColorFilter.tint(
                                 Color.White
                             ),
-                            modifier = Modifier.size(20.dp).padding(bottom = 4.dp)
+                            modifier = Modifier
+                                .size(20.dp)
+                                .padding(bottom = 4.dp)
                         )
                     }
                 }
@@ -215,3 +251,45 @@ fun ContentCategory(viewModel: AddTransactionViewModel) {
         }
     }
 }
+
+@Composable
+fun ListProductView(
+    listData: List<ProductCart>,
+    onItemClick: (String) -> Unit,
+    onClickDelete: (String) -> Unit
+) {
+    if (listData.isEmpty()) {
+        CenterLayout(
+            content = {
+                Text(
+                    text = stringResource(
+                        id = R.string.note_empty_data,
+                        "Layanan atau Produk"
+                    ),
+                    color = FontBlack
+                )
+            }
+        )
+    } else {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 64.dp)
+        ) {
+            items(listData) { data ->
+                ProductCartItem(
+                    modifier = Modifier.clickable {
+                        onItemClick(data.productId)
+                    },
+                    productId = data.productId,
+                    productName = data.productName,
+                    productPrice = currencyFormatterStringViewZero("10000"),
+                    categoryName = "Kiloan",
+                    qty = 0F,
+                    unit = "kg",
+                    onClickDelete = onClickDelete
+                )
+            }
+        }
+    }
+
+}
+

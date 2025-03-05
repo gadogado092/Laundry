@@ -30,6 +30,11 @@ class AddTransactionViewModel(
     val categorySelected: StateFlow<Category>
         get() = _categorySelected
 
+    private val _stateListProductCart: MutableStateFlow<UiState<List<ProductCart>>> =
+        MutableStateFlow(UiState.Loading)
+    val stateListProductCart: StateFlow<UiState<List<ProductCart>>>
+        get() = _stateListProductCart
+
 
     init {
         getCategory()
@@ -39,8 +44,6 @@ class AddTransactionViewModel(
         Log.d("saya", "get all kost")
         viewModelScope.launch {
             _stateListCategory.value = UiState.Loading
-//            val data = kostRepository.getKost()
-//            _stateListKost.value = UiState.Success(data)
             categoryRepository.getAllCategory()
                 .catch {
                     _stateListCategory.value = UiState.Error(it.message.toString())
@@ -63,22 +66,21 @@ class AddTransactionViewModel(
         getProduct()
     }
 
-    private fun getProduct() {
-//        _stateListUnit.value = UiState.Loading
-//        viewModelScope.launch {
-//            try {
-//                val data = unitRepository.getUnitHome(
-//                    unitStatusId = _statusSelected.value.value,
-//                    kostId = _kostSelected.value.id
-//                )
-//                _stateListUnit.value = UiState.Success(data)
-//            } catch (e: Exception) {
-//                _stateListUnit.value = UiState.Error("Error ${e.message.toString()}")
-//            }
-//        }
+    fun getProduct() {
+        _stateListProductCart.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                val data = productRepository.getProductCartList(
+                    categoryId = _categorySelected.value.id
+                )
+                _stateListProductCart.value = UiState.Success(data)
+            } catch (e: Exception) {
+                _stateListProductCart.value = UiState.Error("Error ${e.message.toString()}")
+            }
+        }
     }
 
-    fun deleteCart(productId: String){
+    fun deleteCart(productId: String) {
         TODO("Not yet implemented")
     }
 
