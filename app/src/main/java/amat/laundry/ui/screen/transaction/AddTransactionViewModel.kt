@@ -42,7 +42,6 @@ class AddTransactionViewModel(
     }
 
     private fun getCategory() {
-        Log.d("saya", "get all kost")
         viewModelScope.launch {
             _stateListCategory.value = UiState.Loading
             categoryRepository.getAllCategory()
@@ -71,20 +70,45 @@ class AddTransactionViewModel(
         _stateListProductCart.value = UiState.Loading
         viewModelScope.launch {
             try {
-                val data = productRepository.getProductCartList(
+                val dataProduct = productRepository.getProductList(
                     categoryId = _categorySelected.value.id
                 )
-                _stateListProductCart.value = UiState.Success(data)
+                val dataCart = cartRepository.getCartList(categoryId = _categorySelected.value.id)
+
+                var listData = mutableListOf<ProductCart>()
+
+                dataProduct.forEach { itemProduct ->
+                    val productTemp = ProductCart(
+                        productId = itemProduct.productId,
+                        productName = itemProduct.productName,
+                        productPrice = itemProduct.productPrice,
+                        categoryName = itemProduct.categoryName,
+                        unit = itemProduct.unit,
+                        qty = 0F,
+                        note = ""
+                    )
+                    listData.add(productTemp)
+                }
+
+                //ganti value qty dan note jika produk ada dalam cart
+                dataCart.forEach { itemCart ->
+                    for ((index, itemProduct) in listData.withIndex()) {
+                        if (itemCart.productId == itemProduct.productId) {
+                            listData[index] =
+                                listData[index].copy(qty = itemCart.qty, note = itemCart.note)
+                            return@forEach
+                        }
+                    }
+                }
+
+                listData.forEach {
+                    Log.d("adada", it.toString())
+                }
+
+                _stateListProductCart.value = UiState.Success(listData)
             } catch (e: Exception) {
                 _stateListProductCart.value = UiState.Error("Error ${e.message.toString()}")
             }
-        }
-    }
-
-    fun insertCart(productId: String) {
-        viewModelScope.launch {
-            cartRepository.insert(Cart(productId, 1F, ""))
-            getProduct()
         }
     }
 
@@ -95,15 +119,18 @@ class AddTransactionViewModel(
         }
     }
 
+    fun insertCart(productId: String) {
+        viewModelScope.launch {
+            cartRepository.insert(Cart(productId, 1F, ""))
+            getProduct()
+        }
+    }
+
     fun deleteAllCart() {
         viewModelScope.launch {
             cartRepository.deleteAllCart()
             getProduct()
         }
-    }
-
-    fun deleteCart(productId: String) {
-        TODO("Not yet implemented")
     }
 
 }

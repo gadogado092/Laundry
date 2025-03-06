@@ -1,9 +1,11 @@
 package amat.laundry.data.repository
 
 import amat.laundry.data.Cart
+import amat.laundry.data.CartCategory
 import amat.laundry.data.CartDao
 import amat.laundry.data.Category
 import amat.laundry.data.CategoryDao
+import amat.laundry.data.ProductCategory
 import kotlinx.coroutines.flow.Flow
 
 class CartRepository(private val cartDao: CartDao) {
@@ -18,6 +20,10 @@ class CartRepository(private val cartDao: CartDao) {
 
     suspend fun deleteAllCart() {
         cartDao.deleteAllCart()
+    }
+
+    suspend fun getCartList(categoryId: String): List<CartCategory> {
+        return cartDao.getCartList(categoryId)
     }
 
 

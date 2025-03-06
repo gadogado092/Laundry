@@ -29,6 +29,7 @@ fun ProductCartItem(
     categoryName: String,
     qty: Float,
     unit: String,
+    note: String,
     onClickDelete: (String) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -88,6 +89,18 @@ fun ProductCartItem(
             }
         }
 
+        if (qty > 0 && note != "") {
+            Text(
+                text = note,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = FontBlack,
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+        }
 
         Divider(
             color = GreyLight,

@@ -5,6 +5,7 @@ import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.Category
 import amat.laundry.data.ProductCart
 import amat.laundry.di.Injection
+import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ErrorLayout
@@ -64,6 +65,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class AddTransactionActivity : ComponentActivity() {
@@ -100,6 +102,18 @@ fun AddTransactionScreen(
                 Injection.provideCartRepository(context)
             )
         )
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.getProduct()
+            }
+
+            else -> { /* other stuff */
+            }
+        }
+    }
 
 
     //START UI
@@ -295,6 +309,7 @@ fun ListProductView(
                     categoryName = data.categoryName,
                     qty = data.qty,
                     unit = data.unit,
+                    note = data.note,
                     onClickDelete = onClickDelete
                 )
             }
