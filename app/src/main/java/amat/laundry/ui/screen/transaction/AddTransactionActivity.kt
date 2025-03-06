@@ -95,7 +95,8 @@ fun AddTransactionScreen(
         viewModel(
             factory = AddTransactionViewModelFactory(
                 Injection.provideProductRepository(context),
-                Injection.provideCategoryRepository(context)
+                Injection.provideCategoryRepository(context),
+                Injection.provideCartRepository(context)
             )
         )
 
@@ -162,7 +163,9 @@ fun AddTransactionScreen(
                         is UiState.Success -> {
                             ListProductView(
                                 listData = uiState.data,
-                                onItemClick = {},
+                                onItemClick = { productId ->
+                                    viewModel.insertCart(productId)
+                                },
                                 onClickDelete = {}
                             )
                         }
@@ -281,10 +284,10 @@ fun ListProductView(
                     },
                     productId = data.productId,
                     productName = data.productName,
-                    productPrice = currencyFormatterStringViewZero("10000"),
-                    categoryName = "Kiloan",
-                    qty = 0F,
-                    unit = "kg",
+                    productPrice = currencyFormatterStringViewZero(data.productPrice.toString()),
+                    categoryName = data.categoryName,
+                    qty = data.qty,
+                    unit = data.unit,
                     onClickDelete = onClickDelete
                 )
             }

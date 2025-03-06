@@ -3,7 +3,7 @@ package amat.laundry.ui.screen.transaction
 import amat.laundry.data.Cart
 import amat.laundry.data.Category
 import amat.laundry.data.ProductCart
-import amat.laundry.data.entity.FilterEntity
+import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CategoryRepository
 import amat.laundry.data.repository.ProductRepository
 import amat.laundry.ui.common.UiState
@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class AddTransactionViewModel(
     private val productRepository: ProductRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
 
     private val _stateListCategory: MutableStateFlow<UiState<List<Category>>> =
@@ -80,6 +81,12 @@ class AddTransactionViewModel(
         }
     }
 
+    fun insertCart(productId: String) {
+        viewModelScope.launch {
+            cartRepository.insert(Cart(productId, 1F, ""))
+        }
+    }
+
     fun deleteCart(productId: String) {
         TODO("Not yet implemented")
     }
@@ -92,7 +99,8 @@ class AddTransactionViewModel(
 
 class AddTransactionViewModelFactory(
     private val productRepository: ProductRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val cartRepository: CartRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -100,7 +108,7 @@ class AddTransactionViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddTransactionViewModel::class.java)) {
             return AddTransactionViewModel(
-                productRepository, categoryRepository
+                productRepository, categoryRepository, cartRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
