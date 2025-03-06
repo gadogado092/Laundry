@@ -60,7 +60,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.screen.kost.UpdateKostActivity"
+            android:name=".ui.screen.transaction.AddCartActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />

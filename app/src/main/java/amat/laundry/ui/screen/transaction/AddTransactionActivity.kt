@@ -21,6 +21,7 @@ import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -100,6 +101,8 @@ fun AddTransactionScreen(
             )
         )
 
+
+    //START UI
     Column {
         TopAppBar(
             title = {
@@ -164,9 +167,13 @@ fun AddTransactionScreen(
                             ListProductView(
                                 listData = uiState.data,
                                 onItemClick = { productId ->
-                                    viewModel.insertCart(productId)
+                                    val intent = Intent(context, AddCartActivity::class.java)
+                                    intent.putExtra("id", productId)
+                                    context.startActivity(intent)
                                 },
-                                onClickDelete = {}
+                                onClickDelete = { productId ->
+                                    viewModel.delete(productId)
+                                }
                             )
                         }
 

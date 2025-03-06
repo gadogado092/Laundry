@@ -84,6 +84,21 @@ class AddTransactionViewModel(
     fun insertCart(productId: String) {
         viewModelScope.launch {
             cartRepository.insert(Cart(productId, 1F, ""))
+            getProduct()
+        }
+    }
+
+    fun delete(productId: String) {
+        viewModelScope.launch {
+            cartRepository.delete(Cart(productId, 1F, ""))
+            getProduct()
+        }
+    }
+
+    fun deleteAllCart() {
+        viewModelScope.launch {
+            cartRepository.deleteAllCart()
+            getProduct()
         }
     }
 
@@ -91,9 +106,6 @@ class AddTransactionViewModel(
         TODO("Not yet implemented")
     }
 
-    fun deleteAllCart() {
-        TODO("Not yet implemented")
-    }
 }
 
 

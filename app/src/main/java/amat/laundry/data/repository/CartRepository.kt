@@ -12,6 +12,14 @@ class CartRepository(private val cartDao: CartDao) {
         cartDao.insert(cart)
     }
 
+    suspend fun delete(cart: Cart) {
+        cartDao.delete(cart)
+    }
+
+    suspend fun deleteAllCart() {
+        cartDao.deleteAllCart()
+    }
+
 
     companion object {
         @Volatile
