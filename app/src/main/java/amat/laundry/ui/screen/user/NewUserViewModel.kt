@@ -36,7 +36,7 @@ class NewUserViewModel(
                 "La-Undry",
                 "Terima Kasih",
                 "",
-                25000,
+                30000,
                 "",
                 ""
             )
