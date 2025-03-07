@@ -49,18 +49,22 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(productList: List<Product>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCustomer(customer: Customer)
+
     @Transaction
     suspend fun transactionInsertNewUser(
         user: User,
         statusList: List<LaundryStatus>,
         categoryList: List<Category>,
-        productList: List<Product>
+        productList: List<Product>,
+        customer: Customer
     ) {
         //INSERT
         insert(user)
         insertStatus(statusList)
         insertCategory(categoryList)
         insertProduct(productList)
-
+        insertCustomer(customer)
     }
 }

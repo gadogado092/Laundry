@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Transaction(
     @PrimaryKey
     val id: String,
+    val customerId: String,
     val customerName: String,
     val laundryStatusId: Int,
     val isFullPayment: Boolean,

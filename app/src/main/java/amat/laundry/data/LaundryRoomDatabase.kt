@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
     entities = [
         User::class, Category::class, LaundryStatus::class,
         Product::class, Transaction::class, DetailTransaction::class,
-        Cart::class
+        Cart::class, Customer::class
     ],
     version = 1
 )

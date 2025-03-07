@@ -1,6 +1,7 @@
 package amat.laundry.data.repository
 
 import amat.laundry.data.Category
+import amat.laundry.data.Customer
 import amat.laundry.data.LaundryStatus
 import amat.laundry.data.Product
 import amat.laundry.data.User
@@ -24,7 +25,7 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getDetail()
     }
 
-    suspend fun getProfile(): User{
+    suspend fun getProfile(): User {
         return userDao.getProfile()
     }
 
@@ -40,9 +41,10 @@ class UserRepository(private val userDao: UserDao) {
         user: User,
         statusList: List<LaundryStatus>,
         categoryList: List<Category>,
-        productList: List<Product>
+        productList: List<Product>,
+        customer: Customer
     ) {
-        userDao.transactionInsertNewUser(user, statusList, categoryList, productList)
+        userDao.transactionInsertNewUser(user, statusList, categoryList, productList, customer)
     }
 
     companion object {

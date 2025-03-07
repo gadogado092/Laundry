@@ -2,6 +2,7 @@ package amat.laundry.ui.screen.user
 
 import amat.laundry.addDateLimitApp
 import amat.laundry.data.Category
+import amat.laundry.data.Customer
 import amat.laundry.data.LaundryStatus
 import amat.laundry.data.Product
 import amat.laundry.data.User
@@ -205,7 +206,15 @@ class NewUserViewModel(
                 LaundryStatus(4, "Batal")
             )
 
-            userRepository.transactionInsertNewUser(user, statusList, categoryList, productList)
+            val customer = Customer("0", "walk-in customer", "", false)
+
+            userRepository.transactionInsertNewUser(
+                user,
+                statusList,
+                categoryList,
+                productList,
+                customer
+            )
 
             _isProsesSuccess.value = ValidationResult(false)
         } catch (e: Exception) {
