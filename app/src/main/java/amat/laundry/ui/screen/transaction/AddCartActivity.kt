@@ -181,12 +181,12 @@ fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
             fontSize = 18.sp
         )
         MyOutlinedTextField(
-            label = "Qty (" + data.unit + ") ex:1.4 or 1,4",
+            label = "Qty (" + data.unit + ") ex:1 or 1.4 or 1,4",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
             value = viewModel.stateUi.collectAsState().value.qty,
             onValueChange = {
-//                    userViewModel.setBusinessName(it)
+                viewModel.setQty(it)
             },
 //                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
 //                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
@@ -197,10 +197,8 @@ fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
             modifier = Modifier.fillMaxWidth(),
             value = viewModel.stateUi.collectAsState().value.note,
             onValueChange = {
-//                    userViewModel.setBusinessName(it)
+                viewModel.setNote(it)
             },
-//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
         )
 
         Text(
@@ -220,7 +218,7 @@ fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
 
         Button(
             onClick = {
-//                    viewModel.insertCart()
+                viewModel.insertCart()
             },
             modifier = Modifier
                 .fillMaxWidth()

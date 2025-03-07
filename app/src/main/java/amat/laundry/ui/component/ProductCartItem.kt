@@ -78,6 +78,17 @@ fun ProductCartItem(
             }
         }
 
+        if (qty > 0 && note != "") {
+            Text(
+                text = note,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    color = FontBlack,
+                ),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+
         if (qty > 0) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 IconBooking(
@@ -87,19 +98,6 @@ fun ProductCartItem(
                         .align(Alignment.Bottom)
                 )
             }
-        }
-
-        if (qty > 0 && note != "") {
-            Text(
-                text = note,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = FontBlack,
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(end = 8.dp)
-            )
         }
 
         Divider(

@@ -3,6 +3,7 @@ package amat.laundry.ui.screen.transaction
 import amat.laundry.data.Cart
 import amat.laundry.data.ProductCart
 import amat.laundry.data.User
+import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.ProductRepository
 import amat.laundry.ui.common.UiState
@@ -28,6 +29,12 @@ class AddCartViewModel(
         MutableStateFlow(AddCartUi())
     val stateUi: StateFlow<AddCartUi>
         get() = _stateUi
+
+    private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesSuccess: StateFlow<ValidationResult>
+        get() = _isProsesSuccess
 
     fun getDetailProduct(productId: String) {
         viewModelScope.launch {
@@ -55,9 +62,11 @@ class AddCartViewModel(
 
                 _stateUi.value =
                     stateUi.value.copy(
+                        productId = productTemp.productId,
                         qty = if (productTemp.qty == 0F) "" else productTemp.qty.toString(),
                         note = productTemp.note,
-                        totalPrice = totalPrice.toString()
+                        price = productTemp.productPrice.toString(),
+                        totalPrice = totalPrice.toInt().toString()
                     )
 
                 _stateInitProduct.value = UiState.Success(productTemp)
@@ -69,9 +78,48 @@ class AddCartViewModel(
         }
     }
 
-    fun insertCart(cart: Cart) {
+    fun setQty(value: String) {
+        clearError()
+        var qty = 0F
+        val cleanValue = value.replace(",", ".").replace(" ", "")
+        //check qty is float or not
+        if (cleanValue.toFloatOrNull() != null) {
+            qty = cleanValue.toFloat()
+            val totalPrice = stateUi.value.price.toFloat() * qty.toFloat()
+            _stateUi.value =
+                stateUi.value.copy(qty = value, totalPrice = totalPrice.toInt().toString())
+        } else {
+            _stateUi.value =
+                stateUi.value.copy(qty = "", totalPrice = "0")
+        }
+
+    }
+
+    fun setNote(value: String) {
+        clearError()
+        _stateUi.value = stateUi.value.copy(note = value)
+    }
+
+    fun clearError() {
+        _isProsesSuccess.value = ValidationResult(true, "")
+    }
+
+    fun insertCart() {
+        //todo check qty value
+
         viewModelScope.launch {
-            cartRepository.insert(cart)
+            try {
+                cartRepository.insert(
+                    Cart(
+                        productId = stateUi.value.productId,
+                        qty = stateUi.value.qty.toFloat(),
+                        note = stateUi.value.note
+                    )
+                )
+                _isProsesSuccess.value = ValidationResult(false)
+            } catch (e: Exception) {
+                _isProsesSuccess.value = ValidationResult(true, e.message.toString())
+            }
         }
     }
 
