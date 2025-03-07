@@ -26,6 +26,10 @@ class CartRepository(private val cartDao: CartDao) {
         return cartDao.getCartList(categoryId)
     }
 
+    suspend fun getCartDetail(productId: String): CartCategory {
+        return cartDao.getCartDetail(productId)
+    }
+
 
     companion object {
         @Volatile

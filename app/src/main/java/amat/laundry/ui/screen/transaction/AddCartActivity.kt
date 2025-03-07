@@ -2,21 +2,26 @@ package amat.laundry.ui.screen.transaction
 
 import amat.laundry.R
 import amat.laundry.currencyFormatterStringViewZero
+import amat.laundry.data.ProductCart
+import amat.laundry.di.Injection
+import amat.laundry.ui.common.OnLifecycleEvent
+import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.BoxPrice
+import amat.laundry.ui.component.ErrorLayout
+import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
-import amat.laundry.ui.theme.ErrorColor
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +37,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -49,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class AddCartActivity : ComponentActivity() {
 
@@ -83,6 +89,26 @@ fun AddCartScreen(
     productId: String
 ) {
 
+    val viewModel: AddCartViewModel =
+        viewModel(
+            factory = AddCartViewModelFactory(
+                Injection.provideCartRepository(context),
+                Injection.provideProductRepository(context)
+            )
+        )
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                viewModel.getDetailProduct(productId)
+            }
+
+            else -> { /* other stuff */
+            }
+        }
+    }
+
     //START UI
     Column {
         TopAppBar(
@@ -109,76 +135,99 @@ fun AddCartScreen(
                 }
             },
         )
+
+        viewModel.stateInitProduct.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            when (uiState) {
+                is UiState.Error -> {
+                    ErrorLayout(
+                        modifier = Modifier.fillMaxHeight(),
+                        errorMessage = uiState.errorMessage
+                    ) {
+                        viewModel.getDetailProduct(productId)
+                    }
+                }
+
+                UiState.Loading -> {
+                    LoadingLayout(modifier = Modifier.fillMaxHeight())
+                }
+
+                is UiState.Success -> {
+                    FormAddCart(viewModel, uiState.data)
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = data.productName,
+            style = TextStyle(color = FontBlack, fontWeight = FontWeight.Bold),
+            fontSize = 18.sp
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = currencyFormatterStringViewZero(data.productPrice.toString()),
+            style = TextStyle(color = FontBlack),
+            fontSize = 18.sp
+        )
+        MyOutlinedTextField(
+            label = "Qty (" + data.unit + ") ex:1.4 or 1,4",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            modifier = Modifier.fillMaxWidth(),
+            value = viewModel.stateUi.collectAsState().value.qty,
+            onValueChange = {
+//                    userViewModel.setBusinessName(it)
+            },
+//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
+//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
+        )
+        MyOutlinedTextField(
+            label = "Catatan",
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            modifier = Modifier.fillMaxWidth(),
+            value = viewModel.stateUi.collectAsState().value.note,
+            onValueChange = {
+//                    userViewModel.setBusinessName(it)
+            },
+//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
+//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
+        )
+
+        Text(
+            text = "Total Harga",
+            style = TextStyle(color = FontBlack, fontWeight = FontWeight.Bold),
+            fontSize = 16.sp
+        )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = "Nama Produk",
-                style = TextStyle(color = FontBlack),
-                fontSize = 18.sp
+            BoxPrice(
+                title = currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalPrice),
+                fontSize = 20.sp
             )
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = "Harga Produk",
-                style = TextStyle(color = FontBlack),
-                fontSize = 16.sp
-            )
-            MyOutlinedTextField(
-                label = "Qty(Kg) ex:1.4",
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                modifier = Modifier.fillMaxWidth(),
-//                value = userViewModel.user.collectAsState().value.businessName,
-                value = "",
-                onValueChange = {
-//                    userViewModel.setBusinessName(it)
-                },
-//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
-            )
-            MyOutlinedTextField(
-                label = "Catatan",
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                modifier = Modifier.fillMaxWidth(),
-//                value = userViewModel.user.collectAsState().value.businessName,
-                value = "",
-                onValueChange = {
-//                    userViewModel.setBusinessName(it)
-                },
-//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
-            )
+        }
 
-            Text(
-                text = "Total Harga",
-                style = TextStyle(color = FontBlack, fontWeight = FontWeight.Bold),
-                fontSize = 16.sp
-            )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                BoxPrice(
-                    title = currencyFormatterStringViewZero("25000"),
-                    fontSize = 20.sp
-                )
-            }
-
-            Button(
-                onClick = {
-//                    userViewModel.prosesRegistration()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
-            ) {
-                Text(text = "Simpan", color = FontWhite)
-            }
+        Button(
+            onClick = {
+//                    viewModel.insertCart()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
+        ) {
+            Text(text = "Simpan", color = FontWhite)
         }
     }
 }
