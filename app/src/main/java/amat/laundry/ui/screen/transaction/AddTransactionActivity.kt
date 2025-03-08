@@ -108,6 +108,7 @@ fun AddTransactionScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.getProduct()
+                viewModel.getTotalService()
             }
 
             else -> { /* other stuff */
@@ -170,6 +171,7 @@ fun AddTransactionScreen(
                         is UiState.Error -> {
                             ErrorLayout(errorMessage = uiState.errorMessage) {
                                 viewModel.getProduct()
+                                viewModel.getTotalService()
                             }
                         }
 
@@ -207,23 +209,56 @@ fun AddTransactionScreen(
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            val intent = Intent(context, PaymentActivity::class.java)
+                            context.startActivity(intent)
+                        },
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("3 Layanan", color = Color.White, fontSize = 16.sp)
-                    Row {
-                        Text("30.000", color = Color.White, fontSize = 16.sp)
-                        Spacer(Modifier.width(4.dp))
-                        Image(
-                            imageVector = Icons.Default.ShoppingBasket,
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(
-                                Color.White
-                            ),
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(bottom = 4.dp)
-                        )
+
+                    viewModel.stateUiCart.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                        when (uiState) {
+                            is UiState.Error -> {
+                                Text(
+                                    "Error ${uiState.errorMessage}",
+                                    color = Color.White,
+                                    fontSize = 16.sp
+                                )
+                            }
+
+                            UiState.Loading -> {
+                                Text("Loading", color = Color.White, fontSize = 16.sp)
+                            }
+
+                            is UiState.Success -> {
+                                Text(
+                                    "${uiState.data.totalService} Layanan",
+                                    color = Color.White,
+                                    fontSize = 16.sp
+                                )
+                                Row {
+                                    Text(
+                                        uiState.data.totalPrice,
+                                        color = Color.White,
+                                        fontSize = 16.sp
+                                    )
+                                    Spacer(Modifier.width(4.dp))
+                                    Image(
+                                        imageVector = Icons.Default.ShoppingBasket,
+                                        contentDescription = "",
+                                        colorFilter = ColorFilter.tint(
+                                            Color.White
+                                        ),
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .padding(bottom = 4.dp)
+                                    )
+                                }
+                            }
+
+                        }
+
                     }
                 }
             }

@@ -6,6 +6,7 @@ import amat.laundry.data.CartDao
 import amat.laundry.data.Category
 import amat.laundry.data.CategoryDao
 import amat.laundry.data.ProductCategory
+import amat.laundry.data.entity.Sum
 import kotlinx.coroutines.flow.Flow
 
 class CartRepository(private val cartDao: CartDao) {
@@ -32,6 +33,14 @@ class CartRepository(private val cartDao: CartDao) {
 
     suspend fun getCartDetail(productId: String): CartCategory {
         return cartDao.getCartDetail(productId)
+    }
+
+    suspend fun getTotalPriceCart(): Sum{
+        return cartDao.getTotalPriceCart()
+    }
+
+    suspend fun getTotalDataCart(): Sum{
+        return cartDao.getTotalDataCart()
     }
 
 

@@ -1,5 +1,6 @@
 package amat.laundry.ui.screen.transaction
 
+import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.Cart
 import amat.laundry.data.Category
 import amat.laundry.data.ProductCart
@@ -35,6 +36,11 @@ class AddTransactionViewModel(
         MutableStateFlow(UiState.Loading)
     val stateListProductCart: StateFlow<UiState<List<ProductCart>>>
         get() = _stateListProductCart
+
+    private val _stateUiCart: MutableStateFlow<UiState<AddTransactionUi>> =
+        MutableStateFlow(UiState.Loading)
+    val stateUiCart: StateFlow<UiState<AddTransactionUi>>
+        get() = _stateUiCart
 
 
     init {
@@ -75,7 +81,7 @@ class AddTransactionViewModel(
                 )
                 val dataCart = cartRepository.getCartList(categoryId = _categorySelected.value.id)
 
-                var listData = mutableListOf<ProductCart>()
+                val listData = mutableListOf<ProductCart>()
 
                 dataProduct.forEach { itemProduct ->
                     val productTemp = ProductCart(
@@ -112,17 +118,40 @@ class AddTransactionViewModel(
         }
     }
 
-    fun delete(productId: String) {
+    fun getTotalService() {
+        _stateUiCart.value = UiState.Loading
         viewModelScope.launch {
-            cartRepository.delete(Cart(productId, 1F, ""))
-            getProduct()
+            try {
+                val totalPrice = cartRepository.getTotalPriceCart()
+                val totalDataCart = cartRepository.getTotalDataCart()
+
+                if (totalPrice.total == null) {
+                    totalPrice.total = "0"
+                }
+
+                if (totalDataCart.total == null) {
+                    totalDataCart.total = "0"
+                }
+
+                _stateUiCart.value = UiState.Success(
+                    AddTransactionUi(
+                        totalPrice = currencyFormatterStringViewZero(totalPrice.total!!),
+                        totalService = totalDataCart.total!!
+                    )
+                )
+
+            } catch (e: Exception) {
+                _stateUiCart.value = UiState.Error("Error ${e.message.toString()}")
+            }
         }
     }
 
-    fun insertCart(productId: String) {
+
+    fun delete(productId: String) {
         viewModelScope.launch {
-            cartRepository.insert(Cart(productId, 1F, ""))
+            cartRepository.delete(productId)
             getProduct()
+            getTotalService()
         }
     }
 
@@ -130,6 +159,7 @@ class AddTransactionViewModel(
         viewModelScope.launch {
             cartRepository.deleteAllCart()
             getProduct()
+            getTotalService()
         }
     }
 

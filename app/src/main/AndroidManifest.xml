@@ -66,7 +66,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.screen.unit_type.AddUnitTypeActivity"
+            android:name=".ui.screen.transaction.PaymentActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />

@@ -97,7 +97,7 @@ class AddCartViewModel(
         //check qty is float or not
         if (cleanValue.toFloatOrNull() != null) {
             qty = cleanValue.toFloat()
-            val totalPrice = stateUi.value.price.toFloat() * qty.toFloat()
+            val totalPrice = stateUi.value.price.toFloat() * qty
             _stateUi.value =
                 stateUi.value.copy(qty = value, totalPrice = totalPrice.toInt().toString())
             _isQtyValid.value = ValidationResult(false, "")
@@ -148,11 +148,14 @@ class AddCartViewModel(
                     cartRepository.delete(stateUi.value.productId)
                     _isProsesFailed.value = ValidationResult(false)
                 } else {
+                    val totalPrice = stateUi.value.price.toFloat() * qty
+
                     cartRepository.insert(
                         Cart(
                             productId = stateUi.value.productId,
                             qty = stateUi.value.qty.toFloat(),
-                            note = stateUi.value.note
+                            note = stateUi.value.note,
+                            totalPrice = totalPrice.toInt().toString()
                         )
                     )
                     _isProsesFailed.value = ValidationResult(false)

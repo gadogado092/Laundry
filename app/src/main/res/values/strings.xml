@@ -73,6 +73,7 @@
 
     <string name="title_add_kost">Tambah Kost</string>
     <string name="title_add_transaction">Tambah Transaksi</string>
+    <string name="title_payment_transaction">Pembayaran</string>
     <string name="title_update_cart">Update Keranjang</string>
     <string name="title_check_in">Check In</string>
     <string name="title_check_out">Check Out</string>

@@ -1,5 +1,6 @@
 package amat.laundry.data
 
+import amat.laundry.data.entity.Sum
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -42,5 +43,17 @@ interface CartDao {
 
     @Query("DELETE FROM Cart")
     suspend fun deleteAllCart()
+
+    @Query(
+        "SELECT SUM(totalPrice) AS total " +
+                "FROM Cart"
+    )
+    suspend fun getTotalPriceCart(): Sum
+
+    @Query(
+        "SELECT COUNT(productId) AS total " +
+                "FROM Cart"
+    )
+    suspend fun getTotalDataCart(): Sum
 
 }

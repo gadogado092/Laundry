@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Cart(
     @PrimaryKey
     val productId: String,
+    val totalPrice: String,
     val qty: Float,
     val note: String
 )
