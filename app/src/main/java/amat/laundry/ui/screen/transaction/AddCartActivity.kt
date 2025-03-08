@@ -10,13 +10,16 @@ import amat.laundry.ui.component.BoxPrice
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
+import amat.laundry.ui.screen.main.MainActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -109,6 +112,22 @@ fun AddCartScreen(
         }
     }
 
+    if (!viewModel.isProsesFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Update Berhasil Dilakukan", Toast.LENGTH_SHORT)
+            .show()
+        val activity = (context as? Activity)
+        activity?.finish()
+    } else {
+        if (viewModel.isProsesFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
     //START UI
     Column {
         TopAppBar(
@@ -186,10 +205,10 @@ fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
             modifier = Modifier.fillMaxWidth(),
             value = viewModel.stateUi.collectAsState().value.qty,
             onValueChange = {
-                viewModel.setQty(it)
+                if (it.length <= 6) viewModel.setQty(it)
             },
-//                isError = userViewModel.isBusinessNameValid.collectAsState().value.isError,
-//                errorMessage = userViewModel.isBusinessNameValid.collectAsState().value.errorMessage
+            isError = viewModel.isQtyValid.collectAsState().value.isError,
+            errorMessage = viewModel.isQtyValid.collectAsState().value.errorMessage
         )
         MyOutlinedTextField(
             label = "Catatan",

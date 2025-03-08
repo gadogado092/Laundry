@@ -30,11 +30,16 @@ class AddCartViewModel(
     val stateUi: StateFlow<AddCartUi>
         get() = _stateUi
 
-    private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
+    private val _isQtyValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+    val isQtyValid: StateFlow<ValidationResult>
+        get() = _isQtyValid
+
+    private val _isProsesFailed: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
-    val isProsesSuccess: StateFlow<ValidationResult>
-        get() = _isProsesSuccess
+    val isProsesFailed: StateFlow<ValidationResult>
+        get() = _isProsesFailed
 
     fun getDetailProduct(productId: String) {
         viewModelScope.launch {
@@ -80,6 +85,13 @@ class AddCartViewModel(
 
     fun setQty(value: String) {
         clearError()
+
+        if (value.isEmpty()) {
+            _stateUi.value =
+                stateUi.value.copy(qty = "", totalPrice = "0")
+            return
+        }
+
         var qty = 0F
         val cleanValue = value.replace(",", ".").replace(" ", "")
         //check qty is float or not
@@ -88,7 +100,9 @@ class AddCartViewModel(
             val totalPrice = stateUi.value.price.toFloat() * qty.toFloat()
             _stateUi.value =
                 stateUi.value.copy(qty = value, totalPrice = totalPrice.toInt().toString())
+            _isQtyValid.value = ValidationResult(false, "")
         } else {
+            _isQtyValid.value = ValidationResult(true, "Masukkan Format Angka Desimal")
             _stateUi.value =
                 stateUi.value.copy(qty = "", totalPrice = "0")
         }
@@ -101,24 +115,51 @@ class AddCartViewModel(
     }
 
     fun clearError() {
-        _isProsesSuccess.value = ValidationResult(true, "")
+        _isProsesFailed.value = ValidationResult(true, "")
     }
 
     fun insertCart() {
-        //todo check qty value
+        clearError()
+
+        var qty = 0F
+        val cleanValue = stateUi.value.qty.replace(",", ".").replace(" ", "")
+        //check qty is float or not
+        if (cleanValue.isNotEmpty()) {
+            if (cleanValue.toFloatOrNull() != null) {
+                qty = cleanValue.toFloat()
+            } else {
+                _isQtyValid.value = ValidationResult(true, "Masukkan Format Angka Desimal")
+                _isProsesFailed.value = ValidationResult(true, "Masukkan Format Angka Desimal")
+                return
+            }
+
+            if (qty < 0F) {
+                _isQtyValid.value = ValidationResult(true, "Angka Qty Harus Positif")
+                _isProsesFailed.value = ValidationResult(true, "Angka Qty Harus Positif")
+                return
+            }
+
+        }
+
 
         viewModelScope.launch {
             try {
-                cartRepository.insert(
-                    Cart(
-                        productId = stateUi.value.productId,
-                        qty = stateUi.value.qty.toFloat(),
-                        note = stateUi.value.note
+                if (qty == 0F) {
+                    cartRepository.delete(stateUi.value.productId)
+                    _isProsesFailed.value = ValidationResult(false)
+                } else {
+                    cartRepository.insert(
+                        Cart(
+                            productId = stateUi.value.productId,
+                            qty = stateUi.value.qty.toFloat(),
+                            note = stateUi.value.note
+                        )
                     )
-                )
-                _isProsesSuccess.value = ValidationResult(false)
+                    _isProsesFailed.value = ValidationResult(false)
+                }
+
             } catch (e: Exception) {
-                _isProsesSuccess.value = ValidationResult(true, e.message.toString())
+                _isProsesFailed.value = ValidationResult(true, e.message.toString())
             }
         }
     }
