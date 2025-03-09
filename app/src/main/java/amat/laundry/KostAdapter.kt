@@ -1,10 +1,5 @@
 package amat.laundry
 
-import amat.laundry.databinding.ItemKostBinding
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-
 //class KostAdapter(
 //    private val onItemClicked: (Kost) -> Unit
 //) :

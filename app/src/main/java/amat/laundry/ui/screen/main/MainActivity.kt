@@ -2,22 +2,16 @@ package amat.laundry.ui.screen.main
 
 import amat.laundry.R
 import amat.laundry.di.Injection
-import amat.laundry.sendWhatsApp
 import amat.laundry.ui.navigation.NavigationItem
 import amat.laundry.ui.navigation.Screen
 import amat.laundry.ui.screen.home.HomeScreen
 import amat.laundry.ui.screen.other.OtherScreen
 import amat.laundry.ui.screen.transaction.TransactionScreen
-import amat.laundry.ui.screen.user.UpdateUserActivity
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight2
 import amat.laundry.ui.theme.LaundryAppTheme
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -28,12 +22,9 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalLaundryService
-import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text

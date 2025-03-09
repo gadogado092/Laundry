@@ -1,6 +1,5 @@
 package amat.laundry.ui.screen.onboard
 
-import amat.laundry.AccountBackupPreference
 import amat.laundry.R
 import amat.laundry.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN
 import amat.laundry.ui.screen.onboard.Tags.TAG_ONBOARD_SCREEN_IMAGE_VIEW
@@ -9,7 +8,6 @@ import amat.laundry.ui.screen.onboard.Tags.TAG_ONBOARD_TAG_ROW
 import amat.laundry.ui.screen.user.NewUserActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
-import amat.laundry.ui.theme.GreenDark
 import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -25,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab

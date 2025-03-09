@@ -1,10 +1,5 @@
 package amat.laundry
 
-import amat.laundry.databinding.ItemUnitTypeBinding
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-
 //class UnitTypeAdapter(
 //    private val onItemClicked: (UnitType) -> Unit
 //) :

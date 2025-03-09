@@ -3,7 +3,6 @@ package amat.laundry.ui.screen.user
 import amat.laundry.data.User
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.UserRepository
-import amat.laundry.isEmailValid
 import amat.laundry.isNumberPhoneValid
 import amat.laundry.ui.common.UiState
 import androidx.lifecycle.ViewModel

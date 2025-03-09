@@ -2,7 +2,6 @@ package amat.laundry.ui.screen.user
 
 import amat.laundry.R
 import amat.laundry.di.Injection
-import amat.laundry.ui.component.InformationBox
 import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.screen.main.MainActivity
 import amat.laundry.ui.theme.FontBlack

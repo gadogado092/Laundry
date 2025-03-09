@@ -1,7 +1,5 @@
 package amat.laundry.ui.component
 
-import amat.laundry.R
-import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Arrangement

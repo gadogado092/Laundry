@@ -1,7 +1,6 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.currencyFormatterStringViewZero
-import amat.laundry.data.Cart
 import amat.laundry.data.Category
 import amat.laundry.data.ProductCart
 import amat.laundry.data.repository.CartRepository

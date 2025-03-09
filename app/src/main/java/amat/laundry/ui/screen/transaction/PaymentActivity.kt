@@ -10,8 +10,8 @@ import amat.laundry.ui.component.BoxPrice
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
+import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.component.PaymentCartItem
-import amat.laundry.ui.theme.ErrorColor
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
@@ -22,27 +22,27 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -51,7 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -177,6 +177,40 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
                 .fillMaxWidth()
         ) {
             item {
+
+                Spacer(modifier = Modifier.height(8.dp))
+                MyOutlinedTextField(
+                    label = "Nama Pelanggan",
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    value = viewModel.stateUi.collectAsState().value.customerName,
+                    onValueChange = {
+                        viewModel.setCustomerName(it)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
+                    errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                )
+
+                MyOutlinedTextField(
+                    label = "Catatan",
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    value = viewModel.stateUi.collectAsState().value.note,
+                    onValueChange = {
+                        viewModel.setNote(it)
+                    },
+                )
+
+                Divider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = GreyLight,
+                    thickness = 8.dp
+                )
+
                 Text(
                     text = "Waktu Transaksi",
                     style = TextStyle(
@@ -187,7 +221,7 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
                 )
                 Divider(
                     color = GreyLight,
-                    thickness = 6.dp
+                    thickness = 8.dp
                 )
             }
 
@@ -207,45 +241,79 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
             item {
                 Divider(
                     color = GreyLight,
-                    thickness = 6.dp
+                    thickness = 8.dp
                 )
 
+                Spacer(Modifier.height(8.dp))
                 Text(
                     text = "Total Pembayaran",
                     style = TextStyle(
                         fontSize = 18.sp,
                         color = FontBlack,
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
-
+                Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     BoxPrice(
-                        title = currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalPrice),
+                        title = viewModel.stateUi.collectAsState().value.totalPrice,
                         fontSize = 20.sp
                     )
                 }
 
-                Text(
-                    text = "Tipe Pembayaran",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        color = FontBlack,
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-
-                Text(
-                    text = "Nama Pelanggan",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        color = FontBlack,
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)) {
+                    Text(
+                        text = "Tipe Pembayaran", style = TextStyle(
+                            fontSize = 18.sp,
+                            color = FontBlack,
+                        )
+                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    viewModel.setPaymentType(true)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = viewModel.stateUi.collectAsState().value.isFullPayment,
+                                onClick = { viewModel.setPaymentType(true) }
+                            )
+                            Text(
+                                text = "Lunas", style = TextStyle(
+                                    fontSize = 18.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    viewModel.setPaymentType(false)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = !viewModel.stateUi.collectAsState().value.isFullPayment,
+                                onClick = { viewModel.setPaymentType(false) }
+                            )
+                            Text(
+                                text = "Bayar Nanti", style = TextStyle(
+                                    fontSize = 18.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                    }
+                }
 
                 Button(
                     onClick = {
@@ -253,10 +321,16 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(8.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
                 ) {
-                    Text(text = "Proses", color = FontWhite)
+                    Text(
+                        text = "Proses",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = FontWhite,
+                        )
+                    )
                 }
             }
         }

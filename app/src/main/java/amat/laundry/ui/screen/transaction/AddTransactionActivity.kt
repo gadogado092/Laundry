@@ -12,8 +12,6 @@ import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.FilterItem
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.ProductCartItem
-import amat.laundry.ui.screen.user.NewUserViewModel
-import amat.laundry.ui.screen.user.NewUserViewModelFactory
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.ErrorColor
 import amat.laundry.ui.theme.FontBlack
@@ -28,7 +26,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +40,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -52,6 +48,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ShoppingBasket
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

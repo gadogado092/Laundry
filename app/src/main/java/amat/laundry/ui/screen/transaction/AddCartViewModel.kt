@@ -2,7 +2,6 @@ package amat.laundry.ui.screen.transaction
 
 import amat.laundry.data.Cart
 import amat.laundry.data.ProductCart
-import amat.laundry.data.User
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.ProductRepository
@@ -115,7 +114,7 @@ class AddCartViewModel(
         _stateUi.value = stateUi.value.copy(note = value)
     }
 
-    fun clearError() {
+    private fun clearError() {
         _isProsesFailed.value = ValidationResult(true, "")
     }
 
