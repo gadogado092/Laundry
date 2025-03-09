@@ -1,5 +1,6 @@
 package amat.laundry.ui.component
 
+import amat.laundry.cleanPointZeroFloat
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Arrangement
@@ -61,7 +62,7 @@ fun PaymentCartItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$qty $unit X $productPrice",
+                text = "${cleanPointZeroFloat(qty)} $unit X $productPrice",
                 style = TextStyle(
                     fontSize = 18.sp,
                     color = FontBlack,

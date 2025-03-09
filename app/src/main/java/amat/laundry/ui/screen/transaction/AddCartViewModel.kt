@@ -1,5 +1,6 @@
 package amat.laundry.ui.screen.transaction
 
+import amat.laundry.cleanPointZeroFloat
 import amat.laundry.data.Cart
 import amat.laundry.data.ProductCart
 import amat.laundry.data.entity.ValidationResult
@@ -65,10 +66,12 @@ class AddCartViewModel(
 
                 val totalPrice = productTemp.qty * productTemp.productPrice
 
+                val qty = cleanPointZeroFloat(productTemp.qty)
+
                 _stateUi.value =
                     stateUi.value.copy(
                         productId = productTemp.productId,
-                        qty = if (productTemp.qty == 0F) "" else productTemp.qty.toString(),
+                        qty = qty,
                         note = productTemp.note,
                         price = productTemp.productPrice.toString(),
                         totalPrice = totalPrice.toInt().toString()

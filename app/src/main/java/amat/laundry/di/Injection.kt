@@ -4,6 +4,7 @@ import amat.laundry.data.LaundryRoomDatabase
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CategoryRepository
 import amat.laundry.data.repository.ProductRepository
+import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
 import android.content.Context
 
@@ -29,6 +30,12 @@ object Injection {
     fun provideCartRepository(context: Context): CartRepository {
         return CartRepository.getInstance(
             LaundryRoomDatabase.getDatabase(context).cartDao()
+        )
+    }
+
+    fun provideTransactionRepository(context: Context): TransactionRepository {
+        return TransactionRepository.getInstance(
+            LaundryRoomDatabase.getDatabase(context).transactionDao()
         )
     }
 

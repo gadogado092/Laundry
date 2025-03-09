@@ -50,6 +50,21 @@ fun checkIsNumberPhoneValid(numberPhone: String): Boolean {
     return false
 }
 
+fun generateZeroInvoice(value: String): String {
+    var newValue = ""
+    if (value.length == 1) {
+        newValue = "000$value"
+    } else if (value.length == 2) {
+        newValue = "00$value"
+    } else if (value.length == 3) {
+        newValue = "0$value"
+    } else if (value.length == 4) {
+        newValue = value
+    }
+
+    return newValue
+}
+
 @SuppressLint("SimpleDateFormat")
 fun dateUniversalToDisplay(dateString: String): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd")
@@ -65,6 +80,15 @@ fun dateTimeUniversalToDisplay(dateString: String): String {
     val date = fmt.parse(dateString)
 
     val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm")
+    return fmtOut.format(date as Date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateTimeToKodeInvoice(dateString: String): String {
+    val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val date = fmt.parse(dateString)
+
+    val fmtOut = SimpleDateFormat("yyyyMMdd")
     return fmtOut.format(date as Date)
 }
 
@@ -374,6 +398,20 @@ fun checkDateRangeValid(dateStart: String, dateEnd: String): Boolean {
         return false
     } catch (e: Exception) {
         return false
+    }
+}
+
+fun cleanPointZeroFloat(value: Float): String {
+    return if (value == 0F) {
+        ""
+    } else {
+        val myString = value.toString()
+        val last2Character = myString.substring(myString.length - 2, myString.length)
+        if (last2Character == ".0") {
+            myString.substring(0, myString.length - 2)
+        } else {
+            value.toString()
+        }
     }
 }
 

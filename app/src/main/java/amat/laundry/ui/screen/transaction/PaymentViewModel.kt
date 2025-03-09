@@ -4,6 +4,10 @@ import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.ProductCart
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
+import amat.laundry.data.repository.TransactionRepository
+import amat.laundry.dateTimeToKodeInvoice
+import amat.laundry.generateDateTimeNow
+import amat.laundry.generateZeroInvoice
 import amat.laundry.ui.common.UiState
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -14,7 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PaymentViewModel(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
     private val _stateProduct: MutableStateFlow<UiState<List<ProductCart>>> =
@@ -80,17 +85,54 @@ class PaymentViewModel(
         }
     }
 
+    fun process() {
+        try {
+            viewModelScope.launch {
+                val createAt = generateDateTimeNow()
+                val dateInvoice = dateTimeToKodeInvoice(createAt)
+
+                val lastNumberInvoice =
+                    if (transactionRepository.getLastNumberInvoice(dateInvoice).lastCode == null) 0 else transactionRepository.getLastNumberInvoice(
+                        dateInvoice
+                    ).lastCode
+                val newNumberInvoice =
+                    if (lastNumberInvoice == 0) 1 else lastNumberInvoice!!.plus(1)
+
+                val newCodeInvoice = dateInvoice + generateZeroInvoice(newNumberInvoice.toString())
+                Log.d("bossku", dateInvoice)
+                Log.d("bossku", newNumberInvoice.toString())
+                Log.d("bossku", generateZeroInvoice("1"))
+                Log.d("bossku", generateZeroInvoice("12"))
+                Log.d("bossku", generateZeroInvoice("130"))
+                Log.d("bossku", generateZeroInvoice("1400"))
+                Log.d("bossku", generateZeroInvoice("15001"))
+                Log.d("bossku", newCodeInvoice)
+
+            }
+        } catch (e: Exception) {
+            Log.e("bossku", e.message.toString())
+            _isProsesFailed.value = ValidationResult(true, e.message.toString())
+        }
+    }
+
     private fun clearError() {
         _isProsesFailed.value = ValidationResult(true, "")
     }
 
-    fun checkPayment() {
-        TODO("Not yet implemented")
+    fun dataIsComplete(): Boolean {
+        clearError()
+        if (stateUi.value.customerName.trim().isEmpty()) {
+            _isCustomerNameValid.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+            _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+            return false
+        }
+        return true
     }
 }
 
 class PaymentViewModelFactory(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val transactionRepository: TransactionRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -98,7 +140,7 @@ class PaymentViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PaymentViewModel::class.java)) {
             return PaymentViewModel(
-                cartRepository
+                cartRepository, transactionRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

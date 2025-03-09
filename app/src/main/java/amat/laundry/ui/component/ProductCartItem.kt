@@ -1,6 +1,7 @@
 package amat.laundry.ui.component
 
 import amat.laundry.R
+import amat.laundry.cleanPointZeroFloat
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.GreyLight
@@ -74,7 +75,7 @@ fun ProductCartItem(
             )
 
             if (qty > 0) {
-                BoxRectangle(title = "$qty $unit", backgroundColor = Blue)
+                BoxRectangle(title = "${cleanPointZeroFloat(qty)} $unit", backgroundColor = Blue)
             }
         }
 

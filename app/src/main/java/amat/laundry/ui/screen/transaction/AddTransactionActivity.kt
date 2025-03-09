@@ -199,18 +199,20 @@ fun AddTransactionScreen(
             Card(
                 modifier = Modifier
                     .padding(4.dp, 8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable {
+                        val activity = (context as? Activity)
+                        activity?.finish()
+                        val intent = Intent(context, PaymentActivity::class.java)
+                        context.startActivity(intent)
+                    },
                 colors = CardDefaults.cardColors(Blue),
                 border = BorderStroke(0.5.dp, Blue),
             ) {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
-                        .fillMaxWidth()
-                        .clickable {
-                            val intent = Intent(context, PaymentActivity::class.java)
-                            context.startActivity(intent)
-                        },
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 

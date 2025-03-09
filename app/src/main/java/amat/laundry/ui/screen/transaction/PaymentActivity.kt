@@ -19,7 +19,10 @@ import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -59,6 +62,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class PaymentActivity : ComponentActivity() {
 
@@ -85,12 +89,11 @@ fun PaymentScreen(
     modifier: Modifier = Modifier,
     context: Context
 ) {
-    //todo handle if service 0
-
     val viewModel: PaymentViewModel =
         viewModel(
             factory = PaymentViewModelFactory(
-                Injection.provideCartRepository(context)
+                Injection.provideCartRepository(context),
+                Injection.provideTransactionRepository(context)
             )
         )
 
@@ -122,6 +125,8 @@ fun PaymentScreen(
                     onClick = {
                         val activity = (context as? Activity)
                         activity?.finish()
+                        val intent = Intent(context, AddTransactionActivity::class.java)
+                        context.startActivity(intent)
                     }
                 ) {
                     Icon(
@@ -149,7 +154,7 @@ fun PaymentScreen(
                 }
 
                 is UiState.Success -> {
-                    FormPayment(viewModel, uiState.data)
+                    FormPayment(viewModel, uiState.data, context)
                 }
             }
         }
@@ -158,7 +163,7 @@ fun PaymentScreen(
 }
 
 @Composable
-fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
+fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, context: Context) {
     if (listData.isEmpty()) {
         CenterLayout(
             content = {
@@ -206,20 +211,7 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
                 )
 
                 Divider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    color = GreyLight,
-                    thickness = 8.dp
-                )
-
-                Text(
-                    text = "Waktu Transaksi",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        color = FontBlack,
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                Divider(
+                    modifier = Modifier.padding(top = 8.dp),
                     color = GreyLight,
                     thickness = 8.dp
                 )
@@ -264,9 +256,11 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
                     )
                 }
 
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
                     Text(
                         text = "Tipe Pembayaran", style = TextStyle(
                             fontSize = 18.sp,
@@ -317,7 +311,9 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
 
                 Button(
                     onClick = {
-                        viewModel.checkPayment()
+                        if (viewModel.dataIsComplete()) {
+                            showBottomConfirm(context, viewModel)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -335,4 +331,26 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>) {
             }
         }
     }
+}
+
+private fun showBottomConfirm(
+    context: Context,
+    viewModel: PaymentViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Tambah Data Transaksi?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.process()
+    }
+    bottomSheetDialog.show()
+
 }

@@ -135,8 +135,8 @@ class NewUserViewModel(
         }
 
         if (_user.value.address.trim().isEmpty()) {
-            _isAddressValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
+            _isAddressValid.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
+            _isProsesSuccess.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
             return
         }
 

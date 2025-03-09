@@ -19,6 +19,7 @@ abstract class LaundryRoomDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun cartDao(): CartDao
     abstract fun productDao(): ProductDao
+    abstract fun transactionDao(): TransactionDao
 
     companion object {
         @Volatile
