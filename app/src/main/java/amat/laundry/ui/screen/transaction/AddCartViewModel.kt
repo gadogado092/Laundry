@@ -20,10 +20,10 @@ class AddCartViewModel(
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
-    private val _stateInitProduct: MutableStateFlow<UiState<ProductCart>> =
+    private val _stateProduct: MutableStateFlow<UiState<ProductCart>> =
         MutableStateFlow(UiState.Loading)
-    val stateInitProduct: StateFlow<UiState<ProductCart>>
-        get() = _stateInitProduct
+    val stateProduct: StateFlow<UiState<ProductCart>>
+        get() = _stateProduct
 
     private val _stateUi: MutableStateFlow<AddCartUi> =
         MutableStateFlow(AddCartUi())
@@ -43,7 +43,7 @@ class AddCartViewModel(
 
     fun getDetailProduct(productId: String) {
         viewModelScope.launch {
-            _stateInitProduct.value = UiState.Loading
+            _stateProduct.value = UiState.Loading
             try {
                 val product = productRepository.getProductCategoryDetail(productId)
 
@@ -54,7 +54,8 @@ class AddCartViewModel(
                     categoryName = product.categoryName,
                     unit = product.unit,
                     qty = 0F,
-                    note = ""
+                    note = "",
+                    productTotalPrice = ""
                 )
 
                 val cart = cartRepository.getCartDetail(productId)
@@ -74,11 +75,11 @@ class AddCartViewModel(
                         totalPrice = totalPrice.toInt().toString()
                     )
 
-                _stateInitProduct.value = UiState.Success(productTemp)
+                _stateProduct.value = UiState.Success(productTemp)
 
             } catch (e: Exception) {
                 Log.e("add cart", e.message.toString())
-                _stateInitProduct.value = UiState.Error(e.message.toString())
+                _stateProduct.value = UiState.Error(e.message.toString())
             }
         }
     }

@@ -11,5 +11,6 @@ data class DetailTransaction(
     val productName: String,
     val price: String,
     val qty: Float,
+    val createAt: String,
     val isDelete: Boolean
 )

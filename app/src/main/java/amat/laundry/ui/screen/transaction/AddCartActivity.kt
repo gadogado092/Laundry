@@ -155,7 +155,7 @@ fun AddCartScreen(
             },
         )
 
-        viewModel.stateInitProduct.collectAsState(initial = UiState.Loading).value.let { uiState ->
+        viewModel.stateProduct.collectAsState(initial = UiState.Loading).value.let { uiState ->
             when (uiState) {
                 is UiState.Error -> {
                     ErrorLayout(

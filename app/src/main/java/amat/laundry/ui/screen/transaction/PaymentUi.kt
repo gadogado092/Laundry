@@ -1,0 +1,9 @@
+package amat.laundry.ui.screen.transaction
+
+data class PaymentUi(
+    val customerName: String = "",
+    val note: String = "",
+    val paymentTime: String = "",
+    val totalPrice: String = "",
+    val isFullPayment: Boolean = true
+)

@@ -173,7 +173,7 @@ class NewUserViewModel(
 
             val categoryList = listOf(
                 Category(category1Id.toString(), "Kiloan", "Kg", false),
-                Category(category2Id.toString(), "Satuan", "Item", false)
+                Category(category2Id.toString(), "Satuan", "Pcs", false)
             )
 
             val product1Id = UUID.randomUUID()

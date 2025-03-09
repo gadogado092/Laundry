@@ -91,7 +91,8 @@ class AddTransactionViewModel(
                         categoryName = itemProduct.categoryName,
                         unit = itemProduct.unit,
                         qty = 0F,
-                        note = ""
+                        note = "",
+                        productTotalPrice = ""
                     )
                     listData.add(productTemp)
                 }

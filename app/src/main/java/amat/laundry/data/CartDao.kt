@@ -21,6 +21,16 @@ interface CartDao {
     suspend fun getCartList(categoryId: String): List<CartCategory>
 
     @Query(
+        "SELECT Cart.productId AS productId, Product.name AS productName, Product.Price AS productPrice, Cart.totalPrice AS productTotalPrice, Cart.qty AS qty, Cart.note AS note, " +
+                "Category.name AS categoryName, Category.unit AS unit " +
+                "FROM Cart " +
+                "LEFT JOIN (SELECT Product.id, Product.name, Product.Price, Product.categoryId, Product.isDelete FROM Product) AS Product ON Product.id = Cart.productId " +
+                "LEFT JOIN (SELECT Category.id, Category.name, Category.unit FROM Category) AS Category ON Product.categoryId = Category.id " +
+                "WHERE Product.isDelete=0"
+    )
+    suspend fun getCartList(): List<ProductCart>
+
+    @Query(
         "SELECT Cart.productId AS productId, Cart.qty AS qty, Cart.note AS note, " +
                 "Category.name AS categoryName " +
                 "FROM Cart " +
