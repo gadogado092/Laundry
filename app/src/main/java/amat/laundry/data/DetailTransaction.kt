@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 data class DetailTransaction(
     @PrimaryKey
     val id: String,
+    val transactionId: String,
     val productId: String,
     val productName: String,
-    val price: String,
+    val price: Int,
     val qty: Float,
     val createAt: String,
     val isDelete: Boolean

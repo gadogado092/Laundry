@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         User::class, Category::class, LaundryStatus::class,
-        Product::class, Transaction::class, DetailTransaction::class,
+        Product::class, TransactionLaundry::class, DetailTransaction::class,
         Cart::class, Customer::class
     ],
     version = 1
@@ -19,7 +19,7 @@ abstract class LaundryRoomDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun cartDao(): CartDao
     abstract fun productDao(): ProductDao
-    abstract fun transactionDao(): TransactionDao
+    abstract fun transactionDao(): TransactionLaundryDao
 
     companion object {
         @Volatile

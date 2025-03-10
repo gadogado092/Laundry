@@ -1,15 +1,21 @@
 package amat.laundry.data.repository
 
-import amat.laundry.data.Category
-import amat.laundry.data.CategoryDao
-import amat.laundry.data.TransactionDao
+import amat.laundry.data.DetailTransaction
+import amat.laundry.data.TransactionLaundry
+import amat.laundry.data.TransactionLaundryDao
 import amat.laundry.data.entity.InvoiceCode
-import kotlinx.coroutines.flow.Flow
 
-class TransactionRepository(private val transactionDao: TransactionDao) {
+class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
 
     suspend fun getLastNumberInvoice(dateInvoice: String): InvoiceCode {
         return transactionDao.getLastNumberInvoice(dateInvoice)
+    }
+
+    suspend fun insertNewTransaction(
+        transaction: TransactionLaundry,
+        detailTransaction: List<DetailTransaction>
+    ) {
+        transactionDao.insertNewTransaction(transaction, detailTransaction)
     }
 
 
@@ -17,7 +23,7 @@ class TransactionRepository(private val transactionDao: TransactionDao) {
         @Volatile
         private var instance: TransactionRepository? = null
 
-        fun getInstance(dao: TransactionDao): TransactionRepository =
+        fun getInstance(dao: TransactionLaundryDao): TransactionRepository =
             instance ?: synchronized(this) {
                 TransactionRepository(dao).apply {
                     instance = this

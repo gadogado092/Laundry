@@ -1,3 +1,3 @@
 package amat.laundry.data.entity
 
-data class InvoiceCode(var lastCode: Int? = 0)
+data class InvoiceCode(var lastCode: String? = "0")

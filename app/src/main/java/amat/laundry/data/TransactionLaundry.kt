@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Transaction(
+data class TransactionLaundry(
     @PrimaryKey
     val id: String,
     val invoiceCode: String,

@@ -72,7 +72,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.screen.unit_type.UpdateUnitTypeActivity"
+            android:name=".ui.screen.bill.BillActivityNew"
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />

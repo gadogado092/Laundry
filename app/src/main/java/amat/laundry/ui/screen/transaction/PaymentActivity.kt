@@ -12,6 +12,7 @@ import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.component.PaymentCartItem
+import amat.laundry.ui.screen.bill.BillActivityNew
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
@@ -23,6 +24,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -106,6 +108,25 @@ fun PaymentScreen(
 
             else -> { /* other stuff */
             }
+        }
+    }
+
+    if (!viewModel.isProsesFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Proses Transaksi Berhasil", Toast.LENGTH_SHORT)
+            .show()
+        val activity = (context as? Activity)
+        activity?.finish()
+        val intent = Intent(context, BillActivityNew::class.java)
+        intent.putExtra("id", viewModel.transactionId.collectAsState().value)
+        context.startActivity(intent)
+    } else {
+        if (viewModel.isProsesFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
@@ -251,7 +272,7 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     BoxPrice(
-                        title = viewModel.stateUi.collectAsState().value.totalPrice,
+                        title = currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalPrice),
                         fontSize = 20.sp
                     )
                 }
@@ -312,7 +333,7 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                 Button(
                     onClick = {
                         if (viewModel.dataIsComplete()) {
-                            showBottomConfirm(context, viewModel)
+                            showBottomConfirm(context, viewModel, listData)
                         }
                     },
                     modifier = Modifier
@@ -335,7 +356,8 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
 
 private fun showBottomConfirm(
     context: Context,
-    viewModel: PaymentViewModel
+    viewModel: PaymentViewModel,
+    listData: List<ProductCart>
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
@@ -349,7 +371,7 @@ private fun showBottomConfirm(
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
-        viewModel.process()
+        viewModel.process(listData)
     }
     bottomSheetDialog.show()
 

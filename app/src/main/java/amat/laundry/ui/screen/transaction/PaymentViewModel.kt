@@ -1,7 +1,9 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.currencyFormatterStringViewZero
+import amat.laundry.data.DetailTransaction
 import amat.laundry.data.ProductCart
+import amat.laundry.data.TransactionLaundry
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.TransactionRepository
@@ -16,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class PaymentViewModel(
     private val cartRepository: CartRepository,
@@ -31,6 +34,11 @@ class PaymentViewModel(
         MutableStateFlow(PaymentUi())
     val stateUi: StateFlow<PaymentUi>
         get() = _stateUi
+
+    private val _transactionId: MutableStateFlow<String> =
+        MutableStateFlow("")
+    val transactionId: StateFlow<String>
+        get() = _transactionId
 
     private val _isCustomerNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
@@ -54,7 +62,7 @@ class PaymentViewModel(
                     totalPrice.total = "0"
                 }
                 _stateUi.value =
-                    stateUi.value.copy(totalPrice = currencyFormatterStringViewZero(totalPrice.total!!))
+                    stateUi.value.copy(totalPrice = totalPrice.total!!)
 
                 val cart = cartRepository.getCartList()
                 _stateProduct.value = UiState.Success(cart)
@@ -85,29 +93,58 @@ class PaymentViewModel(
         }
     }
 
-    fun process() {
+    fun process(listDataProduct: List<ProductCart>) {
         try {
             viewModelScope.launch {
                 val createAt = generateDateTimeNow()
                 val dateInvoice = dateTimeToKodeInvoice(createAt)
+                var lastNumberInvoice = 0
 
-                val lastNumberInvoice =
-                    if (transactionRepository.getLastNumberInvoice(dateInvoice).lastCode == null) 0 else transactionRepository.getLastNumberInvoice(
-                        dateInvoice
-                    ).lastCode
+                val data = transactionRepository.getLastNumberInvoice(dateInvoice).lastCode
+                if (data != null) {
+                    lastNumberInvoice = data.substring(data.length - 4, data.length).toInt()
+                }
+
                 val newNumberInvoice =
-                    if (lastNumberInvoice == 0) 1 else lastNumberInvoice!!.plus(1)
+                    if (lastNumberInvoice == 0) 1 else lastNumberInvoice.plus(1)
 
                 val newCodeInvoice = dateInvoice + generateZeroInvoice(newNumberInvoice.toString())
-                Log.d("bossku", dateInvoice)
-                Log.d("bossku", newNumberInvoice.toString())
-                Log.d("bossku", generateZeroInvoice("1"))
-                Log.d("bossku", generateZeroInvoice("12"))
-                Log.d("bossku", generateZeroInvoice("130"))
-                Log.d("bossku", generateZeroInvoice("1400"))
-                Log.d("bossku", generateZeroInvoice("15001"))
-                Log.d("bossku", newCodeInvoice)
 
+                val transactionId = UUID.randomUUID().toString()
+                _transactionId.value = transactionId
+
+                val listDetailTransaction = mutableListOf<DetailTransaction>()
+                listDataProduct.forEach { item ->
+                    val id = UUID.randomUUID().toString()
+                    listDetailTransaction.add(
+                        DetailTransaction(
+                            id = id,
+                            transactionId = transactionId,
+                            productId = item.productId,
+                            productName = item.productName,
+                            price = item.productPrice,
+                            qty = item.qty,
+                            createAt = createAt,
+                            isDelete = false
+                        )
+                    )
+                }
+
+                val transaction = TransactionLaundry(
+                    id = transactionId,
+                    invoiceCode = newCodeInvoice,
+                    customerId = "0",
+                    customerName = stateUi.value.customerName.trim(),
+                    laundryStatusId = 3,
+                    isFullPayment = stateUi.value.isFullPayment,
+                    totalPrice = stateUi.value.totalPrice,
+                    note = stateUi.value.note,
+                    createAt = createAt,
+                    isDelete = false
+                )
+
+                transactionRepository.insertNewTransaction(transaction, listDetailTransaction)
+                _isProsesFailed.value = ValidationResult(false)
             }
         } catch (e: Exception) {
             Log.e("bossku", e.message.toString())
