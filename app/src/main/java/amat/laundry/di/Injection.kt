@@ -3,6 +3,7 @@ package amat.laundry.di
 import amat.laundry.data.LaundryRoomDatabase
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CategoryRepository
+import amat.laundry.data.repository.DetailTransactionRepository
 import amat.laundry.data.repository.ProductRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
@@ -36,6 +37,12 @@ object Injection {
     fun provideTransactionRepository(context: Context): TransactionRepository {
         return TransactionRepository.getInstance(
             LaundryRoomDatabase.getDatabase(context).transactionDao()
+        )
+    }
+
+    fun provideDetailTransactionRepository(context: Context): DetailTransactionRepository {
+        return DetailTransactionRepository.getInstance(
+            LaundryRoomDatabase.getDatabase(context).detailTransactionDao()
         )
     }
 

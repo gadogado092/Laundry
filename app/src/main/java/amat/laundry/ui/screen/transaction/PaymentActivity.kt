@@ -26,6 +26,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -99,6 +100,13 @@ fun PaymentScreen(
             )
         )
 
+    BackHandler {
+        val activity = (context as? Activity)
+        activity?.finish()
+        val intent = Intent(context, AddTransactionActivity::class.java)
+        context.startActivity(intent)
+    }
+
     OnLifecycleEvent { owner, event ->
         // do stuff on event
         when (event) {
@@ -112,7 +120,7 @@ fun PaymentScreen(
     }
 
     if (!viewModel.isProsesFailed.collectAsState().value.isError) {
-        Toast.makeText(context, "Proses Transaksi Berhasil", Toast.LENGTH_SHORT)
+        Toast.makeText(context, "Pembayaran Transaksi Berhasil", Toast.LENGTH_SHORT)
             .show()
         val activity = (context as? Activity)
         activity?.finish()
@@ -365,7 +373,7 @@ private fun showBottomConfirm(
     val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
     val messageString =
-        "Tambah Data Transaksi?"
+        "Proses Transaksi Ini?"
 
     message?.text = messageString
 

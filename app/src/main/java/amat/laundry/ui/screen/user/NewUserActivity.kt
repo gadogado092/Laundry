@@ -145,39 +145,39 @@ fun NewUserScreen() {
                 isError = userViewModel.isAddressValid.collectAsState().value.isError,
                 errorMessage = userViewModel.isAddressValid.collectAsState().value.errorMessage
             )
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Tipe Whatsapp", color = FontBlack)
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .weight(1F)
-                            .clickable {
-                                userViewModel.setTypeWa("Standard")
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = ("Standard" == userViewModel.user.collectAsState().value.typeWa),
-                            onClick = { userViewModel.setTypeWa("Standard") }
-                        )
-                        Text(text = "Standard", color = FontBlack)
-                    }
-                    Row(
-                        modifier = Modifier
-                            .weight(1F)
-                            .clickable {
-                                userViewModel.setTypeWa("Business")
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = ("Business" == userViewModel.user.collectAsState().value.typeWa),
-                            onClick = { userViewModel.setTypeWa("Business") }
-                        )
-                        Text(text = "Business", color = FontBlack)
-                    }
-                }
-            }
+//            Column(modifier = Modifier.fillMaxWidth()) {
+//                Text(text = "Tipe Whatsapp", color = FontBlack)
+//                Row(modifier = Modifier.fillMaxWidth()) {
+//                    Row(
+//                        modifier = Modifier
+//                            .weight(1F)
+//                            .clickable {
+//                                userViewModel.setTypeWa("Standard")
+//                            },
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        RadioButton(
+//                            selected = ("Standard" == userViewModel.user.collectAsState().value.typeWa),
+//                            onClick = { userViewModel.setTypeWa("Standard") }
+//                        )
+//                        Text(text = "Standard", color = FontBlack)
+//                    }
+//                    Row(
+//                        modifier = Modifier
+//                            .weight(1F)
+//                            .clickable {
+//                                userViewModel.setTypeWa("Business")
+//                            },
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        RadioButton(
+//                            selected = ("Business" == userViewModel.user.collectAsState().value.typeWa),
+//                            onClick = { userViewModel.setTypeWa("Business") }
+//                        )
+//                        Text(text = "Business", color = FontBlack)
+//                    }
+//                }
+//            }
             Button(
                 onClick = {
                     userViewModel.prosesRegistration()

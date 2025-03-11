@@ -125,6 +125,7 @@ class PaymentViewModel(
                             price = item.productPrice,
                             qty = item.qty,
                             createAt = createAt,
+                            totalPrice = item.productTotalPrice,
                             isDelete = false
                         )
                     )
