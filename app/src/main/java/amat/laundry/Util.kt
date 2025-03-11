@@ -79,7 +79,7 @@ fun dateTimeUniversalToDisplay(dateString: String): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val date = fmt.parse(dateString)
 
-    val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm")
+    val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
     return fmtOut.format(date as Date)
 }
 

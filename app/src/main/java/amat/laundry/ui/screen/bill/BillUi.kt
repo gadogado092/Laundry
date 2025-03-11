@@ -11,8 +11,9 @@ data class BillUi(
     val dateTimeTransaction: String = "",
     val customerName: String = "",
     val invoiceCode: String = "",
+    val isFullPayment: Boolean = false,
 
-    val listDetailTransaction: MutableList<DetailTransaction> = mutableListOf(),
+    val listDetailTransaction: List<DetailTransaction> = mutableListOf(),
 
     val totalPrice: String = "0",
 )

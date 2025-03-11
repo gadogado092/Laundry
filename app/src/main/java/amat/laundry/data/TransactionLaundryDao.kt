@@ -16,6 +16,12 @@ interface TransactionLaundryDao {
     )
     suspend fun getLastNumberInvoice(dateInvoice: String): InvoiceCode
 
+    @Query(
+        "SELECT * FROM TransactionLaundry " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun getTransaction(transactionId: String): TransactionLaundry
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetailTransaction(detailTransaction: List<DetailTransaction>)
 

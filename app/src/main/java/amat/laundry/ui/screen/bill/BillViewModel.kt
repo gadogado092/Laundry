@@ -1,6 +1,5 @@
 package amat.laundry.ui.screen.bill
 
-import amat.laundry.data.ProductCart
 import amat.laundry.data.repository.DetailTransactionRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
@@ -25,20 +24,41 @@ class BillViewModel(
         get() = _stateUi
 
     fun getData(transactionId: String) {
-        _stateUi.value = UiState.Loading
+        if (transactionId != "") {
 
-        viewModelScope.launch {
-            try {
-                val dataProfile = repository.getProfile()
+            _stateUi.value = UiState.Loading
 
-                val dataUi = BillUi(businessName = dataProfile.businessName)
+            viewModelScope.launch {
+                try {
+                    val dataProfile = repository.getProfile()
+                    val dataTransaction = transactionRepository.getTransaction(transactionId)
+                    val listDetailTransaction =
+                        detailTransactionRepository.getDetailTransactionList(transactionId)
 
-                _stateUi.value = UiState.Success(dataUi)
-            } catch (e: Exception) {
-                Log.e("bill", e.message.toString())
-                _stateUi.value = UiState.Error(e.message.toString())
+                    val dataUi = BillUi(
+                        businessName = dataProfile.businessName,
+                        businessAddress = dataProfile.address,
+                        businessNumberPhone = dataProfile.numberPhone,
+                        footerNote = dataProfile.footerNote,
+                        isFullPayment = dataTransaction.isFullPayment,
+
+                        customerName = dataTransaction.customerName,
+                        invoiceCode = dataTransaction.invoiceCode,
+                        dateTimeTransaction = dataTransaction.createAt,
+                        totalPrice = dataTransaction.totalPrice,
+                        listDetailTransaction = listDetailTransaction
+                    )
+
+                    _stateUi.value = UiState.Success(dataUi)
+                } catch (e: Exception) {
+                    Log.e("bill", e.message.toString())
+                    _stateUi.value = UiState.Error(e.message.toString())
+                }
+
             }
 
+        } else {
+            _stateUi.value = UiState.Error("Id Transaksi Tidak Ada")
         }
 
     }

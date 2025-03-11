@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PaymentCartItem(
+fun BillItem(
     modifier: Modifier = Modifier,
     productName: String,
     productPrice: String,
@@ -41,10 +41,9 @@ fun PaymentCartItem(
                 Text(
                     text = productName[0].uppercase() + productName.drop(1),
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = FontBlack,
                     ),
-                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(end = 8.dp)
@@ -62,7 +61,7 @@ fun PaymentCartItem(
             Text(
                 text = "${cleanPointZeroFloat(qty)} $unit X $productPrice",
                 style = TextStyle(
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = FontBlack,
                 ),
                 modifier = Modifier.padding(end = 8.dp)
@@ -72,7 +71,7 @@ fun PaymentCartItem(
                 Text(
                     text = productTotalPrice,
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = FontBlack,
                     )
                 )
@@ -83,18 +82,12 @@ fun PaymentCartItem(
             Text(
                 text = note,
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     color = FontBlack,
                 ),
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
-
-        Divider(
-            modifier = Modifier.padding(top = 8.dp),
-            color = GreyLight,
-            thickness = 1.dp
-        )
 
     }
 }

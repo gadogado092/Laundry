@@ -248,11 +248,9 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
 
             items(listData) { data ->
                 PaymentCartItem(
-                    productId = data.productId,
                     productName = data.productName,
                     productPrice = currencyFormatterStringViewZero(data.productPrice.toString()),
                     productTotalPrice = currencyFormatterStringViewZero(data.productTotalPrice),
-                    categoryName = data.categoryName,
                     note = data.note,
                     unit = data.unit,
                     qty = data.qty

@@ -5,8 +5,8 @@ import amat.laundry.data.DetailTransactionDao
 
 class DetailTransactionRepository(private val detailTransactionRepository: DetailTransactionDao) {
 
-    suspend fun getDetailTransactionList(): List<DetailTransaction> {
-        return detailTransactionRepository.getDetailTransactionList()
+    suspend fun getDetailTransactionList(transactionId: String): List<DetailTransaction> {
+        return detailTransactionRepository.getDetailTransactionList(transactionId)
     }
 
 

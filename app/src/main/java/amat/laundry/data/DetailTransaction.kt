@@ -10,6 +10,8 @@ data class DetailTransaction(
     val transactionId: String,
     val productId: String,
     val productName: String,
+    val note: String,
+    val unit: String,
     val price: Int,
     val totalPrice: String,
     val qty: Float,

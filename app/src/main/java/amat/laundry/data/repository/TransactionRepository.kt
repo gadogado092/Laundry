@@ -11,6 +11,10 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         return transactionDao.getLastNumberInvoice(dateInvoice)
     }
 
+    suspend fun getTransaction(transactionId: String): TransactionLaundry {
+        return transactionDao.getTransaction(transactionId)
+    }
+
     suspend fun insertNewTransaction(
         transaction: TransactionLaundry,
         detailTransaction: List<DetailTransaction>

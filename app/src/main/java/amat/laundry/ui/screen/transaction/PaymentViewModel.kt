@@ -122,6 +122,8 @@ class PaymentViewModel(
                             transactionId = transactionId,
                             productId = item.productId,
                             productName = item.productName,
+                            note = item.note,
+                            unit = item.unit,
                             price = item.productPrice,
                             qty = item.qty,
                             createAt = createAt,
