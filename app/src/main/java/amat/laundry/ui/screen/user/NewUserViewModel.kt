@@ -8,6 +8,7 @@ import amat.laundry.data.Product
 import amat.laundry.data.User
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.UserRepository
+import amat.laundry.generateDateNow
 import amat.laundry.generateDateTimeNow
 import amat.laundry.isNumberPhoneValid
 import androidx.lifecycle.ViewModel
@@ -147,7 +148,8 @@ class NewUserViewModel(
         ) {
             viewModelScope.launch {
                 val userId = UUID.randomUUID()
-                val createAt = generateDateTimeNow()
+                val createAt = generateDateNow()
+                val createDateTimeNow = generateDateTimeNow()
                 val encodedDateTime = addDateLimitApp(createAt, "Bulan", 1)
                 val key = UUID.randomUUID().toString().substring(0, 4).uppercase()
 
@@ -156,7 +158,7 @@ class NewUserViewModel(
                         id = userId.toString(),
                         limit = encodedDateTime,
                         key = key,
-                        createAt = createAt
+                        createAt = createDateTimeNow
                     )
 
                 insertNewUser(user = user)

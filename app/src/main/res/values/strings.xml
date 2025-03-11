@@ -69,11 +69,13 @@
     <string name="title_customer_service">Customer Service</string>
     <string name="subtitle_customer_service">Hubungi customer service apapun kendala anda\nChat Via WA 085241527504</string>
     <string name="title_profile">Profil</string>
-    <string name="subtitle_profile">Lihat profil dan pengaturan</string>
+    <string name="subtitle_profile">Lihat profil dan Wa yang digunakan</string>
 
     <string name="title_add_kost">Tambah Kost</string>
     <string name="title_add_transaction">Tambah Transaksi</string>
     <string name="title_payment_transaction">Pembayaran</string>
+    <string name="title_printer">Printer</string>
+    <string name="subtitle_printer">Pilih printer thermal</string>
     <string name="title_update_cart">Update Keranjang</string>
     <string name="title_check_in">Check In</string>
     <string name="title_check_out">Check Out</string>

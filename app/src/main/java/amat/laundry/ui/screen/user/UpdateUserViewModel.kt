@@ -25,21 +25,21 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
     val user: StateFlow<User>
         get() = _user
 
-    private val _isUserNameValid: MutableStateFlow<ValidationResult> =
+    private val _isBusinessNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
 
-    val isUserNameValid: StateFlow<ValidationResult>
-        get() = _isUserNameValid
+    val isBusinessNameValid: StateFlow<ValidationResult>
+        get() = _isBusinessNameValid
 
     private val _isUserNumberPhoneValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
     val isUserNumberPhoneValid: StateFlow<ValidationResult>
         get() = _isUserNumberPhoneValid
 
-    private val _isUserEmailValid: MutableStateFlow<ValidationResult> =
+    private val _isAddressValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
-    val isUserEmailValid: StateFlow<ValidationResult>
-        get() = _isUserEmailValid
+    val isAddressValid: StateFlow<ValidationResult>
+        get() = _isAddressValid
 
     private val _isProsesSuccess: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
@@ -52,14 +52,14 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         _user.value = _user.value.copy(typeWa = value)
     }
 
-    fun setName(value: String) {
-//        clearError()
-//        _user.value = _user.value.copy(name = value)
-//        if (_user.value.name.trim().isEmpty()) {
-//            _isUserNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
-//        } else {
-//            _isUserNameValid.value = ValidationResult(false, "")
-//        }
+    fun setBusinessName(value: String) {
+        clearError()
+        _user.value = _user.value.copy(businessName = value)
+        if (_user.value.businessName.trim().isEmpty()) {
+            _isBusinessNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+        } else {
+            _isBusinessNameValid.value = ValidationResult(false, "")
+        }
     }
 
     fun setNumberPhone(value: String) {
@@ -75,17 +75,15 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         }
     }
 
-    fun setEmail(value: String) {
-//        clearError()
-//        _user.value = _user.value.copy(email = value)
-//
-//        if (_user.value.email.trim().isEmpty()) {
-//            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-//        } else if (!isEmailValid(_user.value.email.trim())) {
-//            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
-//        } else {
-//            _isUserEmailValid.value = ValidationResult(false, "")
-//        }
+    fun setAddress(value: String) {
+        clearError()
+        _user.value = _user.value.copy(address = value)
+
+        if (_user.value.address.trim().isEmpty()) {
+            _isAddressValid.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
+        } else {
+            _isAddressValid.value = ValidationResult(false, "")
+        }
     }
 
     fun getDetail() {
@@ -120,19 +118,15 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
             return
         }
 
-//        if (_user.value.email.trim().isEmpty()) {
-//            _isUserEmailValid.value = ValidationResult(true, "Email Wajib Dimasukkan")
-//            _isProsesSuccess.value = ValidationResult(true, "Email Wajib Dimasukkan")
-//            return
-//        } else if (!isEmailValid(_user.value.email.trim())) {
-//            _isUserEmailValid.value = ValidationResult(true, "Email Belum Valid")
-//            _isProsesSuccess.value = ValidationResult(true, "Email Belum Valid")
-//            return
-//        }
+        if (_user.value.address.trim().isEmpty()) {
+            _isAddressValid.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
+            _isProsesSuccess.value = ValidationResult(true, "Alamat Wajib Dimasukkan")
+            return
+        }
 
-        if (!_isUserNameValid.value.isError
+        if (!_isBusinessNameValid.value.isError
             && !_isUserNumberPhoneValid.value.isError
-            && !_isUserEmailValid.value.isError
+            && !_isAddressValid.value.isError
         ) {
             viewModelScope.launch {
                 val user = _user.value

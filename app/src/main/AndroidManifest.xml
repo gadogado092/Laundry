@@ -82,7 +82,7 @@
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.screen.unit.AddUnitActivity"
+            android:name=".ui.screen.printer.PrinterActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />

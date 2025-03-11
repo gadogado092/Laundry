@@ -83,7 +83,11 @@ fun UpdateUserScreen(
         viewModel(factory = UpdateUserViewModelFactory(Injection.provideUserRepository(context)))
 
     if (!updateUserViewModel.isProsesSuccess.collectAsState().value.isError) {
-        Toast.makeText(context, stringResource(id = R.string.success_update_data), Toast.LENGTH_SHORT)
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.success_update_data),
+            Toast.LENGTH_SHORT
+        )
             .show()
         val activity = (context as? Activity)
         activity?.finish()
@@ -173,11 +177,11 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             value = updateUserViewModel.user.collectAsState().value.businessName,
             onValueChange = {
-                updateUserViewModel.setName(it)
+                updateUserViewModel.setBusinessName(it)
             },
             modifier = Modifier.fillMaxWidth(),
-            isError = updateUserViewModel.isUserNameValid.collectAsState().value.isError,
-            errorMessage = updateUserViewModel.isUserNameValid.collectAsState().value.errorMessage
+            isError = updateUserViewModel.isBusinessNameValid.collectAsState().value.isError,
+            errorMessage = updateUserViewModel.isBusinessNameValid.collectAsState().value.errorMessage
         )
 
         MyOutlinedTextField(
@@ -194,16 +198,16 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
         )
 
         MyOutlinedTextField(
-            label = "Alamat Email",
+            label = "Alamat",
             value = updateUserViewModel.user.collectAsState().value.address,
             onValueChange = {
-                updateUserViewModel.setEmail(it)
+                updateUserViewModel.setAddress(it)
             },
             modifier = Modifier
                 .fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            isError = updateUserViewModel.isUserEmailValid.collectAsState().value.isError,
-            errorMessage = updateUserViewModel.isUserEmailValid.collectAsState().value.errorMessage
+            isError = updateUserViewModel.isAddressValid.collectAsState().value.isError,
+            errorMessage = updateUserViewModel.isAddressValid.collectAsState().value.errorMessage
         )
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = "Tipe Whatsapp", color = FontBlack)
@@ -238,7 +242,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
                 }
             }
         }
-        InformationBox(value = "Informasi Nama Bank, Nomor Rekening dan Catatan akan muncul saat mengirim penagihan ke penyewa")
+//        InformationBox(value = "Informasi Nama Bank, Nomor Rekening dan Catatan akan muncul saat mengirim penagihan ke penyewa")
 //        MyOutlinedTextField(
 //            label = "Nama Bank / Nama Dompet Digital",
 //            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),

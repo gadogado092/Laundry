@@ -2,16 +2,23 @@ package amat.laundry.ui.screen.main
 
 import amat.laundry.R
 import amat.laundry.di.Injection
+import amat.laundry.sendWhatsApp
 import amat.laundry.ui.navigation.NavigationItem
 import amat.laundry.ui.navigation.Screen
 import amat.laundry.ui.screen.home.HomeScreen
 import amat.laundry.ui.screen.other.OtherScreen
+import amat.laundry.ui.screen.printer.PrinterActivity
 import amat.laundry.ui.screen.transaction.TransactionScreen
+import amat.laundry.ui.screen.user.UpdateUserActivity
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight2
 import amat.laundry.ui.theme.LaundryAppTheme
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -40,6 +47,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.core.net.toUri
 
 class MainActivity : ComponentActivity() {
 
@@ -107,21 +115,20 @@ fun MainScreen(
                 TransactionScreen(context = context)
             }
             composable(Screen.Other.route) {
-                OtherScreen(context = context)
-//                val urlTutorial = stringResource(R.string.url_tutorial_app)
-//                val numberCs = stringResource(R.string.number_cs)
-//                val messageCs =
-//                    stringResource(R.string.message_cs, stringResource(R.string.app_name))
-//                OtherScreen(
-//                    context = context,
-//                    onClickCsExtend = {
-//                        sendWhatsApp(
-//                            context,
-//                            numberCs,
-//                            it,
-//                            myViewModel.typeWa.value
-//                        )
-//                    },
+                val urlTutorial = stringResource(R.string.url_tutorial_app)
+                val numberCs = stringResource(R.string.number_cs)
+                val messageCs =
+                    stringResource(R.string.message_cs, stringResource(R.string.app_name))
+                OtherScreen(
+                    context = context,
+                    onClickCsExtend = {
+                        sendWhatsApp(
+                            context,
+                            numberCs,
+                            it,
+                            myViewModel.typeWa.value
+                        )
+                    },
 //                    navigateToBooking = {
 //                        val intent = Intent(context, BookingActivity::class.java)
 //                        context.startActivity(intent)
@@ -140,36 +147,40 @@ fun MainScreen(
 //                    navigateToUnitType = {
 //                        navController.navigate(Screen.UnitType.route)
 //                    },
-//                    navigateToProfile = {
-//                        val intent = Intent(context, UpdateUserActivity::class.java)
-//                        context.startActivity(intent)
-//                    },
-//                    onClickTutorial = {
-//                        try {
-//                            val webIntent =
-//                                Intent(
-//                                    Intent.ACTION_VIEW,
-//                                    Uri.parse(urlTutorial)
-//                                )
-//                            context.startActivity(webIntent)
-//                        } catch (ex: ActivityNotFoundException) {
-//                            Toast.makeText(
-//                                context,
-//                                "Tidak Bisa Akses Tutorial",
-//                                Toast.LENGTH_SHORT
-//                            )
-//                                .show()
-//                        }
-//                    },
-//                    onClickCostumerService = {
-//                        sendWhatsApp(
-//                            context,
-//                            numberCs,
-//                            messageCs,
-//                            typeWa = it,
-//                        )
-//                    },
-//                )
+                    navigateToPrinter = {
+                        val intent = Intent(context, PrinterActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    navigateToProfile = {
+                        val intent = Intent(context, UpdateUserActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    onClickTutorial = {
+                        try {
+                            val webIntent =
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    urlTutorial.toUri()
+                                )
+                            context.startActivity(webIntent)
+                        } catch (ex: ActivityNotFoundException) {
+                            Toast.makeText(
+                                context,
+                                "Tidak Bisa Akses Tutorial",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    },
+                    onClickCostumerService = {
+                        sendWhatsApp(
+                            context,
+                            numberCs,
+                            messageCs,
+                            typeWa = it,
+                        )
+                    },
+                )
             }
         }
     }
