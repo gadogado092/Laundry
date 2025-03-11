@@ -28,6 +28,13 @@ interface TransactionLaundryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionLaundry)
 
+    @Query(
+        "UPDATE TransactionLaundry " +
+                "SET isFullPayment=:isFullPayment " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun updateTransactionStatusPayment(transactionId: String, isFullPayment: Boolean)
+
     @Query("DELETE FROM Cart")
     suspend fun deleteAllCart()
 
@@ -40,5 +47,26 @@ interface TransactionLaundryDao {
         insertDetailTransaction(detailTransaction)
 
         deleteAllCart()
+    }
+
+    //DELETE AREA
+    @Query(
+        "UPDATE TransactionLaundry " +
+                "SET isDelete=1 " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun deleteTransaction(transactionId: String)
+
+    @Query(
+        "UPDATE DetailTransaction " +
+                "SET isDelete=1 " +
+                "WHERE transactionId=:transactionId"
+    )
+    suspend fun deleteDetailTransaction(transactionId: String)
+
+    @Transaction
+    suspend fun deleteTransactionAndDetailTransaction(transactionId: String) {
+        deleteTransaction(transactionId)
+        deleteDetailTransaction(transactionId)
     }
 }

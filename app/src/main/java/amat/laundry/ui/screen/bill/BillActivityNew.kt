@@ -1,8 +1,8 @@
 package amat.laundry.ui.screen.bill
 
 import amat.laundry.R
-import amat.laundry.cleanPointZeroFloat
 import amat.laundry.currencyFormatterStringViewZero
+import amat.laundry.data.ProductCart
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
@@ -11,8 +11,8 @@ import amat.laundry.ui.component.BillItem
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
-import amat.laundry.ui.component.PaymentCartItem
 import amat.laundry.ui.screen.transaction.AddTransactionActivity
+import amat.laundry.ui.screen.transaction.PaymentViewModel
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontBlackSoft
@@ -25,6 +25,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -32,14 +35,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
@@ -66,6 +66,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class BillActivityNew : ComponentActivity() {
 
@@ -120,6 +121,37 @@ fun BillNewScreen(
 
             else -> { /* other stuff */
             }
+        }
+    }
+
+    if (!viewModel.isProsesDeleteFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Hapus Transaksi Berhasil", Toast.LENGTH_SHORT)
+            .show()
+        val activity = (context as? Activity)
+        activity?.finish()
+    } else {
+        if (viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    if (!viewModel.isProsesUpdateStatusFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Update Status Berhasil", Toast.LENGTH_SHORT)
+            .show()
+        viewModel.getData(transactionId)
+    } else {
+        if (viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
@@ -183,7 +215,7 @@ fun BillNewScreen(
                     }
 
                     is UiState.Success -> {
-                        BillMainArea(viewModel, context, uiState.data)
+                        BillMainArea(viewModel, context, uiState.data, transactionId)
                     }
                 }
             }
@@ -192,7 +224,7 @@ fun BillNewScreen(
 }
 
 @Composable
-fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi) {
+fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, transactionId: String) {
     if (data.listDetailTransaction.isEmpty()) {
         CenterLayout(
             content = {
@@ -248,58 +280,100 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi) {
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
                 ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                "Nomor Invoice", style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                data.invoiceCode, style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+
+                        Column {
+                            Text(
+                                "Waktu Transaksi",
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                dateTimeUniversalToDisplay(data.dateTimeTransaction),
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column {
+                            Text(
+                                "Nama Pelanggan", style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                data.customerName, style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                        Column {
+                            Text(
+                                "Status Pembayaran",
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                if (data.isFullPayment) "Lunas" else "Belum Lunas",
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                    }
+
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        "Waktu Transaksi", style = TextStyle(
+                        "Catatan", style = TextStyle(
                             fontSize = 14.sp,
                             color = FontGrey,
                         )
                     )
                     Text(
-                        dateTimeUniversalToDisplay(data.dateTimeTransaction), style = TextStyle(
+                        data.noteTransaction, style = TextStyle(
                             fontSize = 16.sp,
                             color = FontBlack,
                         )
                     )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        "Nama Pelanggan", style = TextStyle(
-                            fontSize = 14.sp,
-                            color = FontGrey,
-                        )
-                    )
-                    Text(
-                        data.customerName, style = TextStyle(
-                            fontSize = 16.sp,
-                            color = FontBlack,
-                        )
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        "Nomor Invoice", style = TextStyle(
-                            fontSize = 14.sp,
-                            color = FontGrey,
-                        )
-                    )
-                    Text(
-                        data.invoiceCode, style = TextStyle(
-                            fontSize = 16.sp,
-                            color = FontBlack,
-                        )
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        "Status Pembayaran", style = TextStyle(
-                            fontSize = 14.sp,
-                            color = FontGrey,
-                        )
-                    )
-                    Text(
-                        if (data.isFullPayment) "Lunas" else "Belum Lunas", style = TextStyle(
-                            fontSize = 16.sp,
-                            color = FontBlack,
-                        )
-                    )
+
                 }
 
                 Divider(
@@ -379,7 +453,7 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi) {
                 if (!data.isFullPayment) {
                     Button(
                         onClick = {
-                            // todo
+                            showBottomConfirmUpdateStatus(context, viewModel, transactionId)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -407,11 +481,11 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi) {
 
                 Button(
                     onClick = {
-                        //todo hapus transaksi
+                        showBottomConfirmDelete(context, viewModel, transactionId)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 2.dp, horizontal = 8.dp),
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = GreyLight)
                 ) {
                     Text(text = "Hapus Transaksi", color = FontBlackSoft)
@@ -420,5 +494,51 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi) {
 
         }
     }
+
+}
+
+private fun showBottomConfirmDelete(
+    context: Context,
+    viewModel: BillViewModel,
+    transactionId: String,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Hapus Transaksi Ini?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.deleteTransaction(transactionId)
+    }
+    bottomSheetDialog.show()
+
+}
+
+private fun showBottomConfirmUpdateStatus(
+    context: Context,
+    viewModel: BillViewModel,
+    transactionId: String,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Update Status Jadi Lunas?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.updateStatusTransaction(transactionId)
+    }
+    bottomSheetDialog.show()
 
 }

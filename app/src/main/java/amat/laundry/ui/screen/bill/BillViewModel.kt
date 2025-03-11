@@ -1,5 +1,6 @@
 package amat.laundry.ui.screen.bill
 
+import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.DetailTransactionRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
@@ -23,7 +24,20 @@ class BillViewModel(
     val stateUi: StateFlow<UiState<BillUi>>
         get() = _stateUi
 
+    private val _isProsesDeleteFailed: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesDeleteFailed: StateFlow<ValidationResult>
+        get() = _isProsesDeleteFailed
+
+    private val _isProsesUpdateStatusFailed: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(true, ""))
+
+    val isProsesUpdateStatusFailed: StateFlow<ValidationResult>
+        get() = _isProsesUpdateStatusFailed
+
     fun getData(transactionId: String) {
+        clearError()
         if (transactionId != "") {
 
             _stateUi.value = UiState.Loading
@@ -46,6 +60,7 @@ class BillViewModel(
                         invoiceCode = dataTransaction.invoiceCode,
                         dateTimeTransaction = dataTransaction.createAt,
                         totalPrice = dataTransaction.totalPrice,
+                        noteTransaction = dataTransaction.note,
                         listDetailTransaction = listDetailTransaction
                     )
 
@@ -61,6 +76,47 @@ class BillViewModel(
             _stateUi.value = UiState.Error("Id Transaksi Tidak Ada")
         }
 
+    }
+
+    fun deleteTransaction(transactionId: String) {
+        clearError()
+        if (transactionId != "") {
+
+            viewModelScope.launch {
+                try {
+                    transactionRepository.deleteTransactionAndDetailTransaction(transactionId)
+                    _isProsesDeleteFailed.value = ValidationResult(false)
+                } catch (e: Exception) {
+                    _isProsesDeleteFailed.value = ValidationResult(true, e.message.toString())
+                }
+            }
+
+        } else {
+            _isProsesDeleteFailed.value = ValidationResult(true, "Id Transaksi Tidak Ada")
+        }
+    }
+
+    fun updateStatusTransaction(transactionId: String) {
+        clearError()
+        if (transactionId != "") {
+
+            viewModelScope.launch {
+                try {
+                    transactionRepository.updateTransactionStatusPayment(transactionId, true)
+                    _isProsesUpdateStatusFailed.value = ValidationResult(false)
+                } catch (e: Exception) {
+                    _isProsesUpdateStatusFailed.value = ValidationResult(true, e.message.toString())
+                }
+            }
+
+        } else {
+            _isProsesUpdateStatusFailed.value = ValidationResult(true, "Id Transaksi Tidak Ada")
+        }
+    }
+
+    private fun clearError() {
+        _isProsesDeleteFailed.value = ValidationResult(true, "")
+        _isProsesUpdateStatusFailed.value = ValidationResult(true, "")
     }
 
 }

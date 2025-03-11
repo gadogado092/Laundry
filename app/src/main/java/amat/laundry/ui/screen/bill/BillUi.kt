@@ -6,6 +6,7 @@ data class BillUi(
     val businessName: String = "",
     val businessNumberPhone: String = "",
     val businessAddress: String = "",
+    val noteTransaction: String = "",
     val footerNote: String = "",
 
     val dateTimeTransaction: String = "",

@@ -22,6 +22,14 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         transactionDao.insertNewTransaction(transaction, detailTransaction)
     }
 
+    suspend fun deleteTransactionAndDetailTransaction(transactionId: String) {
+        transactionDao.deleteTransactionAndDetailTransaction(transactionId)
+    }
+
+    suspend fun updateTransactionStatusPayment(transactionId: String, isFullPayment: Boolean) {
+        transactionDao.updateTransactionStatusPayment(transactionId, isFullPayment)
+    }
+
 
     companion object {
         @Volatile
