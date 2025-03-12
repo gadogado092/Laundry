@@ -13,8 +13,8 @@ import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.TealGreen
 import android.content.ClipData
-import android.content.Context
 import android.content.ClipboardManager
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

@@ -5,7 +5,6 @@ import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.ErrorLayout
-import amat.laundry.ui.component.InformationBox
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.theme.FontBlack

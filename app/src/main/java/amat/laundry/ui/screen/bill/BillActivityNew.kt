@@ -1,7 +1,6 @@
 package amat.laundry.ui.screen.bill
 
 import amat.laundry.PrinterCommands
-import amat.laundry.PrinterCommands.LF
 import amat.laundry.R
 import amat.laundry.cleanPointZeroFloat
 import amat.laundry.currencyFormatterStringViewZero

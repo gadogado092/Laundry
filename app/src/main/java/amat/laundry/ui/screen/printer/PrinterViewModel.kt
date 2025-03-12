@@ -3,11 +3,8 @@ package amat.laundry.ui.screen.printer
 import amat.laundry.data.User
 import amat.laundry.data.entity.PrinterEntity
 import amat.laundry.data.entity.ValidationResult
-import amat.laundry.data.repository.CartRepository
-import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
 import amat.laundry.ui.common.UiState
-import amat.laundry.ui.screen.transaction.PaymentViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
