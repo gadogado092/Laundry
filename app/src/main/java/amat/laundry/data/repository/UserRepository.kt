@@ -33,6 +33,10 @@ class UserRepository(private val userDao: UserDao) {
         userDao.update(user)
     }
 
+    suspend fun printerSelected(userId: String, printerName: String, printerAddress: String) {
+        userDao.printerSelected(userId, printerName, printerAddress)
+    }
+
     suspend fun extendApp(userId: String, newLimit: String, newKey: String) {
         userDao.extendApp(userId, newLimit, newKey)
     }

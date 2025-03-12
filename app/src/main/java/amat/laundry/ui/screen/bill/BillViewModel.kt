@@ -36,6 +36,12 @@ class BillViewModel(
     val isProsesUpdateStatusFailed: StateFlow<ValidationResult>
         get() = _isProsesUpdateStatusFailed
 
+    private val _dataInvoice: MutableStateFlow<BillUi> =
+        MutableStateFlow(BillUi())
+
+    val dataInvoice: StateFlow<BillUi>
+        get() = _dataInvoice
+
     fun getData(transactionId: String) {
         clearError()
         if (transactionId != "") {
@@ -56,6 +62,9 @@ class BillViewModel(
                         footerNote = dataProfile.footerNote,
                         isFullPayment = dataTransaction.isFullPayment,
 
+                        printerName = dataProfile.printerName,
+                        printerAddress = dataProfile.printerAddress,
+
                         customerName = dataTransaction.customerName,
                         invoiceCode = dataTransaction.invoiceCode,
                         dateTimeTransaction = dataTransaction.createAt,
@@ -64,6 +73,7 @@ class BillViewModel(
                         listDetailTransaction = listDetailTransaction
                     )
 
+                    _dataInvoice.value = dataUi
                     _stateUi.value = UiState.Success(dataUi)
                 } catch (e: Exception) {
                     Log.e("bill", e.message.toString())

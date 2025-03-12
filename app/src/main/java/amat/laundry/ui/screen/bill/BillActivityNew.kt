@@ -1,8 +1,10 @@
 package amat.laundry.ui.screen.bill
 
+import amat.laundry.PrinterCommands
+import amat.laundry.PrinterCommands.LF
 import amat.laundry.R
+import amat.laundry.cleanPointZeroFloat
 import amat.laundry.currencyFormatterStringViewZero
-import amat.laundry.data.ProductCart
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
@@ -11,8 +13,8 @@ import amat.laundry.ui.component.BillItem
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
+import amat.laundry.ui.screen.printer.PrinterActivity
 import amat.laundry.ui.screen.transaction.AddTransactionActivity
-import amat.laundry.ui.screen.transaction.PaymentViewModel
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontBlackSoft
@@ -21,10 +23,15 @@ import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.LaundryAppTheme
+import android.Manifest
 import android.app.Activity
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -61,12 +68,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.IOException
+import java.io.OutputStream
+import java.util.UUID
+
 
 class BillActivityNew : ComponentActivity() {
 
@@ -93,134 +105,410 @@ class BillActivityNew : ComponentActivity() {
             insets
         }
     }
-}
 
-@Composable
-fun BillNewScreen(
-    context: Context,
-    transactionId: String
-) {
+    private fun printInvoice(context: Context, dataInvoice: BillUi) {
+        if (dataInvoice.printerAddress == "") {
+            Toast.makeText(this, "Pilih Printernya Gan", Toast.LENGTH_LONG).show()
+        } else {
+            val bluetoothManager =
+                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter = bluetoothManager.adapter
 
-    val viewModel: BillViewModel =
-        viewModel(
-            factory = BillViewModelFactory(
-                Injection.provideUserRepository(context),
-                Injection.provideTransactionRepository(context),
-                Injection.provideDetailTransactionRepository(context),
-            )
-        )
+            if (bluetoothAdapter == null) {
+                Toast.makeText(this, "Bluetooth Adapter Broken", Toast.LENGTH_LONG).show()
+            } else {
+                val applicationUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                val bluetoothDevice =
+                    bluetoothAdapter.getRemoteDevice(dataInvoice.printerAddress)
 
-    OnLifecycleEvent { owner, event ->
-        // do stuff on event
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                if (transactionId != "") {
-                    viewModel.getData(transactionId)
-                }
-            }
-
-            else -> { /* other stuff */
-            }
-        }
-    }
-
-    if (!viewModel.isProsesDeleteFailed.collectAsState().value.isError) {
-        Toast.makeText(context, "Hapus Transaksi Berhasil", Toast.LENGTH_SHORT)
-            .show()
-        val activity = (context as? Activity)
-        activity?.finish()
-    } else {
-        if (viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage.isNotEmpty()) {
-            Toast.makeText(
-                context,
-                viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage,
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-    }
-
-    if (!viewModel.isProsesUpdateStatusFailed.collectAsState().value.isError) {
-        Toast.makeText(context, "Update Status Berhasil", Toast.LENGTH_SHORT)
-            .show()
-        viewModel.getData(transactionId)
-    } else {
-        if (viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage.isNotEmpty()) {
-            Toast.makeText(
-                context,
-                viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage,
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-    }
-
-    Column {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(id = R.string.bill),
-                    color = FontWhite,
-                    fontSize = 22.sp
-                )
-            },
-            backgroundColor = GreenDark,
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        val activity = (context as? Activity)
-                        activity?.finish()
-                    }
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                }
-            },
-            actions = {
-                IconButton(
-                    onClick = {
-                        //todo check print
+                    // : Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
+                            1
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Print,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
+//                    Toast.makeText(this, "Printer Permission Problem 1", Toast.LENGTH_LONG)
+//                        .show()
                 }
+
+
+                val bluetoothSocket =
+                    bluetoothDevice.createRfcommSocketToServiceRecord(applicationUUID)
+
+                //check koneksi
+                try {
+                    bluetoothSocket.connect()
+                    if (!bluetoothSocket.isConnected) {
+                        Toast.makeText(
+                            context,
+                            "Printer Tidak Tersambung",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        bluetoothSocket.close()
+                        return
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        "Printer Socket Tidak Tersambung",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                    bluetoothSocket.close()
+                    return
+                }
+
+                try {
+
+                    if (bluetoothSocket == null) {
+                        Toast.makeText(
+                            context,
+                            "Printer Socket Tidak Tersambung",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        return
+                    } else {
+                        Toast.makeText(this, "Printer Mencetak", Toast.LENGTH_LONG)
+                            .show()
+
+                        val outputStream = bluetoothSocket.outputStream
+
+                        //wajib ada ini boss ku
+                        val printformat = byteArrayOf(0x1B, 0x21, 0x03)
+                        outputStream.write(printformat)
+
+                        printCustom(dataInvoice.businessName, 1, 1, outputStream)
+                        printCustom(dataInvoice.businessAddress, 0, 1, outputStream)
+                        printCustom(dataInvoice.businessNumberPhone, 0, 1, outputStream)
+                        printCustom("--------------------------------", 0, 1, outputStream)
+
+                        printCustom(
+                            dateTimeUniversalToDisplay(dataInvoice.dateTimeTransaction),
+                            0,
+                            0,
+                            outputStream
+                        )
+                        printCustom(
+                            "Nomor  : ${dataInvoice.invoiceCode}",
+                            0,
+                            0,
+                            outputStream
+                        )
+                        val status = if (dataInvoice.isFullPayment) "Lunas" else "Belum Lunas"
+                        printCustom(
+                            "Status : $status",
+                            0,
+                            0,
+                            outputStream
+                        )
+
+                        printCustom("Nama   : ${dataInvoice.customerName}", 0, 0, outputStream)
+
+                        if (dataInvoice.noteTransaction != "") {
+                            printCustom(
+                                "Note   : ${dataInvoice.noteTransaction}",
+                                0,
+                                0,
+                                outputStream
+                            )
+                        }
+                        printCustom("--------------------------------", 0, 1, outputStream)
+
+                        dataInvoice.listDetailTransaction.forEach { item ->
+                            printCustom(
+                                item.productName,
+                                0,
+                                0,
+                                outputStream
+                            )
+                            printText(
+                                leftRightAlign(
+                                    "${cleanPointZeroFloat(item.qty)} ${item.unit}",
+                                    currencyFormatterStringViewZero(item.totalPrice),
+                                    "2"
+                                ),
+                                outputStream
+                            )
+                            if (item.note != "") {
+                                printCustom(
+                                    item.note,
+                                    0,
+                                    0,
+                                    outputStream
+                                )
+                            }
+
+                        }
+                        printCustom("--------------------------------", 0, 1, outputStream)
+                        printCustom(
+                            "Total   :${currencyFormatterStringViewZero(dataInvoice.totalPrice)}",
+                            1,
+                            2,
+                            outputStream
+                        )
+
+                        val LF = byteArrayOf(0x0A)
+                        outputStream.write(LF)
+                        printCustom(dataInvoice.footerNote, 0, 1, outputStream)
+                        outputStream.write(LF)
+                        outputStream.write(LF)
+//                        outputStream.write(LF)
+
+                        outputStream.flush()
+                        outputStream.close()
+                        bluetoothSocket.close()
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("bluetooth", e.message.toString())
+                    bluetoothSocket.close()
+                    Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_LONG)
+                        .show()
+                }
+
+
             }
-        )
-        if (transactionId == "") {
-            ErrorLayout(errorMessage = "ID Transaksi tidak ada") {
-                val activity = (context as? Activity)
-                activity?.finish()
+
+        }
+
+    }
+
+    private fun printCustom(msg: String, size: Int, align: Int, outputStream: OutputStream) {
+        //Print config "mode"
+
+        val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
+        //byte[] cc1 = new byte[]{0x1B,0x21,0x00};  // 0- normal size text
+        val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
+        val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
+        val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
+        try {
+            when (size) {
+                0 -> outputStream.write(cc)
+                1 -> outputStream.write(bb)
+                2 -> outputStream.write(bb2)
+                3 -> outputStream.write(bb3)
+            }
+
+            when (align) {
+                0 ->                     //left align
+                    outputStream.write(PrinterCommands.ESC_ALIGN_LEFT)
+
+                1 ->                     //center align
+                    outputStream.write(PrinterCommands.ESC_ALIGN_CENTER)
+
+                2 ->                     //right align
+                    outputStream.write(PrinterCommands.ESC_ALIGN_RIGHT)
+            }
+            outputStream.write(msg.toByteArray())
+            val LF = byteArrayOf(0x0A)
+            outputStream.write(LF)
+            //outputStream.write(cc);
+            //printNewLine();
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun printNewLine(outputStream: OutputStream) {
+        try {
+            outputStream.write(PrinterCommands.FEED_LINE)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun printText(msg: String, outputStream: OutputStream) {
+        try {
+            // Print normal text
+            outputStream.write(msg.toByteArray())
+            val LF = byteArrayOf(0x0A)
+            outputStream.write(LF)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun leftRightAlign(str1: String, str2: String, ukuranStruk: String): String {
+        var ans = str1 + str2
+        if (ukuranStruk == "3") {
+            if (ans.length < 31) {
+                val n = (31 - str1.length + str2.length)
+                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+            }
+        } else if (ukuranStruk == "2") {
+            if (ans.length < 31) {
+                val n = (20 - str1.length + str2.length)
+                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+            }
+        } else if (ukuranStruk == "1") {
+            if (ans.length < 31) {
+                val n = (22 - str1.length + str2.length)
+                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
             }
         } else {
-            viewModel.stateUi.collectAsState(initial = UiState.Loading).value.let { uiState ->
-                when (uiState) {
-                    is UiState.Error -> {
-                        ErrorLayout(
-                            modifier = Modifier.fillMaxHeight(),
-                            errorMessage = uiState.errorMessage
-                        ) {
-                            viewModel.getData(transactionId)
+            if (ans.length < 31) {
+                val n = (31 - str1.length + str2.length)
+                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+            }
+        }
+        return ans
+    }
+
+    @Composable
+    fun BillNewScreen(
+        context: Context,
+        transactionId: String
+    ) {
+
+        val viewModel: BillViewModel =
+            viewModel(
+                factory = BillViewModelFactory(
+                    Injection.provideUserRepository(context),
+                    Injection.provideTransactionRepository(context),
+                    Injection.provideDetailTransactionRepository(context),
+                )
+            )
+
+        OnLifecycleEvent { owner, event ->
+            // do stuff on event
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    if (transactionId != "") {
+                        viewModel.getData(transactionId)
+                    }
+                }
+
+                else -> { /* other stuff */
+                }
+            }
+        }
+
+        if (!viewModel.isProsesDeleteFailed.collectAsState().value.isError) {
+            Toast.makeText(context, "Hapus Transaksi Berhasil", Toast.LENGTH_SHORT)
+                .show()
+            val activity = (context as? Activity)
+            activity?.finish()
+        } else {
+            if (viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+                Toast.makeText(
+                    context,
+                    viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+
+        if (!viewModel.isProsesUpdateStatusFailed.collectAsState().value.isError) {
+            Toast.makeText(context, "Update Status Berhasil", Toast.LENGTH_SHORT)
+                .show()
+            viewModel.getData(transactionId)
+        } else {
+            if (viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+                Toast.makeText(
+                    context,
+                    viewModel.isProsesUpdateStatusFailed.collectAsState().value.errorMessage,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+
+        Column {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.bill),
+                        color = FontWhite,
+                        fontSize = 22.sp
+                    )
+                },
+                backgroundColor = GreenDark,
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            val activity = (context as? Activity)
+                            activity?.finish()
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "",
+                            tint = Color.White
+                        )
                     }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            if (viewModel.dataInvoice.value.printerAddress == "") {
+                                Toast.makeText(
+                                    context,
+                                    "Pilih Printer guys",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                val intent = Intent(context, PrinterActivity::class.java)
+                                context.startActivity(intent)
+                            } else {
+                                printInvoice(context, viewModel.dataInvoice.value)
+                            }
 
-                    UiState.Loading -> {
-                        LoadingLayout(modifier = Modifier.fillMaxHeight())
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Print,
+                            contentDescription = "",
+                            tint = Color.White
+                        )
                     }
+                }
+            )
+            if (transactionId == "") {
+                ErrorLayout(errorMessage = "ID Transaksi tidak ada") {
+                    val activity = (context as? Activity)
+                    activity?.finish()
+                }
+            } else {
+                viewModel.stateUi.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                    when (uiState) {
+                        is UiState.Error -> {
+                            ErrorLayout(
+                                modifier = Modifier.fillMaxHeight(),
+                                errorMessage = uiState.errorMessage
+                            ) {
+                                viewModel.getData(transactionId)
+                            }
+                        }
 
-                    is UiState.Success -> {
-                        BillMainArea(viewModel, context, uiState.data, transactionId)
+                        UiState.Loading -> {
+                            LoadingLayout(modifier = Modifier.fillMaxHeight())
+                        }
+
+                        is UiState.Success -> {
+                            BillMainArea(viewModel, context, uiState.data, transactionId)
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 @Composable

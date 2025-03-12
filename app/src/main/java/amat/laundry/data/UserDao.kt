@@ -31,6 +31,9 @@ interface UserDao {
     @Query("UPDATE User SET `limit`=:newLimit, `key`=:newKey  WHERE id=:userId")
     suspend fun extendApp(userId: String, newLimit: String, newKey: String)
 
+    @Query("UPDATE User SET printerName=:printerName, printerAddress=:printerAddress  WHERE id=:userId")
+    suspend fun printerSelected(userId: String, printerName: String, printerAddress: String)
+
     //RESTORE Data
     @Query("DELETE FROM User")
     suspend fun deleteAllUser()

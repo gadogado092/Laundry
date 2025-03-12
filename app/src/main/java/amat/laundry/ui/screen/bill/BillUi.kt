@@ -9,6 +9,9 @@ data class BillUi(
     val noteTransaction: String = "",
     val footerNote: String = "",
 
+    val printerName:String = "",
+    val printerAddress:String = "",
+
     val dateTimeTransaction: String = "",
     val customerName: String = "",
     val invoiceCode: String = "",
