@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "amat.laundry"
+    namespace = "amat.laundrysederhana"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "amat.laundry"
+        applicationId = "amat.laundrysederhana"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
