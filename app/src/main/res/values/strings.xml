@@ -76,6 +76,10 @@
     <string name="title_payment_transaction">Pembayaran</string>
     <string name="title_printer">Printer</string>
     <string name="subtitle_printer">Pilih printer thermal</string>
+    <string name="title_product">Produk/Layanan</string>
+    <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
+    <string name="title_category">Kategori</string>
+    <string name="subtitle_category">Bagi produk/layanan berdasarkan kategori</string>
     <string name="title_update_cart">Update Keranjang</string>
     <string name="title_check_in">Check In</string>
     <string name="title_check_out">Check Out</string>

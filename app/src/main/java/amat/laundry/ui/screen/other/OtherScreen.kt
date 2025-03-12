@@ -36,8 +36,11 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.LocalLaundryService
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.Wash
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -60,6 +63,8 @@ fun OtherScreen(
     onClickCsExtend: (String) -> Unit,
     navigateToProfile: () -> Unit,
     navigateToPrinter: () -> Unit,
+    navigateToProduct: () -> Unit,
+    navigateToCategory: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit
 ) {
@@ -224,6 +229,26 @@ fun OtherScreen(
         Divider(
             color = GreyLight,
             thickness = 8.dp,
+        )
+
+        OtherMenuItem(
+            Icons.Default.Wash,
+            stringResource(id = R.string.title_product),
+            stringResource(id = R.string.subtitle_product),
+            modifier = Modifier
+                .clickable {
+                    navigateToProduct()
+                },
+        )
+
+        OtherMenuItem(
+            Icons.Default.Category,
+            stringResource(id = R.string.title_category),
+            stringResource(id = R.string.subtitle_category),
+            modifier = Modifier
+                .clickable {
+                    navigateToCategory()
+                },
         )
 
         OtherMenuItem(

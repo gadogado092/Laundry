@@ -143,6 +143,10 @@ class BillActivityNew : ComponentActivity() {
 //                        .show()
                 }
 
+                if (!bluetoothAdapter.isEnabled){
+                    Toast.makeText(this, "Bluetooth Tidak Aktif", Toast.LENGTH_LONG).show()
+                    return
+                }
 
                 val bluetoothSocket =
                     bluetoothDevice.createRfcommSocketToServiceRecord(applicationUUID)
@@ -152,7 +156,7 @@ class BillActivityNew : ComponentActivity() {
                     bluetoothSocket.connect()
                     if (!bluetoothSocket.isConnected) {
                         Toast.makeText(
-                            context,
+                            this,
                             "Printer Tidak Tersambung",
                             Toast.LENGTH_LONG
                         )
@@ -161,10 +165,11 @@ class BillActivityNew : ComponentActivity() {
                         return
                     }
                 } catch (e: Exception) {
+                    Log.e("ada", e.message.toString())
                     Toast.makeText(
-                        context,
-                        "Printer Socket Tidak Tersambung",
-                        Toast.LENGTH_LONG
+                        this@BillActivityNew,
+                        "Printer Socket Tidak Tersambung.",
+                        Toast.LENGTH_SHORT
                     )
                         .show()
                     bluetoothSocket.close()
@@ -175,14 +180,14 @@ class BillActivityNew : ComponentActivity() {
 
                     if (bluetoothSocket == null) {
                         Toast.makeText(
-                            context,
-                            "Printer Socket Tidak Tersambung",
-                            Toast.LENGTH_LONG
+                            this,
+                            "Printer Socket Tidak Tersambung..",
+                            Toast.LENGTH_SHORT
                         )
                             .show()
                         return
                     } else {
-                        Toast.makeText(this, "Printer Mencetak", Toast.LENGTH_LONG)
+                        Toast.makeText(this, "Printer Mencetak", Toast.LENGTH_SHORT)
                             .show()
 
                         val outputStream = bluetoothSocket.outputStream
@@ -276,7 +281,7 @@ class BillActivityNew : ComponentActivity() {
                 } catch (e: Exception) {
                     Log.e("bluetooth", e.message.toString())
                     bluetoothSocket.close()
-                    Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_LONG)
+                    Toast.makeText(this, "Error ${e.message}", Toast.LENGTH_LONG)
                         .show()
                 }
 

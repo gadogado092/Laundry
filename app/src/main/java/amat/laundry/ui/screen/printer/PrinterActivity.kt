@@ -385,9 +385,17 @@ class PrinterActivity : ComponentActivity() {
                             arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
                             1
                         )
+                    }else{
+                        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                        startActivityForResult(enableBtIntent, requestEnableBluetooth)
                     }
 //                    Toast.makeText(this, "Printer Permission Problem 1", Toast.LENGTH_LONG)
 //                        .show()
+                }
+
+                if (!bluetoothAdapter.isEnabled){
+                    Toast.makeText(this, "Bluetooth Tidak Aktif", Toast.LENGTH_LONG).show()
+                    return
                 }
 
 
@@ -399,7 +407,7 @@ class PrinterActivity : ComponentActivity() {
                     bluetoothSocket.connect()
                     if (!bluetoothSocket.isConnected){
                         Toast.makeText(
-                            context,
+                            this,
                             "Printer Tidak Tersambung",
                             Toast.LENGTH_LONG
                         )
@@ -409,7 +417,7 @@ class PrinterActivity : ComponentActivity() {
                     }
                 } catch (e: Exception) {
                     Toast.makeText(
-                        context,
+                        this,
                         "Printer Socket Tidak Tersambung",
                         Toast.LENGTH_LONG
                     )
@@ -422,7 +430,7 @@ class PrinterActivity : ComponentActivity() {
 
                     if (bluetoothSocket == null) {
                         Toast.makeText(
-                            context,
+                            this,
                             "Printer Socket Tidak Tersambung",
                             Toast.LENGTH_LONG
                         )
@@ -463,7 +471,7 @@ class PrinterActivity : ComponentActivity() {
                 } catch (e: Exception) {
                     Log.e("bluetooth", e.message.toString())
                     bluetoothSocket.close()
-                    Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_LONG)
+                    Toast.makeText(this, "Error ${e.message}", Toast.LENGTH_LONG)
                         .show()
                 }
 

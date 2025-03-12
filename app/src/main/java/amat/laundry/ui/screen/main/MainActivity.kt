@@ -128,24 +128,14 @@ fun MainScreen(
                             myViewModel.typeWa.value
                         )
                     },
-//                    navigateToBooking = {
+                    navigateToProduct = {
 //                        val intent = Intent(context, BookingActivity::class.java)
 //                        context.startActivity(intent)
-//                    },
-//                    navigateCreditTenant = {
+                    },
+                    navigateToCategory = {
 //                        val intent = Intent(context, CreditTenantActivity::class.java)
 //                        context.startActivity(intent)
-//                    },
-//                    navigateToDebtCredit = {
-//                        val intent = Intent(context, CreditDebitActivity::class.java)
-//                        context.startActivity(intent)
-//                    },
-//                    navigateToKost = {
-//                        navController.navigate(Screen.Kost.route)
-//                    },
-//                    navigateToUnitType = {
-//                        navController.navigate(Screen.UnitType.route)
-//                    },
+                    },
                     navigateToPrinter = {
                         val intent = Intent(context, PrinterActivity::class.java)
                         context.startActivity(intent)

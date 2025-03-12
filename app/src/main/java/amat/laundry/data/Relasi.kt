@@ -4,6 +4,7 @@ data class ProductCategory(
     val productId: String,
     val productName: String,
     val productPrice: Int,
+    val categoryId: String,
     val categoryName: String,
     val unit: String
 )
