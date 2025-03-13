@@ -68,11 +68,6 @@ class NewUserViewModel(
     val isAddressValid: StateFlow<ValidationResult>
         get() = _isAddressValid
 
-    private val _isKostNameValid: MutableStateFlow<ValidationResult> =
-        MutableStateFlow(ValidationResult(false, ""))
-    val isKostNameValid: StateFlow<ValidationResult>
-        get() = _isKostNameValid
-
     fun setBusinessName(value: String) {
         clearError()
         _user.value = _user.value.copy(businessName = value)
@@ -144,7 +139,6 @@ class NewUserViewModel(
         if (!_isBusinessNameValid.value.isError
             && !_isUserNumberPhoneValid.value.isError
             && !_isAddressValid.value.isError
-            && !_isKostNameValid.value.isError
         ) {
             viewModelScope.launch {
                 val userId = UUID.randomUUID()
