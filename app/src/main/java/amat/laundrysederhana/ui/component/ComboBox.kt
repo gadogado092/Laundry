@@ -50,7 +50,7 @@ fun ComboBox(
                 },
             onValueChange = {},
             enabled = false,
-            textStyle = TextStyle(color = FontBlack),
+            textStyle = TextStyle(color = FontBlack, fontSize = 18.sp),
             singleLine = singleLine,
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(

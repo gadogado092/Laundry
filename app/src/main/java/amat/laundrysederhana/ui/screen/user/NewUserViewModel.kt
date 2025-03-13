@@ -178,27 +178,119 @@ class NewUserViewModel(
                 Category(category2Id.toString(), "Satuan", "Pcs", false)
             )
 
-            val product1Id = UUID.randomUUID()
-            val product2Id = UUID.randomUUID()
-            val product3Id = UUID.randomUUID()
-
             val productList = listOf(
                 Product(
-                    product1Id.toString(),
-                    "Laundry Komplit",
-                    10000,
+                    UUID.randomUUID().toString(),
+                    "Cuci Lipat",
+                    5000,
                     category1Id.toString(),
                     false
                 ),
                 Product(
-                    product2Id.toString(),
-                    "Laundry Kilat Komplit",
-                    15000,
+                    UUID.randomUUID().toString(),
+                    "Cuci Lipat Expres",
+                    7000,
                     category1Id.toString(),
                     false
                 ),
-                Product(product3Id.toString(), "Karpet", 40000, category2Id.toString(), false),
-                Product(product3Id.toString(), "Bed Cover", 30000, category2Id.toString(), false)
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Cuci Setrika",
+                    7000,
+                    category1Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Cuci Setrika Expres",
+                    9000,
+                    category1Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Bed Cover Besar",
+                    40000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Bed Cover Kecil",
+                    35000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Horden Tebal/Besar",
+                    35000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Horden Sedang",
+                    20000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Horden Kecil",
+                    10000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Boneka Besar",
+                    70000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Boneka Kecil",
+                    50000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Selimut Besar",
+                    25000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Selimut Kecil",
+                    10000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Seprei Tebal",
+                    30000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Seprei Sedang",
+                    20000,
+                    category2Id.toString(),
+                    false
+                ),
+                Product(
+                    UUID.randomUUID().toString(),
+                    "Seprei Kecil",
+                    10000,
+                    category2Id.toString(),
+                    false
+                )
             )
 
             val statusList = listOf(

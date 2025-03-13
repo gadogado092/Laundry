@@ -15,6 +15,13 @@ interface ProductDao {
     suspend fun insert(product: Product)
 
     @Query(
+        "UPDATE Product " +
+                "SET isDelete=1 " +
+                "WHERE id=:id"
+    )
+    suspend fun deleteProduct(id: String)
+
+    @Query(
         "SELECT Product.id AS productId, Product.name AS productName, Product.price AS productPrice, " +
                 "Category.id AS categoryId, Category.name AS categoryName, Category.unit AS unit " +
                 "FROM Product " +

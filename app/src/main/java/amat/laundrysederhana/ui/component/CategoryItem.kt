@@ -58,7 +58,7 @@ fun CategoryItem(
         }
         Divider(
             color = GreyLight,
-            thickness = 1.dp
+            thickness = 2.dp
         )
     }
 }

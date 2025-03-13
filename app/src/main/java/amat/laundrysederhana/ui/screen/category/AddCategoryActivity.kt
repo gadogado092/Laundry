@@ -97,7 +97,7 @@ fun AddCategoryScreen(
     OnLifecycleEvent { owner, event ->
         // do stuff on event
         when (event) {
-            Lifecycle.Event.ON_RESUME -> {
+            Lifecycle.Event.ON_CREATE -> {
                 viewModel.getCategory(id)
             }
 

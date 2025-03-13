@@ -14,6 +14,10 @@ class ProductRepository(private val productDao: ProductDao) {
         productDao.update(product)
     }
 
+    suspend fun deleteProduct(id: String){
+        productDao.deleteProduct(id)
+    }
+
     suspend fun getProductList(categoryId: String): List<ProductCategory> {
         return productDao.getProductList(categoryId)
     }

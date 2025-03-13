@@ -46,12 +46,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowCircleRight
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -213,7 +215,8 @@ fun AddTransactionScreen(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     viewModel.stateUiCart.collectAsState(initial = UiState.Loading).value.let { uiState ->
@@ -236,13 +239,7 @@ fun AddTransactionScreen(
                                     color = Color.White,
                                     fontSize = 16.sp
                                 )
-                                Row {
-                                    Text(
-                                        uiState.data.totalPrice,
-                                        color = Color.White,
-                                        fontSize = 16.sp
-                                    )
-                                    Spacer(Modifier.width(4.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Image(
                                         imageVector = Icons.Default.ShoppingBasket,
                                         contentDescription = "",
@@ -250,8 +247,24 @@ fun AddTransactionScreen(
                                             Color.White
                                         ),
                                         modifier = Modifier
-                                            .size(20.dp)
-                                            .padding(bottom = 4.dp)
+                                            .size(24.dp)
+                                            .padding(bottom = 2.dp)
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        uiState.data.totalPrice,
+                                        color = Color.White,
+                                        fontSize = 16.sp
+                                    )
+                                    Spacer(Modifier.width(16.dp))
+                                    Image(
+                                        imageVector = Icons.Default.ArrowCircleRight,
+                                        contentDescription = "",
+                                        colorFilter = ColorFilter.tint(
+                                            Color.White
+                                        ),
+                                        modifier = Modifier
+                                            .size(24.dp)
                                     )
                                 }
                             }
