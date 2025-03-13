@@ -18,6 +18,10 @@ class ProductRepository(private val productDao: ProductDao) {
         return productDao.getProductList(categoryId)
     }
 
+    suspend fun getProductList(): List<ProductCategory> {
+        return productDao.getProductList()
+    }
+
     suspend fun getProductCategoryDetail(productId: String): ProductCategory {
         return productDao.getProductCategoryDetail(productId)
     }

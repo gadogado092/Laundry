@@ -2,7 +2,6 @@ package amat.laundrysederhana.ui.screen.category
 
 import amat.laundrysederhana.R
 import amat.laundrysederhana.data.Category
-import amat.laundrysederhana.data.ProductCart
 import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
@@ -10,11 +9,6 @@ import amat.laundrysederhana.ui.component.CategoryItem
 import amat.laundrysederhana.ui.component.CenterLayout
 import amat.laundrysederhana.ui.component.ErrorLayout
 import amat.laundrysederhana.ui.component.LoadingLayout
-import amat.laundrysederhana.ui.screen.product.AddProductActivity
-import amat.laundrysederhana.ui.screen.transaction.AddCartViewModel
-import amat.laundrysederhana.ui.screen.transaction.AddCartViewModelFactory
-import amat.laundrysederhana.ui.screen.transaction.AddTransactionActivity
-import amat.laundrysederhana.ui.screen.transaction.FormAddCart
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontWhite
 import amat.laundrysederhana.ui.theme.GreenDark

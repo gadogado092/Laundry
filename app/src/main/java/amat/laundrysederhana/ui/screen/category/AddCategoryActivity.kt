@@ -1,8 +1,6 @@
 package amat.laundrysederhana.ui.screen.category
 
 import amat.laundrysederhana.R
-import amat.laundrysederhana.data.Category
-import amat.laundrysederhana.data.ProductCart
 import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState

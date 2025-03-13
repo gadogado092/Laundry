@@ -29,6 +29,16 @@ interface ProductDao {
                 "Category.id AS categoryId, Category.name AS categoryName, Category.unit AS unit " +
                 "FROM Product " +
                 "LEFT JOIN (SELECT Category.id, Category.name, Category.unit FROM Category) AS Category ON Product.categoryId = Category.id " +
+                "WHERE Product.isDelete=0 " +
+                "ORDER BY Product.name ASC"
+    )
+    suspend fun getProductList(): List<ProductCategory>
+
+    @Query(
+        "SELECT Product.id AS productId, Product.name AS productName, Product.price AS productPrice, " +
+                "Category.id AS categoryId, Category.name AS categoryName, Category.unit AS unit " +
+                "FROM Product " +
+                "LEFT JOIN (SELECT Category.id, Category.name, Category.unit FROM Category) AS Category ON Product.categoryId = Category.id " +
                 "WHERE Product.isDelete=0 AND Product.id=:productId " +
                 "ORDER BY Product.name ASC"
     )
