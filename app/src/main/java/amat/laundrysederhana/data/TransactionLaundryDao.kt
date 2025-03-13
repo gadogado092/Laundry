@@ -22,6 +22,14 @@ interface TransactionLaundryDao {
     )
     suspend fun getTransaction(transactionId: String): TransactionLaundry
 
+    @Query(
+        "SELECT * " +
+                "FROM TransactionLaundry WHERE isDelete=0 " +
+                "AND TransactionLaundry.createAt >= :startDate " +
+                "AND TransactionLaundry.createAt <= :endDate ORDER BY TransactionLaundry.createAt DESC"
+    )
+    suspend fun getTransaction(startDate: String, endDate: String): List<TransactionLaundry>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetailTransaction(detailTransaction: List<DetailTransaction>)
 
