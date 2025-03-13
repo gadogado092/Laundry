@@ -5,9 +5,11 @@ import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.sendWhatsApp
 import amat.laundrysederhana.ui.navigation.NavigationItem
 import amat.laundrysederhana.ui.navigation.Screen
+import amat.laundrysederhana.ui.screen.category.CategoryActivity
 import amat.laundrysederhana.ui.screen.home.HomeScreen
 import amat.laundrysederhana.ui.screen.other.OtherScreen
 import amat.laundrysederhana.ui.screen.printer.PrinterActivity
+import amat.laundrysederhana.ui.screen.product.ProductActivity
 import amat.laundrysederhana.ui.screen.transaction.TransactionScreen
 import amat.laundrysederhana.ui.screen.user.UpdateUserActivity
 import amat.laundrysederhana.ui.theme.FontWhite
@@ -129,12 +131,12 @@ fun MainScreen(
                         )
                     },
                     navigateToProduct = {
-//                        val intent = Intent(context, BookingActivity::class.java)
-//                        context.startActivity(intent)
+                        val intent = Intent(context, ProductActivity::class.java)
+                        context.startActivity(intent)
                     },
                     navigateToCategory = {
-//                        val intent = Intent(context, CreditTenantActivity::class.java)
-//                        context.startActivity(intent)
+                        val intent = Intent(context, CategoryActivity::class.java)
+                        context.startActivity(intent)
                     },
                     navigateToPrinter = {
                         val intent = Intent(context, PrinterActivity::class.java)

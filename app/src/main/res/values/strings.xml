@@ -79,6 +79,8 @@
     <string name="title_product">Produk/Layanan</string>
     <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
     <string name="title_category">Kategori</string>
+    <string name="add_category">Tambah Kategori</string>
+    <string name="update_category">Update Kategori</string>
     <string name="subtitle_category">Bagi produk/layanan berdasarkan kategori</string>
     <string name="title_update_cart">Update Keranjang</string>
     <string name="title_check_in">Check In</string>

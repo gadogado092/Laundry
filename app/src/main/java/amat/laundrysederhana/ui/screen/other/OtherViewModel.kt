@@ -66,7 +66,7 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
 
     }
 
-    fun setNewLimit() {
+    private fun setNewLimit() {
         clearError()
         val day = getLimitDay(stateUi.value.limit).toInt()
         if (day < 0) {
@@ -111,7 +111,7 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
         _stateUi.value = stateUi.value.copy(extendPassword = value)
     }
 
-    fun refreshUI() {
+    private fun refreshUI() {
         setNewLimit()
     }
 
@@ -154,7 +154,7 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
 
     }
 
-    fun clearError() {
+    private fun clearError() {
         _isProsesSuccess.value = ValidationResult(true, "")
     }
 

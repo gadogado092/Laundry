@@ -24,4 +24,11 @@ interface CategoryDao {
     @Insert
     suspend fun insert(category: Category)
 
+    @Query(
+        "UPDATE Category " +
+                "SET isDelete=1 " +
+                "WHERE id=:id"
+    )
+    suspend fun deleteCategory(id: String)
+
 }

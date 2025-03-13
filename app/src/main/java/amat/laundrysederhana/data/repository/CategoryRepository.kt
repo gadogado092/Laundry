@@ -26,6 +26,10 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
         categoryDao.update(category)
     }
 
+    suspend fun deleteCategory(id: String){
+        categoryDao.deleteCategory(id)
+    }
+
 
     companion object {
         @Volatile

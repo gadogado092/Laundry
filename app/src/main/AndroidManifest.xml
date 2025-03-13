@@ -96,6 +96,26 @@
             android:exported="true"
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.category.CategoryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.category.AddCategoryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.product.ProductActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screen.product.AddProductActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
