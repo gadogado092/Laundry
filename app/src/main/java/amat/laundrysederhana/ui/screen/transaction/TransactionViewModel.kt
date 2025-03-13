@@ -69,7 +69,7 @@ class TransactionViewModel(private val transactionRepository: TransactionReposit
             startDate = dateDialogToRoomFormat(startDate),
             endDate = dateDialogToRoomFormat(endDate)
         )
-        //todo get data
+        getTransaction()
     }
 
 }
