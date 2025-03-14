@@ -16,7 +16,7 @@ interface DetailTransactionDao {
     @Query(
         "SELECT SUM(totalPrice) AS total " +
                 "FROM DetailTransaction " +
-                "WHERE categoryId=:categoryId " +
+                "WHERE isDelete=0 AND categoryId=:categoryId " +
                 "AND DetailTransaction.createAt >= :startDate " +
                 "AND DetailTransaction.createAt <= :endDate"
     )
@@ -29,7 +29,7 @@ interface DetailTransactionDao {
     @Query(
         "SELECT SUM(qty) AS total " +
                 "FROM DetailTransaction " +
-                "WHERE categoryId=:categoryId " +
+                "WHERE isDelete=0 AND categoryId=:categoryId " +
                 "AND DetailTransaction.createAt >= :startDate " +
                 "AND DetailTransaction.createAt <= :endDate"
     )

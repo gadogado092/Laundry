@@ -1,14 +1,20 @@
 package amat.laundrysederhana.ui.screen.home
 
+import amat.laundrysederhana.currencyFormatterStringViewZero
+import amat.laundrysederhana.dateToDisplayMidFormat
+import amat.laundrysederhana.dateToDisplayMonthYear
 import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.ErrorLayout
+import amat.laundrysederhana.ui.component.HomeItem
 import amat.laundrysederhana.ui.component.LoadingLayout
 import amat.laundrysederhana.ui.screen.transaction.AddTransactionActivity
+import amat.laundrysederhana.ui.theme.Blue
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontWhite
 import amat.laundrysederhana.ui.theme.GreenDark
+import amat.laundrysederhana.ui.theme.LightGreen
 import amat.laundrysederhana.ui.theme.TealGreen
 import android.content.Context
 import android.content.Intent
@@ -26,6 +32,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -157,7 +164,7 @@ fun HomeScreen(
 
                     is UiState.Success -> {
                         ListTransactionView(
-                            uiState.data
+                            uiState.data, viewModel
                         )
                     }
                 }
@@ -185,35 +192,72 @@ fun HomeScreen(
 }
 
 @Composable
-fun ListTransactionView(data: HomeList) {
+fun ListTransactionView(data: HomeList, viewModel: HomeViewModel) {
 
     LazyVerticalGrid(
-        contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp, start = 16.dp, end = 16.dp),
+        contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp, start = 8.dp, end = 8.dp),
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item(span = { GridItemSpan(2) }) {
-            Text("Transaksi Hari Ini")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    "Transaksi Hari Ini", style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    )
+                )
+                Text(
+                    dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.currentDate),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    )
+                )
+            }
+
         }
         items(data.listToday) { item ->
-            Column {
-                Text(item.categoryName)
-                Text(item.categoryUnit)
-                Text(item.totalQty)
-                Text(item.totalPrice)
-            }
+            HomeItem(
+                categoryName = item.categoryName,
+                categoryUnit = item.categoryUnit,
+                totalQty = item.totalQty,
+                totalPrice = currencyFormatterStringViewZero(item.totalPrice)
+            )
         }
         item(span = { GridItemSpan(2) }) {
-            Text("Transaksi Bulan Ini")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    "Transaksi Bulan Ini", style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    )
+                )
+                Text(
+                    dateToDisplayMonthYear(viewModel.stateUi.collectAsState().value.startDateMonth),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    )
+                )
+            }
         }
         items(data.listMonth) { item ->
-            Column(Modifier.height(300.dp)) {
-                Text(item.categoryName)
-                Text(item.categoryUnit)
-                Text(item.totalQty)
-                Text(item.totalPrice)
-            }
+            HomeItem(
+                categoryName = item.categoryName,
+                categoryUnit = item.categoryUnit,
+                totalQty = item.totalQty,
+                totalPrice = currencyFormatterStringViewZero(item.totalPrice)
+            )
         }
     }
 }

@@ -168,6 +168,19 @@ fun dateToDisplayMidFormat(dateString: String): String {
 }
 
 @SuppressLint("SimpleDateFormat")
+fun dateToDisplayMonthYear(dateString: String): String {
+    return try {
+        val fmt = SimpleDateFormat("yyyy-MM-dd")
+        val date = fmt.parse(dateString)
+
+        val fmtOut = SimpleDateFormat("MMMM yyyy")
+        fmtOut.format(date)
+    } catch (e: Exception) {
+        dateString
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
 fun dateToDisplayDayMonth(dateString: String): String {
     val fmt = SimpleDateFormat("yyyy-MM-dd")
     val date = fmt.parse(dateString)
