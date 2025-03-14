@@ -109,6 +109,13 @@ class BillActivityNew : ComponentActivity() {
         if (dataInvoice.printerAddress == "") {
             Toast.makeText(this, "Pilih Printernya Gan", Toast.LENGTH_LONG).show()
         } else {
+            Toast.makeText(
+                this,
+                "Menghubungkan Ke Printer",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+
             val bluetoothManager =
                 context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             val bluetoothAdapter = bluetoothManager.adapter

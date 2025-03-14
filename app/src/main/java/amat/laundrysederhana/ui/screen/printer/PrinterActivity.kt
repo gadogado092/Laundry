@@ -230,8 +230,28 @@ class PrinterActivity : ComponentActivity() {
                 .padding(8.dp)
         ) {
             Text(
-                "Nama Printer Yang Digunakan", style = TextStyle(
+                "Tips Koneksi Ke Printer", style = TextStyle(
                     fontSize = 14.sp,
+                    color = FontBlack,
+                )
+            )
+            Text(
+                "*Aktifkan Printer Thermal" +
+                        "\n*Aktifkan Bluetooth Hp" +
+                        "\n*Pairing Hp Ke Printer Thermal" +
+                        "\n*Berikan Permission Bluetooth" +
+                        "\n*Scan Pairing List" +
+                        "\n*Pilih Printer Pada History",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = FontBlack,
+                ),
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Printer Yang Digunakan Saat Ini", style = TextStyle(
+                    fontSize = 16.sp,
                     color = FontGrey,
                 )
             )
@@ -356,6 +376,13 @@ class PrinterActivity : ComponentActivity() {
         if (data.printerAddress == "") {
             Toast.makeText(this, "Pilih Printernya Gan", Toast.LENGTH_LONG).show()
         } else {
+            Toast.makeText(
+                this,
+                "Menghubungkan Ke Printer",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+
             val bluetoothManager =
                 context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             val bluetoothAdapter = bluetoothManager.adapter
@@ -385,7 +412,7 @@ class PrinterActivity : ComponentActivity() {
                             arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
                             1
                         )
-                    }else{
+                    } else {
                         val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                         startActivityForResult(enableBtIntent, requestEnableBluetooth)
                     }
@@ -393,7 +420,7 @@ class PrinterActivity : ComponentActivity() {
 //                        .show()
                 }
 
-                if (!bluetoothAdapter.isEnabled){
+                if (!bluetoothAdapter.isEnabled) {
                     Toast.makeText(this, "Bluetooth Tidak Aktif", Toast.LENGTH_LONG).show()
                     return
                 }
@@ -405,7 +432,7 @@ class PrinterActivity : ComponentActivity() {
                 //check koneksi
                 try {
                     bluetoothSocket.connect()
-                    if (!bluetoothSocket.isConnected){
+                    if (!bluetoothSocket.isConnected) {
                         Toast.makeText(
                             this,
                             "Printer Tidak Tersambung",
@@ -418,7 +445,7 @@ class PrinterActivity : ComponentActivity() {
                 } catch (e: Exception) {
                     Toast.makeText(
                         this,
-                        "Printer Socket Tidak Tersambung",
+                        "Printer Socket Tidak Tersambung" + e.message,
                         Toast.LENGTH_LONG
                     )
                         .show()
