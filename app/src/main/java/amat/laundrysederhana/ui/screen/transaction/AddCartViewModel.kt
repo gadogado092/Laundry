@@ -55,7 +55,8 @@ class AddCartViewModel(
                     unit = product.unit,
                     qty = 0F,
                     note = "",
-                    productTotalPrice = ""
+                    productTotalPrice = "",
+                    categoryId = product.categoryId
                 )
 
                 val cart = cartRepository.getCartDetail(productId)

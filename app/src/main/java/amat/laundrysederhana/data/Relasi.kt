@@ -21,6 +21,7 @@ data class ProductCart(
     val productName: String,
     val productPrice: Int,
     val productTotalPrice: String,
+    val categoryId: String,
     val categoryName: String,
     val unit: String,
     val qty: Float,

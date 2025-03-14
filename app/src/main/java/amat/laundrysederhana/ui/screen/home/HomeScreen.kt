@@ -15,6 +15,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,7 +54,8 @@ fun HomeScreen(
         viewModel(
             factory = HomeViewModelFactory(
                 Injection.provideUserRepository(context),
-                Injection.provideCategoryRepository(context)
+                Injection.provideCategoryRepository(context),
+                Injection.provideDetailTransactionRepository(context)
             )
         )
 
@@ -104,7 +106,7 @@ fun HomeScreen(
                                             radius = this.size.maxDimension
                                         )
                                     },
-                                text = "P",
+                                text = uiState.data.businessName.substring(0, 1),
                                 color = FontWhite,
                                 style = TextStyle(fontSize = 24.sp)
                             )
@@ -186,6 +188,7 @@ fun HomeScreen(
 fun ListTransactionView(data: HomeList) {
 
     LazyVerticalGrid(
+        contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp, start = 16.dp, end = 16.dp),
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -194,16 +197,22 @@ fun ListTransactionView(data: HomeList) {
             Text("Transaksi Hari Ini")
         }
         items(data.listToday) { item ->
-            Column(Modifier.height(400.dp)) {
+            Column {
                 Text(item.categoryName)
+                Text(item.categoryUnit)
+                Text(item.totalQty)
+                Text(item.totalPrice)
             }
         }
         item(span = { GridItemSpan(2) }) {
             Text("Transaksi Bulan Ini")
         }
         items(data.listMonth) { item ->
-            Column(Modifier.height(200.dp)) {
+            Column(Modifier.height(300.dp)) {
                 Text(item.categoryName)
+                Text(item.categoryUnit)
+                Text(item.totalQty)
+                Text(item.totalPrice)
             }
         }
     }

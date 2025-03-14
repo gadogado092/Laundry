@@ -3,7 +3,10 @@ package amat.laundrysederhana.ui.screen.home
 import amat.laundrysederhana.calenderSelect
 import amat.laundrysederhana.data.User
 import amat.laundrysederhana.data.repository.CategoryRepository
+import amat.laundrysederhana.data.repository.DetailTransactionRepository
 import amat.laundrysederhana.data.repository.UserRepository
+import amat.laundrysederhana.dateToEndTime
+import amat.laundrysederhana.dateToStartTime
 import amat.laundrysederhana.ui.common.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +19,8 @@ import java.util.Date
 
 class HomeViewModel(
     private val userRepository: UserRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val detailTransactionRepository: DetailTransactionRepository
 ) : ViewModel() {
 
     private val _stateUser: MutableStateFlow<UiState<User>> =
@@ -77,19 +81,54 @@ class HomeViewModel(
                 val containListToday = mutableListOf<HomeItem>()
                 val containListMonth = mutableListOf<HomeItem>()
                 dataCategory.forEach { item ->
-                    //todo get total price and total qty
+                    //get total price and total qty today
+                    val totalPrice = detailTransactionRepository.getTotalPriceDetailTransaction(
+                        item.id, dateToStartTime(stateUi.value.currentDate),
+                        dateToEndTime(stateUi.value.currentDate)
+                    )
+                    if (totalPrice.total == null) {
+                        totalPrice.total = "0"
+                    }
+                    val totalQty = detailTransactionRepository.getTotalQtyDetailTransaction(
+                        item.id, dateToStartTime(stateUi.value.currentDate),
+                        dateToEndTime(stateUi.value.currentDate)
+                    )
+                    if (totalQty.total == null) {
+                        totalQty.total = "0"
+                    }
+
                     containListToday.add(
                         HomeItem(
                             categoryName = item.name,
-                            categoryUnit = item.unit
+                            categoryUnit = item.unit,
+                            totalPrice = totalPrice.total!!,
+                            totalQty = totalQty.total!!
                         )
                     )
 
-                    //todo get total price and total qty
+                    //get total price and total month
+                    //get total price and total qty today
+                    val totalPriceMonth =
+                        detailTransactionRepository.getTotalPriceDetailTransaction(
+                            item.id, dateToStartTime(stateUi.value.startDateMonth),
+                            dateToEndTime(stateUi.value.endDateMonth)
+                        )
+                    if (totalPriceMonth.total == null) {
+                        totalPriceMonth.total = "0"
+                    }
+                    val totalQtyMonth = detailTransactionRepository.getTotalQtyDetailTransaction(
+                        item.id, dateToStartTime(stateUi.value.startDateMonth),
+                        dateToEndTime(stateUi.value.endDateMonth)
+                    )
+                    if (totalQtyMonth.total == null) {
+                        totalQtyMonth.total = "0"
+                    }
                     containListMonth.add(
                         HomeItem(
                             categoryName = item.name,
-                            categoryUnit = item.unit
+                            categoryUnit = item.unit,
+                            totalPrice = totalPriceMonth.total!!,
+                            totalQty = totalQtyMonth.total!!
                         )
                     )
 
@@ -117,14 +156,15 @@ class HomeViewModel(
 
 class HomeViewModelFactory(
     private val repository: UserRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val detailTransactionRepository: DetailTransactionRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(repository, categoryRepository) as T
+            return HomeViewModel(repository, categoryRepository, detailTransactionRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
