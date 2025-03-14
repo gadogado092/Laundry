@@ -75,7 +75,7 @@ fun OtherScreen(
         // do stuff on event
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                viewModel.getKostInit()
+                viewModel.getUserInit()
             }
 
             else -> {}
@@ -86,7 +86,7 @@ fun OtherScreen(
     if (!viewModel.isProsesSuccess.collectAsState().value.isError) {
         Toast.makeText(context, "Perpanjang Berhasil Dilakukan", Toast.LENGTH_SHORT)
             .show()
-        viewModel.getKostInit()
+        viewModel.getUserInit()
     } else {
         if (viewModel.isProsesSuccess.collectAsState().value.errorMessage.isNotEmpty()) {
             Toast.makeText(

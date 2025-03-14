@@ -47,7 +47,7 @@ class OtherViewModel(private val repository: UserRepository) : ViewModel() {
     val isProsesSuccess: StateFlow<ValidationResult>
         get() = _isProsesSuccess
 
-    fun getKostInit() {
+    fun getUserInit() {
         clearError()
         viewModelScope.launch {
             _stateUser.value = UiState.Loading

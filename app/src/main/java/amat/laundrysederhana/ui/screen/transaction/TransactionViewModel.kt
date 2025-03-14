@@ -4,6 +4,8 @@ import amat.laundrysederhana.calenderSelect
 import amat.laundrysederhana.data.TransactionLaundry
 import amat.laundrysederhana.data.repository.TransactionRepository
 import amat.laundrysederhana.dateDialogToRoomFormat
+import amat.laundrysederhana.dateToEndTime
+import amat.laundrysederhana.dateToStartTime
 import amat.laundrysederhana.ui.common.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -46,8 +48,8 @@ class TransactionViewModel(private val transactionRepository: TransactionReposit
         viewModelScope.launch {
             try {
                 val data = transactionRepository.getTransaction(
-                    "${stateUi.value.startDate} 00:00:00",
-                    "${stateUi.value.endDate} 23:59:59"
+                    dateToStartTime(stateUi.value.startDate),
+                    dateToEndTime(stateUi.value.endDate)
                 )
                 _stateListTransaction.value = UiState.Success(data)
             } catch (e: Exception) {

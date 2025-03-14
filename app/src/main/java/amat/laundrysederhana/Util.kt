@@ -176,6 +176,14 @@ fun dateToDisplayDayMonth(dateString: String): String {
     return fmtOut.format(date)
 }
 
+fun dateToStartTime(value: String): String {
+    return "$value 00:00:00"
+}
+
+fun dateToEndTime(value: String): String {
+    return "$value 23:59:59"
+}
+
 fun currencyFormatterStringViewZero(num: String): String {
     val numClean = num.replace(".", "")
     if (numClean == "0" || numClean == "" || numClean == "null" || numClean.isEmpty()) {
