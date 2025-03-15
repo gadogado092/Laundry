@@ -262,7 +262,6 @@ class PrinterActivity : ComponentActivity() {
                     color = FontBlack,
                 )
             )
-            val coroutineScope = rememberCoroutineScope()
 
             Button(
                 onClick = {
@@ -270,9 +269,7 @@ class PrinterActivity : ComponentActivity() {
                         Toast.makeText(context, "Pilih Printer Pada List", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        coroutineScope.launch {
-                            testPrint(context, data)
-                        }
+                        testPrint(context, data)
                     }
                 },
                 modifier = Modifier
