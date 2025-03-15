@@ -1,7 +1,6 @@
 package amat.laundrysederhana.ui.component
 
 import amat.laundrysederhana.ui.theme.Blue
-import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontWhite
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

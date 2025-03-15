@@ -3,10 +3,13 @@ package amat.laundrysederhana.ui.screen.transaction
 import amat.laundrysederhana.calenderSelect
 import amat.laundrysederhana.data.TransactionLaundry
 import amat.laundrysederhana.data.repository.TransactionRepository
+import amat.laundrysederhana.data.repository.UserRepository
 import amat.laundrysederhana.dateDialogToRoomFormat
 import amat.laundrysederhana.dateToEndTime
 import amat.laundrysederhana.dateToStartTime
+import amat.laundrysederhana.getLimitDay
 import amat.laundrysederhana.ui.common.UiState
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -16,7 +19,10 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-class TransactionViewModel(private val transactionRepository: TransactionRepository) : ViewModel() {
+class TransactionViewModel(
+    private val transactionRepository: TransactionRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val _stateUi: MutableStateFlow<TransactionUi> =
         MutableStateFlow(TransactionUi())
@@ -27,6 +33,8 @@ class TransactionViewModel(private val transactionRepository: TransactionReposit
         MutableStateFlow(UiState.Loading)
     val stateListTransaction: StateFlow<UiState<List<TransactionLaundry>>>
         get() = _stateListTransaction
+
+    private var _limitDay = ""
 
 
     init {
@@ -40,6 +48,19 @@ class TransactionViewModel(private val transactionRepository: TransactionReposit
         calendarStart.add(Calendar.DAY_OF_MONTH, -7)
 
         setInitDate(calendarStart.time, calendarEnd.time)
+
+        getUserInit()
+    }
+
+    private fun getUserInit() {
+        try {
+            viewModelScope.launch {
+                val data = userRepository.getUser()
+                _limitDay = data[0].limit
+            }
+        } catch (e: Exception) {
+            Log.e("transaction", e.message.toString())
+        }
 
     }
 
@@ -74,10 +95,20 @@ class TransactionViewModel(private val transactionRepository: TransactionReposit
         getTransaction()
     }
 
+    fun checkLimitApp(): Boolean {
+        return try {
+            val day = getLimitDay(_limitDay)
+            day.toInt() < 0
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }
 
 class TransactionViewModelFactory(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val userRepository: UserRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -85,7 +116,7 @@ class TransactionViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
             return TransactionViewModel(
-                transactionRepository
+                transactionRepository, userRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

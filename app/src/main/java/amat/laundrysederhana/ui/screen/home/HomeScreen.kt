@@ -1,5 +1,6 @@
 package amat.laundrysederhana.ui.screen.home
 
+import amat.laundrysederhana.R
 import amat.laundrysederhana.currencyFormatterStringViewZero
 import amat.laundrysederhana.dateToDisplayMidFormat
 import amat.laundrysederhana.dateToDisplayMonthYear
@@ -10,14 +11,14 @@ import amat.laundrysederhana.ui.component.ErrorLayout
 import amat.laundrysederhana.ui.component.HomeItem
 import amat.laundrysederhana.ui.component.LoadingLayout
 import amat.laundrysederhana.ui.screen.transaction.AddTransactionActivity
-import amat.laundrysederhana.ui.theme.Blue
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontWhite
 import amat.laundrysederhana.ui.theme.GreenDark
-import amat.laundrysederhana.ui.theme.LightGreen
 import amat.laundrysederhana.ui.theme.TealGreen
 import android.content.Context
 import android.content.Intent
+import android.widget.Button
+import android.widget.TextView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,14 +26,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -51,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 @Composable
 fun HomeScreen(
@@ -172,8 +172,12 @@ fun HomeScreen(
 
             FloatingActionButton(
                 onClick = {
-                    val intent = Intent(context, AddTransactionActivity::class.java)
-                    context.startActivity(intent)
+                    if (viewModel.checkLimitApp()) {
+                        showBottomLimitApp(context)
+                    } else {
+                        val intent = Intent(context, AddTransactionActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -260,4 +264,21 @@ fun ListTransactionView(data: HomeList, viewModel: HomeViewModel) {
             )
         }
     }
+}
+
+private fun showBottomLimitApp(
+    context: Context
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    message?.text = context.getString(R.string.info_limit)
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+    }
+    bottomSheetDialog.show()
+
 }

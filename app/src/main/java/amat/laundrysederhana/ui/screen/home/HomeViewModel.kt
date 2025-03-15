@@ -7,6 +7,7 @@ import amat.laundrysederhana.data.repository.DetailTransactionRepository
 import amat.laundrysederhana.data.repository.UserRepository
 import amat.laundrysederhana.dateToEndTime
 import amat.laundrysederhana.dateToStartTime
+import amat.laundrysederhana.getLimitDay
 import amat.laundrysederhana.ui.common.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +28,8 @@ class HomeViewModel(
         MutableStateFlow(UiState.Loading)
     val stateUser: StateFlow<UiState<User>>
         get() = _stateUser
+
+    private var _limitDay = ""
 
     private val _stateList: MutableStateFlow<UiState<HomeList>> =
         MutableStateFlow(UiState.Loading)
@@ -64,6 +67,7 @@ class HomeViewModel(
             viewModelScope.launch {
                 _stateUser.value = UiState.Loading
                 val data = userRepository.getUser()
+                _limitDay = data[0].limit
                 _stateUser.value = UiState.Success(data[0])
             }
         } catch (e: Exception) {
@@ -149,6 +153,15 @@ class HomeViewModel(
             endDateMonth = calenderSelect(endDateMonth)
         )
 
+    }
+
+    fun checkLimitApp(): Boolean {
+        return try {
+            val day = getLimitDay(_limitDay)
+            day.toInt() < 0
+        } catch (e: Exception) {
+            false
+        }
     }
 
 

@@ -24,7 +24,9 @@ import amat.laundrysederhana.ui.theme.TealGreen
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.widget.Button
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -54,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 @Composable
 fun TransactionScreen(
@@ -64,7 +67,8 @@ fun TransactionScreen(
     val viewModel: TransactionViewModel =
         viewModel(
             factory = TransactionViewModelFactory(
-                Injection.provideTransactionRepository(context)
+                Injection.provideTransactionRepository(context),
+                Injection.provideUserRepository(context)
             )
         )
 
@@ -145,8 +149,12 @@ fun TransactionScreen(
 
             FloatingActionButton(
                 onClick = {
-                    val intent = Intent(context, AddTransactionActivity::class.java)
-                    context.startActivity(intent)
+                    if (viewModel.checkLimitApp()) {
+                        showBottomLimitApp(context)
+                    } else {
+                        val intent = Intent(context, AddTransactionActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -239,4 +247,21 @@ fun showDatePickerEnd(context: Context, viewModel: TransactionViewModel, dateSta
     )
     mDatePickerDialog.setMessage("Pilih Tanggal Akhir")
     mDatePickerDialog.show()
+}
+
+private fun showBottomLimitApp(
+    context: Context
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    message?.text = context.getString(R.string.info_limit)
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+    }
+    bottomSheetDialog.show()
+
 }
