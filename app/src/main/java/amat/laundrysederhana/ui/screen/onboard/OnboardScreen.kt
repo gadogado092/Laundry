@@ -79,6 +79,7 @@ fun OnboardScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .testTag(TAG_ONBOARD_SCREEN)
     ) {
         OnBoardImageView(
@@ -133,20 +134,21 @@ fun OnBoardImageView(modifier: Modifier = Modifier, currentPage: OnboardPage) {
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillWidth
         )
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .align(Alignment.BottomCenter)
-            .graphicsLayer {
-                // Apply alpha to create the fading effect
-                alpha = 0.6f
-            }
-            .background(
-                Brush.verticalGradient(
-                    colorStops = arrayOf(
-                        Pair(0.8f, Color.Transparent), Pair(1f, Color.White)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.BottomCenter)
+                .graphicsLayer {
+                    // Apply alpha to create the fading effect
+                    alpha = 0.6f
+                }
+                .background(
+                    Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            Pair(0.8f, Color.Transparent), Pair(1f, Color.White)
+                        )
                     )
-                )
-            ))
+                ))
     }
 }
 
@@ -155,7 +157,8 @@ fun OnBoardDetails(
     modifier: Modifier = Modifier, currentPage: OnboardPage
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = currentPage.title,

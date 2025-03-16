@@ -12,6 +12,8 @@ import android.os.Build
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.ui.graphics.Color
+import java.io.IOException
+import java.io.OutputStream
 import java.io.Serializable
 import java.math.BigInteger
 import java.net.URLEncoder
@@ -452,3 +454,40 @@ fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz:
         activity.intent.getSerializableExtra(name) as T
 }
 
+
+fun printText(msg: String, outputStream: OutputStream) {
+    try {
+        // Print normal text
+        outputStream.write(msg.toByteArray())
+        val LF = byteArrayOf(0x0A)
+        outputStream.write(LF)
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+}
+
+fun leftRightAlign(str1: String, str2: String, ukuranStruk: String): String {
+    var ans = str1 + str2
+    if (ukuranStruk == "3") {
+        if (ans.length < 31) {
+            val n = (31 - str1.length + str2.length)
+            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+        }
+    } else if (ukuranStruk == "2") {
+        if (ans.length < 32) {
+            val n = (20 - str1.length + str2.length)
+            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+        }
+    } else if (ukuranStruk == "1") {
+        if (ans.length < 31) {
+            val n = (22 - str1.length + str2.length)
+            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+        }
+    } else {
+        if (ans.length < 31) {
+            val n = (31 - str1.length + str2.length)
+            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
+        }
+    }
+    return ans
+}

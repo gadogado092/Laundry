@@ -6,6 +6,8 @@ import amat.laundrysederhana.cleanPointZeroFloat
 import amat.laundrysederhana.currencyFormatterStringViewZero
 import amat.laundrysederhana.dateTimeUniversalToDisplay
 import amat.laundrysederhana.di.Injection
+import amat.laundrysederhana.leftRightAlign
+import amat.laundrysederhana.printText
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.BillItem
@@ -341,43 +343,6 @@ class BillActivityNew : ComponentActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-    }
-
-    private fun printText(msg: String, outputStream: OutputStream) {
-        try {
-            // Print normal text
-            outputStream.write(msg.toByteArray())
-            val LF = byteArrayOf(0x0A)
-            outputStream.write(LF)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun leftRightAlign(str1: String, str2: String, ukuranStruk: String): String {
-        var ans = str1 + str2
-        if (ukuranStruk == "3") {
-            if (ans.length < 31) {
-                val n = (31 - str1.length + str2.length)
-                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-            }
-        } else if (ukuranStruk == "2") {
-            if (ans.length < 31) {
-                val n = (20 - str1.length + str2.length)
-                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-            }
-        } else if (ukuranStruk == "1") {
-            if (ans.length < 31) {
-                val n = (22 - str1.length + str2.length)
-                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-            }
-        } else {
-            if (ans.length < 31) {
-                val n = (31 - str1.length + str2.length)
-                ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-            }
-        }
-        return ans
     }
 
     @Composable

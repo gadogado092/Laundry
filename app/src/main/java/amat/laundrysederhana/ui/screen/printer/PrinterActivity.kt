@@ -4,6 +4,8 @@ import amat.laundrysederhana.R
 import amat.laundrysederhana.data.User
 import amat.laundrysederhana.data.entity.PrinterEntity
 import amat.laundrysederhana.di.Injection
+import amat.laundrysederhana.leftRightAlign
+import amat.laundrysederhana.printText
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.CenterLayout
@@ -48,7 +50,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -62,7 +63,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -148,6 +148,16 @@ class PrinterActivity : ComponentActivity() {
             }
             myViewModel.updatePrinterList(listPrint)
             return
+        } else {
+            val pairedDevices = bluetoothAdapter.bondedDevices
+            val pairedDevicesList = pairedDevices.toList()
+            // Tampilkan daftar perangkat terpasang
+            val listPrint = mutableListOf<PrinterEntity>()
+            for (device in pairedDevicesList) {
+                Log.d("Bluetooth", "${device.name} - ${device.address}")
+                listPrint.add(PrinterEntity(device.name, device.address))
+            }
+            myViewModel.updatePrinterList(listPrint)
         }
 
     }
@@ -170,6 +180,8 @@ class PrinterActivity : ComponentActivity() {
                 else -> {}
             }
         }
+
+        enableBluetooth(context, viewModel)
 
         //START UI
         Column {
@@ -477,9 +489,14 @@ class PrinterActivity : ComponentActivity() {
                         val ESC_ALIGN_LEFT = byteArrayOf(0x1b, 'a'.code.toByte(), 0x00)
                         outputStream.write(ESC_ALIGN_LEFT)
 
-                        val bytes = data.toByteArray()
-
-                        outputStream.write(bytes)
+                        printText(
+                            leftRightAlign(
+                                "1234567890123456",
+                                "1234567890123456",
+                                "2"
+                            ),
+                            outputStream
+                        )
 
                         val LF = byteArrayOf(0x0A)
                         outputStream.write(LF)
