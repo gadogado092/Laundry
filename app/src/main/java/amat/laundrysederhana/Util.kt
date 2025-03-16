@@ -25,6 +25,7 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
+
 fun generateMd5(input: String): String {
     val md = MessageDigest.getInstance("MD5")
     return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
@@ -461,6 +462,108 @@ fun printText(msg: String, outputStream: OutputStream) {
         outputStream.write(msg.toByteArray())
         val LF = byteArrayOf(0x0A)
         outputStream.write(LF)
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+}
+
+fun printConfig(outputStream: OutputStream, bill: String, size: Int, style: Int, align: Int) {
+    //size 1 = large, size 2 = medium, size 3 = small
+    //style 1 = Regular, style 2 = Bold
+    //align 0 = left, align 1 = center, align 2 = right
+    try {
+        val format = byteArrayOf(27, 33, 0)
+        val change = byteArrayOf(27, 33, 0)
+
+        outputStream.write(format)
+
+        //different sizes, same style Regular
+        if (size == 1 && style == 1)  //large
+        {
+            change[2] = (0x10).toByte() //large
+            outputStream.write(change)
+        } else if (size == 2 && style == 1)  //medium
+        {
+            //nothing to change, uses the default settings
+        } else if (size == 3 && style == 1)  //small
+        {
+            change[2] = (0x3).toByte() //small
+            outputStream.write(change)
+        }
+
+        //different sizes, same style Bold
+        if (size == 1 && style == 2)  //large
+        {
+            change[2] = (0x10 or 0x8).toByte() //large
+            outputStream.write(change)
+        } else if (size == 2 && style == 2)  //medium
+        {
+            change[2] = (0x8).toByte()
+            outputStream.write(change)
+        } else if (size == 3 && style == 2)  //small
+        {
+            change[2] = (0x3 or 0x8).toByte() //small
+            outputStream.write(change)
+        }
+
+
+        when (align) {
+            0 ->                 //left align
+                outputStream.write(PrinterCommands.ESC_ALIGN_LEFT)
+
+            1 ->                 //center align
+                outputStream.write(PrinterCommands.ESC_ALIGN_CENTER)
+
+            2 ->                 //right align
+                outputStream.write(PrinterCommands.ESC_ALIGN_RIGHT)
+        }
+        outputStream.write(bill.toByteArray())
+        val LF = byteArrayOf(0x0A)
+        outputStream.write(LF)
+    } catch (ex: java.lang.Exception) {
+        Log.e("error", ex.toString())
+    }
+}
+
+fun printCustom(msg: String, size: Int, align: Int, outputStream: OutputStream) {
+    //Print config "mode"
+
+    val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
+    //byte[] cc1 = new byte[]{0x1B,0x21,0x00};  // 0- normal size text
+    val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
+    val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
+    val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
+    try {
+        when (size) {
+            0 -> outputStream.write(cc)
+            1 -> outputStream.write(bb)
+            2 -> outputStream.write(bb2)
+            3 -> outputStream.write(bb3)
+        }
+
+        when (align) {
+            0 ->                     //left align
+                outputStream.write(PrinterCommands.ESC_ALIGN_LEFT)
+
+            1 ->                     //center align
+                outputStream.write(PrinterCommands.ESC_ALIGN_CENTER)
+
+            2 ->                     //right align
+                outputStream.write(PrinterCommands.ESC_ALIGN_RIGHT)
+        }
+        outputStream.write(msg.toByteArray())
+        val LF = byteArrayOf(0x0A)
+        outputStream.write(LF)
+        //outputStream.write(cc);
+        //printNewLine();
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+}
+
+private fun printNewLine(outputStream: OutputStream) {
+    try {
+        outputStream.write(PrinterCommands.FEED_LINE)
     } catch (e: IOException) {
         e.printStackTrace()
     }

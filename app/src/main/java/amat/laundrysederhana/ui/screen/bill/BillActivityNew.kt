@@ -1,13 +1,13 @@
 package amat.laundrysederhana.ui.screen.bill
 
-import amat.laundrysederhana.PrinterCommands
 import amat.laundrysederhana.R
 import amat.laundrysederhana.cleanPointZeroFloat
 import amat.laundrysederhana.currencyFormatterStringViewZero
 import amat.laundrysederhana.dateTimeUniversalToDisplay
 import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.leftRightAlign
-import amat.laundrysederhana.printText
+import amat.laundrysederhana.printConfig
+import amat.laundrysederhana.printCustom
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.BillItem
@@ -76,8 +76,6 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import java.io.IOException
-import java.io.OutputStream
 import java.util.UUID
 
 
@@ -205,10 +203,21 @@ class BillActivityNew : ComponentActivity() {
                         val printformat = byteArrayOf(0x1B, 0x21, 0x03)
                         outputStream.write(printformat)
 
-                        printCustom(dataInvoice.businessName, 1, 1, outputStream)
-                        printCustom(dataInvoice.businessAddress, 0, 1, outputStream)
-                        printCustom(dataInvoice.businessNumberPhone, 0, 1, outputStream)
-                        printCustom("--------------------------------", 0, 1, outputStream)
+
+                        //size 1 = large, size 2 = medium, size 3 = small
+                        //style 1 = Regular, style 2 = Bold
+                        //align 0 = left, align 1 = center, align 2 = right
+
+                        printConfig(outputStream, dataInvoice.businessName, 1, 2, 1)
+                        printConfig(outputStream, dataInvoice.businessAddress, 3, 1, 1)
+                        printConfig(outputStream, dataInvoice.businessNumberPhone, 3, 1, 1)
+
+                        printCustom(
+                            "-------------------------------------------",
+                            0,
+                            1,
+                            outputStream
+                        )
 
                         printCustom(
                             dateTimeUniversalToDisplay(dataInvoice.dateTimeTransaction),
@@ -229,33 +238,48 @@ class BillActivityNew : ComponentActivity() {
                             0,
                             outputStream
                         )
+                        //todo
+                        printCustom(
+                            "Kasir  : ${dataInvoice.cashierName}",
+                            0,
+                            0,
+                            outputStream
+                        )
+                        printCustom(
+                            "Jumlah Pakaian ${dataInvoice.totalClothes}",
+                            0,
+                            0,
+                            outputStream
+                        )
 
-                        printCustom("Nama   : ${dataInvoice.customerName}", 0, 0, outputStream)
+                        printConfig(outputStream, "Nama   : ${dataInvoice.customerName}", 1, 1, 0)
 
                         if (dataInvoice.noteTransaction != "") {
-                            printCustom(
+                            printConfig(
+                                outputStream,
                                 "Note   : ${dataInvoice.noteTransaction}",
-                                0,
-                                0,
-                                outputStream
+                                3,
+                                1,
+                                0
                             )
                         }
-                        printCustom("--------------------------------", 0, 1, outputStream)
+                        printCustom(
+                            "-------------------------------------------",
+                            0,
+                            1,
+                            outputStream
+                        )
 
                         dataInvoice.listDetailTransaction.forEach { item ->
-                            printCustom(
-                                item.productName,
-                                0,
-                                0,
-                                outputStream
-                            )
-                            printText(
+                            printConfig(outputStream, item.productName, 1, 1, 0)
+
+                            printConfig(
+                                outputStream,
                                 leftRightAlign(
                                     "${cleanPointZeroFloat(item.qty)} ${item.unit}",
                                     currencyFormatterStringViewZero(item.totalPrice),
                                     "2"
-                                ),
-                                outputStream
+                                ), 1, 1, 1
                             )
                             if (item.note != "") {
                                 printCustom(
@@ -267,12 +291,19 @@ class BillActivityNew : ComponentActivity() {
                             }
 
                         }
-                        printCustom("--------------------------------", 0, 1, outputStream)
                         printCustom(
-                            "Total   :${currencyFormatterStringViewZero(dataInvoice.totalPrice)}",
+                            "-------------------------------------------",
+                            0,
                             1,
-                            2,
                             outputStream
+                        )
+                        printConfig(
+                            outputStream,
+                            leftRightAlign(
+                                "Total",
+                                currencyFormatterStringViewZero(dataInvoice.totalPrice),
+                                "2"
+                            ), 2, 1, 1
                         )
 
                         val LF = byteArrayOf(0x0A)
@@ -299,50 +330,6 @@ class BillActivityNew : ComponentActivity() {
 
         }
 
-    }
-
-    private fun printCustom(msg: String, size: Int, align: Int, outputStream: OutputStream) {
-        //Print config "mode"
-
-        val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
-        //byte[] cc1 = new byte[]{0x1B,0x21,0x00};  // 0- normal size text
-        val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
-        val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
-        val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
-        try {
-            when (size) {
-                0 -> outputStream.write(cc)
-                1 -> outputStream.write(bb)
-                2 -> outputStream.write(bb2)
-                3 -> outputStream.write(bb3)
-            }
-
-            when (align) {
-                0 ->                     //left align
-                    outputStream.write(PrinterCommands.ESC_ALIGN_LEFT)
-
-                1 ->                     //center align
-                    outputStream.write(PrinterCommands.ESC_ALIGN_CENTER)
-
-                2 ->                     //right align
-                    outputStream.write(PrinterCommands.ESC_ALIGN_RIGHT)
-            }
-            outputStream.write(msg.toByteArray())
-            val LF = byteArrayOf(0x0A)
-            outputStream.write(LF)
-            //outputStream.write(cc);
-            //printNewLine();
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun printNewLine(outputStream: OutputStream) {
-        try {
-            outputStream.write(PrinterCommands.FEED_LINE)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
     }
 
     @Composable
@@ -615,6 +602,45 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                             )
                             Text(
                                 if (data.isFullPayment) "Lunas" else "Belum Lunas",
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column {
+                            Text(
+                                "Nama Kasir", style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                data.cashierName, style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                        Column {
+                            Text(
+                                "Jumlah Pakaian",
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    color = FontGrey,
+                                )
+                            )
+                            Text(
+                                data.totalClothes,
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 16.sp,

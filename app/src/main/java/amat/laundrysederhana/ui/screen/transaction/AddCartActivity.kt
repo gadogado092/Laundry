@@ -198,7 +198,7 @@ fun FormAddCart(viewModel: AddCartViewModel, data: ProductCart) {
             fontSize = 18.sp
         )
         MyOutlinedTextField(
-            label = "Qty (" + data.unit + ") ex:1 or 1.4 or 1,4",
+            label = "Qty (" + data.unit + ") ex:1 or 1.4",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
             value = viewModel.stateUi.collectAsState().value.qty,

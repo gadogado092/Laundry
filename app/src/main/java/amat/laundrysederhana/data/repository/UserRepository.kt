@@ -42,7 +42,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     suspend fun transactionInsertNewUser(
-        user: User,
+        user: List<User>,
         statusList: List<LaundryStatus>,
         categoryList: List<Category>,
         productList: List<Product>,

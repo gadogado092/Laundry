@@ -58,6 +58,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -228,16 +229,43 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                 )
 
                 MyOutlinedTextField(
-                    label = "Catatan",
+                    label = "Nama Kasir",
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    value = viewModel.stateUi.collectAsState().value.userName,
+                    onValueChange = {
+                        viewModel.setCashierName(it)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    value = viewModel.stateUi.collectAsState().value.note,
-                    onValueChange = {
-                        viewModel.setNote(it)
-                    },
+                    isError = viewModel.isCashierNameValid.collectAsState().value.isError,
+                    errorMessage = viewModel.isCashierNameValid.collectAsState().value.errorMessage
                 )
+                MyOutlinedTextField(
+                    label = "Jumlah Pakaian",
+                    value = viewModel.stateUi.collectAsState().value.totalClothes,
+                    onValueChange = {
+                        viewModel.setTotalClothes(it)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    isError = viewModel.isTotalClothesValid.collectAsState().value.isError,
+                    errorMessage = viewModel.isTotalClothesValid.collectAsState().value.errorMessage
+                )
+
+//                MyOutlinedTextField(
+//                    label = "Catatan",
+//                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 8.dp),
+//                    value = viewModel.stateUi.collectAsState().value.note,
+//                    onValueChange = {
+//                        viewModel.setNote(it)
+//                    },
+//                )
 
                 Divider(
                     modifier = Modifier.padding(top = 8.dp),

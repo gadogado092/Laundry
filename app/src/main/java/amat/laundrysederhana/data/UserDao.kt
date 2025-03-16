@@ -13,19 +13,19 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)
 
-    @Query("SELECT * FROM User")
+    @Query("SELECT * FROM User WHERE id!=0")
     fun getAllUser(): Flow<List<User>>
 
-    @Query("SELECT * FROM User")
+    @Query("SELECT * FROM User WHERE id!=0")
     suspend fun getUser(): List<User>
 
     @Update
     suspend fun update(user: User)
 
-    @Query("SELECT * FROM User LIMIT 1")
+    @Query("SELECT * FROM User WHERE id!=0 LIMIT 1")
     fun getDetail(): Flow<User>
 
-    @Query("SELECT * FROM User LIMIT 1")
+    @Query("SELECT * FROM User WHERE id!=0 LIMIT 1")
     suspend fun getProfile(): User
 
     @Query("UPDATE User SET `limit`=:newLimit, `key`=:newKey  WHERE id=:userId")
@@ -57,14 +57,14 @@ interface UserDao {
 
     @Transaction
     suspend fun transactionInsertNewUser(
-        user: User,
+        user: List<User>,
         statusList: List<LaundryStatus>,
         categoryList: List<Category>,
         productList: List<Product>,
         customer: Customer
     ) {
         //INSERT
-        insert(user)
+        insertUser(user)
         insertStatus(statusList)
         insertCategory(categoryList)
         insertProduct(productList)

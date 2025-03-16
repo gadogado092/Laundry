@@ -13,7 +13,10 @@ data class TransactionLaundry(
     val laundryStatusId: Int,
     val isFullPayment: Boolean,
     val totalPrice: String,
+    val totalClothes: String,
     val note: String,
+    val userId: String,
+    val userName: String,
     val createAt: String,
     val isDelete: Boolean
 )

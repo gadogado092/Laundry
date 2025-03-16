@@ -155,13 +155,34 @@ class NewUserViewModel(
                         createAt = createDateTimeNow
                     )
 
-                insertNewUser(user = user)
+                val userList = listOf(
+                    user,
+                    User(
+                        "0",
+                        "Kosong",
+                        "",
+                        "",
+                        "Standard",
+                        "",
+                        "",
+                        "58 mm",
+                        "La-Undry",
+                        "Terima Kasih",
+                        "",
+                        30000,
+                        "",
+                        ""
+                    ),
+
+                    )
+
+                insertNewUser(user = userList)
             }
         }
 
     }
 
-    private suspend fun insertNewUser(user: User) {
+    private suspend fun insertNewUser(user: List<User>) {
         try {
 
             val category1Id = UUID.randomUUID()
