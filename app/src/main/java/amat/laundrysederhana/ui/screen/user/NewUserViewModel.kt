@@ -1,6 +1,7 @@
 package amat.laundrysederhana.ui.screen.user
 
 import amat.laundrysederhana.addDateLimitApp
+import amat.laundrysederhana.data.CashFlowCategory
 import amat.laundrysederhana.data.Category
 import amat.laundrysederhana.data.Customer
 import amat.laundrysederhana.data.LaundryStatus
@@ -315,6 +316,13 @@ class NewUserViewModel(
                 LaundryStatus(4, "Batal")
             )
 
+            val cashFlowCategoryList = listOf(
+                CashFlowCategory("0", "Tanpa Kategori", 1, false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Sabun", 1, false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Parfum", 1, false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, false)
+            )
+
             val customer = Customer("0", "walk-in customer", "", false)
 
             userRepository.transactionInsertNewUser(
@@ -322,7 +330,8 @@ class NewUserViewModel(
                 statusList,
                 categoryList,
                 productList,
-                customer
+                customer,
+                cashFlowCategoryList
             )
 
             _isProsesSuccess.value = ValidationResult(false)

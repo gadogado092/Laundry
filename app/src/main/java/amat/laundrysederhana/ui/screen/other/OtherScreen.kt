@@ -35,6 +35,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentCopy
@@ -64,6 +65,8 @@ fun OtherScreen(
     navigateToPrinter: () -> Unit,
     navigateToProduct: () -> Unit,
     navigateToCategory: () -> Unit,
+    navigateToCashFlow: () -> Unit,
+    navigateToCashFlowCategory: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit
 ) {
@@ -163,7 +166,7 @@ fun OtherScreen(
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
             text = "Support Kami Melalui",
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color= FontBlack)
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = FontBlack)
         )
         ItemSupport(
             subtitle = context.getString(R.string.bank),
@@ -259,6 +262,37 @@ fun OtherScreen(
                     navigateToPrinter()
                 },
         )
+
+        Divider(
+            color = GreyLight,
+            thickness = 8.dp,
+        )
+
+        OtherMenuItem(
+            Icons.Default.AccountBalanceWallet,
+            stringResource(id = R.string.title_cash_flow),
+            stringResource(id = R.string.subtitle_cash_flow),
+            modifier = Modifier
+                .clickable {
+                    navigateToCashFlow()
+                },
+        )
+
+        OtherMenuItem(
+            Icons.Default.Category,
+            stringResource(id = R.string.title_cash_flow_category),
+            stringResource(id = R.string.subtitle_cash_flow_category),
+            modifier = Modifier
+                .clickable {
+                    navigateToCashFlowCategory()
+                },
+        )
+
+        Divider(
+            color = GreyLight,
+            thickness = 8.dp,
+        )
+
 
         OtherMenuItem(
             Icons.Default.AccountCircle,

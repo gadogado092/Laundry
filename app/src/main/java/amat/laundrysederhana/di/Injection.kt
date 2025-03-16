@@ -2,6 +2,8 @@ package amat.laundrysederhana.di
 
 import amat.laundrysederhana.data.LaundryRoomDatabase
 import amat.laundrysederhana.data.repository.CartRepository
+import amat.laundrysederhana.data.repository.CashFlowCategoryRepository
+import amat.laundrysederhana.data.repository.CashFlowRepository
 import amat.laundrysederhana.data.repository.CategoryRepository
 import amat.laundrysederhana.data.repository.DetailTransactionRepository
 import amat.laundrysederhana.data.repository.ProductRepository
@@ -43,6 +45,18 @@ object Injection {
     fun provideDetailTransactionRepository(context: Context): DetailTransactionRepository {
         return DetailTransactionRepository.getInstance(
             LaundryRoomDatabase.getDatabase(context).detailTransactionDao()
+        )
+    }
+
+    fun provideCashFlowCategoryRepository(context: Context): CashFlowCategoryRepository {
+        return CashFlowCategoryRepository.getInstance(
+            LaundryRoomDatabase.getDatabase(context).cashFlowCategoryDao()
+        )
+    }
+
+    fun provideCashFlowRepository(context: Context): CashFlowRepository {
+        return CashFlowRepository.getInstance(
+            LaundryRoomDatabase.getDatabase(context).cashFlowDao()
         )
     }
 

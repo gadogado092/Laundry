@@ -117,6 +117,30 @@
             android:theme="@style/Theme.Laundry"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".ui.screen.cashflowcategory.AddCashFlowCategoryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.screen.cashflowcategory.CashFlowCategoryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.screen.cashflow.CashFlowActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.screen.cashflow.AddCashFlowActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

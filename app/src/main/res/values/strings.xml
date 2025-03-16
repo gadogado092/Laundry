@@ -79,6 +79,10 @@
     <string name="title_product">Produk/Layanan</string>
     <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
     <string name="title_category">Kategori</string>
+    <string name="title_cash_flow">Alur Kas</string>
+    <string name="subtitle_cash_flow">Pantau Pengeluaran Usaha Disini</string>
+    <string name="title_cash_flow_category">Kategori Alur Kas</string>
+    <string name="subtitle_cash_flow_category">Sesuaikan Alur Kas berdasarkan kategori</string>
     <string name="add_category">Tambah Kategori</string>
     <string name="update_category">Update Kategori</string>
     <string name="add_product">Tambah Layanan</string>

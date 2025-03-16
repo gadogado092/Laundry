@@ -238,7 +238,6 @@ class BillActivityNew : ComponentActivity() {
                             0,
                             outputStream
                         )
-                        //todo
                         printCustom(
                             "Kasir  : ${dataInvoice.cashierName}",
                             0,
