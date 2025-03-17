@@ -263,6 +263,16 @@ fun OtherScreen(
                 },
         )
 
+        OtherMenuItem(
+            Icons.Default.AccountCircle,
+            stringResource(id = R.string.title_profile),
+            stringResource(id = R.string.subtitle_profile),
+            modifier = Modifier
+                .clickable {
+                    navigateToProfile()
+                },
+        )
+
         Divider(
             color = GreyLight,
             thickness = 8.dp,
@@ -293,16 +303,6 @@ fun OtherScreen(
             thickness = 8.dp,
         )
 
-
-        OtherMenuItem(
-            Icons.Default.AccountCircle,
-            stringResource(id = R.string.title_profile),
-            stringResource(id = R.string.subtitle_profile),
-            modifier = Modifier
-                .clickable {
-                    navigateToProfile()
-                },
-        )
         OtherMenuItem(
             R.drawable.baseline_play_circle_filled_24,
             stringResource(id = R.string.title_tutorial),

@@ -119,7 +119,7 @@ fun AddProductScreen(
         }
     }
 
-    //catch get Kost result
+    //catch get Category result
     viewModel.stateListCategory.collectAsState(initial = UiState.Error("")).value.let { uiState ->
         when (uiState) {
             is UiState.Error -> {
@@ -135,7 +135,7 @@ fun AddProductScreen(
             UiState.Loading -> {
                 Toast.makeText(
                     context,
-                    "Loading Data Kost",
+                    "Loading Data Kategori",
                     Toast.LENGTH_SHORT
                 ).show()
             }

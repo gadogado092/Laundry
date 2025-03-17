@@ -37,6 +37,7 @@
     <string name="invoice">Invoice Penagihan</string>
     <string name="bill">Bukti Pembayaran</string>
     <string name="add_cash_flow">Tambah Alur Kas</string>
+    <string name="add_cash_flow_out">Tambah Data Pengeluaran</string>
     <string name="add_booking">Booking Unit/Kamar</string>
     <string name="cancel_booking">Cancel Booking Unit/Kamar</string>
     <string name="info_add_cash_flow">Silahkan pilih penyewa, kost atau kamar jika alur kas terkait dengan salah satu, semuanya atau tidak memilih apapun</string>
@@ -80,11 +81,14 @@
     <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
     <string name="title_category">Kategori</string>
     <string name="title_cash_flow">Alur Kas</string>
+    <string name="title_cash_flow_out">Alur Kas Pengeluaran</string>
     <string name="subtitle_cash_flow">Pantau Pengeluaran Usaha Disini</string>
     <string name="title_cash_flow_category">Kategori Alur Kas</string>
     <string name="subtitle_cash_flow_category">Sesuaikan Alur Kas berdasarkan kategori</string>
     <string name="add_category">Tambah Kategori</string>
     <string name="update_category">Update Kategori</string>
+    <string name="update_cash_flow">Update Alur Kas</string>
+    <string name="update_cash_flow_out">Update Data Pengeluaran</string>
     <string name="add_product">Tambah Layanan</string>
     <string name="update_product">Update Layanan</string>
     <string name="subtitle_category">Bagi produk/layanan berdasarkan kategori</string>

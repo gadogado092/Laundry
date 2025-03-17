@@ -1,83 +1,89 @@
 package amat.laundrysederhana.ui.component
 
-import amat.laundrysederhana.currencyFormatterStringViewZero
-import amat.laundrysederhana.dateToDisplayMidFormat
-import amat.laundrysederhana.ui.theme.ColorIncome
-import amat.laundrysederhana.ui.theme.ColorRed
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.GreyLight
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun CashFlowItem(
     modifier: Modifier = Modifier,
+    categoryId: String,
+    categoryName: String,
     nominal: String,
-    typePayment: Int,
     createAt: String,
-    type: Int,
     note: String
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 4.dp)
+        modifier = modifier.fillMaxSize()
     ) {
-        Row {
-            Image(
+        Spacer(Modifier.height(8.dp))
+        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+            Row(
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .size(32.dp),
-                imageVector = if (type == 0) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                contentDescription = "",
-                colorFilter = ColorFilter.tint(if (type == 0) ColorIncome else ColorRed)
-            )
-            Column(modifier = Modifier.padding(end = 8.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = currencyFormatterStringViewZero(nominal),
-                        style = TextStyle(
-                            fontWeight = FontWeight.Medium,
-                            color = if (type == 0) ColorIncome else ColorRed,
-                            fontSize = 14.sp
-                        )
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (categoryId == "0") {
+                    BoxRectangle(
+                        title = categoryName[0].uppercase() + categoryName.drop(1),
+                        backgroundColor = Color.DarkGray,
+                        fontSize = 14.sp
                     )
-                    Text(
-                        text = dateToDisplayMidFormat(createAt),
-                        style = TextStyle(
-                            fontWeight = FontWeight.Medium,
-                            color = FontBlack,
-                            fontSize = 14.sp
-                        )
+                } else {
+                    BoxRectangle(
+                        title = categoryName[0].uppercase() + categoryName.drop(1),
+                        fontSize = 14.sp
                     )
                 }
-                Text(text = note, textAlign = TextAlign.Justify, color = FontBlack)
-                Text(text = generateTextType(typePayment), color = FontBlack)
+                Text(
+                    text = createAt,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    ),
+                )
             }
+
+            Text(
+                text = nominal,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = FontBlack,
+                ),
+                modifier = Modifier.padding(end = 8.dp)
+            )
+
+            if (note.isNotEmpty()) {
+                Text(
+                    text = note,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    ),
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+            }
+
         }
+
+
         Divider(
-            modifier = Modifier.padding(top = 2.dp),
+            modifier = Modifier.padding(top = 4.dp),
             color = GreyLight,
             thickness = 1.dp
         )
