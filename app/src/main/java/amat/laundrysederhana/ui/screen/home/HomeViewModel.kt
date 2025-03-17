@@ -2,6 +2,8 @@ package amat.laundrysederhana.ui.screen.home
 
 import amat.laundrysederhana.calenderSelect
 import amat.laundrysederhana.data.User
+import amat.laundrysederhana.data.repository.CashFlowCategoryRepository
+import amat.laundrysederhana.data.repository.CashFlowRepository
 import amat.laundrysederhana.data.repository.CategoryRepository
 import amat.laundrysederhana.data.repository.DetailTransactionRepository
 import amat.laundrysederhana.data.repository.UserRepository
@@ -21,7 +23,9 @@ import java.util.Date
 class HomeViewModel(
     private val userRepository: UserRepository,
     private val categoryRepository: CategoryRepository,
-    private val detailTransactionRepository: DetailTransactionRepository
+    private val detailTransactionRepository: DetailTransactionRepository,
+    private val cashFlowCategoryRepository: CashFlowCategoryRepository,
+    private val cashFlowRepository: CashFlowRepository
 ) : ViewModel() {
 
     private val _stateUser: MutableStateFlow<UiState<User>> =
@@ -82,8 +86,11 @@ class HomeViewModel(
                 _stateList.value = UiState.Loading
                 val dataCategory = categoryRepository.getCategory()
 
+                var totalTransactionToday = 0
+                var totalTransactionMonth = 0
                 val containListToday = mutableListOf<HomeItem>()
                 val containListMonth = mutableListOf<HomeItem>()
+
                 dataCategory.forEach { item ->
                     //get total price and total qty today
                     val totalPrice = detailTransactionRepository.getTotalPriceDetailTransaction(
@@ -100,6 +107,8 @@ class HomeViewModel(
                     if (totalQty.total == null) {
                         totalQty.total = "0"
                     }
+
+                    totalTransactionToday += totalPrice.total!!.toInt()
 
                     containListToday.add(
                         HomeItem(
@@ -120,6 +129,7 @@ class HomeViewModel(
                     if (totalPriceMonth.total == null) {
                         totalPriceMonth.total = "0"
                     }
+
                     val totalQtyMonth = detailTransactionRepository.getTotalQtyDetailTransaction(
                         item.id, dateToStartTime(stateUi.value.startDateMonth),
                         dateToEndTime(stateUi.value.endDateMonth)
@@ -127,6 +137,9 @@ class HomeViewModel(
                     if (totalQtyMonth.total == null) {
                         totalQtyMonth.total = "0"
                     }
+
+                    totalTransactionMonth += totalPriceMonth.total!!.toInt()
+
                     containListMonth.add(
                         HomeItem(
                             categoryName = item.name,
@@ -138,7 +151,87 @@ class HomeViewModel(
 
                 }
 
-                val dataList = HomeList(listMonth = containListMonth, listToday = containListToday)
+                //cash flow area
+
+                var totalCashFlowToday = 0
+                var totalCashFlowMonth = 0
+
+                val containCashFlowListToday = mutableListOf<HomeItem>()
+                val containCashFlowListMonth = mutableListOf<HomeItem>()
+                val dataCashFlowCategory = cashFlowCategoryRepository.getCategory()
+                dataCashFlowCategory.forEach { item ->
+                    //today
+                    val totalPrice = cashFlowRepository.getTotalNominalCashFlow(
+                        item.id, dateToStartTime(stateUi.value.currentDate),
+                        dateToEndTime(stateUi.value.currentDate)
+                    )
+                    if (totalPrice.total == null) {
+                        totalPrice.total = "0"
+                    }
+
+                    val totalQty = cashFlowRepository.getTotalQtyCashFlow(
+                        item.id, dateToStartTime(stateUi.value.currentDate),
+                        dateToEndTime(stateUi.value.currentDate)
+                    )
+                    if (totalQty.total == null) {
+                        totalQty.total = "0"
+                    }
+
+                    totalCashFlowToday += totalPrice.total!!.toInt()
+
+                    containCashFlowListToday.add(
+                        HomeItem(
+                            categoryName = item.name,
+                            categoryUnit = item.unit,
+                            totalPrice = totalPrice.total!!,
+                            totalQty = totalQty.total!!,
+                        )
+                    )
+
+                    //month
+                    val totalPriceMonth = cashFlowRepository.getTotalNominalCashFlow(
+                        item.id, dateToStartTime(stateUi.value.startDateMonth),
+                        dateToEndTime(stateUi.value.endDateMonth)
+                    )
+                    if (totalPriceMonth.total == null) {
+                        totalPriceMonth.total = "0"
+                    }
+
+                    val totalQtyMonth = cashFlowRepository.getTotalQtyCashFlow(
+                        item.id, dateToStartTime(stateUi.value.startDateMonth),
+                        dateToEndTime(stateUi.value.endDateMonth)
+                    )
+                    if (totalQtyMonth.total == null) {
+                        totalQtyMonth.total = "0"
+                    }
+
+                    totalCashFlowMonth += totalPriceMonth.total!!.toInt()
+
+                    containCashFlowListMonth.add(
+                        HomeItem(
+                            categoryName = item.name,
+                            categoryUnit = item.unit,
+                            totalPrice = totalPrice.total!!,
+                            totalQty = totalQty.total!!,
+                        )
+                    )
+
+                }
+
+
+                val dataList = HomeList(
+                    listMonth = containListMonth,
+                    listToday = containListToday,
+                    listCashFlowToday = containCashFlowListToday,
+                    listCashFlowMonth = containCashFlowListMonth
+                )
+                _stateUi.value =
+                    stateUi.value.copy(
+                        totalTransactionToday = totalTransactionToday.toString(),
+                        totalTransactionMonth = totalTransactionMonth.toString(),
+                        totalCashFlowToday = totalCashFlowToday.toString(),
+                        totalCashFlowMonth = totalCashFlowMonth.toString()
+                    )
                 _stateList.value = UiState.Success(dataList)
             }
         } catch (e: Exception) {
@@ -170,14 +263,22 @@ class HomeViewModel(
 class HomeViewModelFactory(
     private val repository: UserRepository,
     private val categoryRepository: CategoryRepository,
-    private val detailTransactionRepository: DetailTransactionRepository
+    private val detailTransactionRepository: DetailTransactionRepository,
+    private val cashFlowCategoryRepository: CashFlowCategoryRepository,
+    private val cashFlowRepository: CashFlowRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(repository, categoryRepository, detailTransactionRepository) as T
+            return HomeViewModel(
+                repository,
+                categoryRepository,
+                detailTransactionRepository,
+                cashFlowCategoryRepository,
+                cashFlowRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

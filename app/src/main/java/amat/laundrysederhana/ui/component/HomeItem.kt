@@ -1,5 +1,6 @@
 package amat.laundrysederhana.ui.component
 
+import amat.laundrysederhana.ui.theme.BGCashFlow
 import amat.laundrysederhana.ui.theme.Blue
 import amat.laundrysederhana.ui.theme.FontWhite
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +48,56 @@ fun HomeItem(
                 )
             )
             Spacer(Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    "$totalQty $categoryUnit", style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontWhite
+                    )
+                )
+                Text(
+                    totalPrice, style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontWhite
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeItemSmall(
+    modifier: Modifier = Modifier,
+    categoryName: String,
+    categoryUnit: String,
+    totalQty: String,
+    totalPrice: String
+) {
+    Card(
+        modifier = modifier,
+        backgroundColor = BGCashFlow
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        ) {
+            Spacer(Modifier.height(4.dp))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = categoryName,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = FontWhite
+                )
+            )
+            Spacer(Modifier.height(4.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

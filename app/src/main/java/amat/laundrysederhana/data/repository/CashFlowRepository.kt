@@ -3,6 +3,7 @@ package amat.laundrysederhana.data.repository
 import amat.laundrysederhana.data.CashFlow
 import amat.laundrysederhana.data.CashFlowAndCategory
 import amat.laundrysederhana.data.CashFlowDao
+import amat.laundrysederhana.data.entity.Sum
 
 class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
 
@@ -14,7 +15,7 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
         cashFlowDao.update(cashFlow)
     }
 
-    suspend fun deleteCashFlow(id: String){
+    suspend fun deleteCashFlow(id: String) {
         cashFlowDao.deleteCashFlow(id)
     }
 
@@ -24,6 +25,22 @@ class CashFlowRepository(private val cashFlowDao: CashFlowDao) {
 
     suspend fun getCashFlow(cashFlowId: String): CashFlowAndCategory {
         return cashFlowDao.getCashFlow(cashFlowId)
+    }
+
+    suspend fun getTotalNominalCashFlow(
+        cashFlowCategoryId: String,
+        startDate: String,
+        endDate: String
+    ): Sum{
+        return cashFlowDao.getTotalNominalCashFlow(cashFlowCategoryId, startDate, endDate)
+    }
+
+    suspend fun getTotalQtyCashFlow(
+        cashFlowCategoryId: String,
+        startDate: String,
+        endDate: String
+    ): Sum {
+        return cashFlowDao.getTotalQtyCashFlow(cashFlowCategoryId, startDate, endDate)
     }
 
     companion object {

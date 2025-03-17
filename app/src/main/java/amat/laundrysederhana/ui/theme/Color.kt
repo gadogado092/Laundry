@@ -31,3 +31,4 @@ val ColorIncome = Color(0xFF398AE5)
 
 val Blue = Color(0xFF398AE5)
 val FontBlue = Color(0xFF006AE8)
+val BGCashFlow = Color(0xFF0BAABE)

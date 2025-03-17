@@ -3,12 +3,20 @@ package amat.laundrysederhana.ui.screen.home
 data class HomeUi(
     val currentDate: String = "",
     val startDateMonth: String = "",
-    val endDateMonth: String = ""
+    val endDateMonth: String = "",
+
+    val totalTransactionToday: String = "",
+    val totalTransactionMonth: String = "",
+
+    val totalCashFlowToday: String = "",
+    val totalCashFlowMonth: String = ""
 )
 
 data class HomeList(
     val listToday: List<HomeItem> = mutableListOf(),
-    val listMonth: List<HomeItem> = mutableListOf()
+    val listMonth: List<HomeItem> = mutableListOf(),
+    val listCashFlowToday: List<HomeItem> = mutableListOf(),
+    val listCashFlowMonth: List<HomeItem> = mutableListOf()
 )
 
 data class HomeItem(

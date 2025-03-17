@@ -1,5 +1,6 @@
 package amat.laundrysederhana.data
 
+import amat.laundrysederhana.data.entity.Sum
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -40,5 +41,31 @@ interface CashFlowDao {
                 "WHERE Cashflow.id =:cashFlowId"
     )
     suspend fun getCashFlow(cashFlowId: String): CashFlowAndCategory
+
+    @Query(
+        "SELECT SUM(nominal) AS total " +
+                "FROM CashFlow " +
+                "WHERE isDelete=0 AND cashFlowCategoryId=:cashFlowCategoryId " +
+                "AND CashFlow.createAt >= :startDate " +
+                "AND CashFlow.createAt <= :endDate"
+    )
+    suspend fun getTotalNominalCashFlow(
+        cashFlowCategoryId: String,
+        startDate: String,
+        endDate: String
+    ): Sum
+
+    @Query(
+        "SELECT SUM(Qty) AS total " +
+                "FROM CashFlow " +
+                "WHERE isDelete=0 AND cashFlowCategoryId=:cashFlowCategoryId " +
+                "AND CashFlow.createAt >= :startDate " +
+                "AND CashFlow.createAt <= :endDate"
+    )
+    suspend fun getTotalQtyCashFlow(
+        cashFlowCategoryId: String,
+        startDate: String,
+        endDate: String
+    ): Sum
 
 }

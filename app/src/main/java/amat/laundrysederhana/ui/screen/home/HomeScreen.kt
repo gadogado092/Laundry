@@ -9,16 +9,21 @@ import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.ErrorLayout
 import amat.laundrysederhana.ui.component.HomeItem
+import amat.laundrysederhana.ui.component.HomeItemSmall
 import amat.laundrysederhana.ui.component.LoadingLayout
 import amat.laundrysederhana.ui.screen.transaction.AddTransactionActivity
+import amat.laundrysederhana.ui.theme.BGCashFlow
+import amat.laundrysederhana.ui.theme.Blue
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontWhite
 import amat.laundrysederhana.ui.theme.GreenDark
+import amat.laundrysederhana.ui.theme.GreyLight
 import amat.laundrysederhana.ui.theme.TealGreen
 import android.content.Context
 import android.content.Intent
 import android.widget.Button
 import android.widget.TextView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,12 +43,15 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,7 +70,9 @@ fun HomeScreen(
             factory = HomeViewModelFactory(
                 Injection.provideUserRepository(context),
                 Injection.provideCategoryRepository(context),
-                Injection.provideDetailTransactionRepository(context)
+                Injection.provideDetailTransactionRepository(context),
+                Injection.provideCashFlowCategoryRepository(context),
+                Injection.provideCashFlowRepository(context)
             )
         )
 
@@ -100,39 +110,57 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .padding(top = 8.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .drawBehind {
-                                        drawCircle(
-                                            color = TealGreen,
-                                            radius = this.size.maxDimension
-                                        )
-                                    },
-                                text = uiState.data.businessName.substring(0, 1),
-                                color = FontWhite,
-                                style = TextStyle(fontSize = 24.sp)
-                            )
 
-                            Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(
-                                    uiState.data.businessName,
-                                    style = TextStyle(fontSize = 20.sp),
-                                    color = FontBlack,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .drawBehind {
+                                            drawCircle(
+                                                color = TealGreen,
+                                                radius = this.size.maxDimension
+                                            )
+                                        },
+                                    text = uiState.data.businessName.substring(0, 1),
+                                    color = FontWhite,
+                                    style = TextStyle(fontSize = 24.sp)
                                 )
-                                Text(
-                                    uiState.data.address,
-                                    style = TextStyle(fontSize = 18.sp),
-                                    color = FontBlack,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
+
+                                Column {
+                                    Text(
+                                        uiState.data.businessName,
+                                        style = TextStyle(fontSize = 20.sp),
+                                        color = FontBlack,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                    Text(
+                                        uiState.data.address,
+                                        style = TextStyle(fontSize = 18.sp),
+                                        color = FontBlack,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                }
+
                             }
+
+                            Text(
+                                dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.currentDate),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlack,
+                                ),
+                                modifier = Modifier.padding(bottom = 2.dp, end = 8.dp)
+                            )
 
                         }
 
@@ -210,17 +238,28 @@ fun ListTransactionView(data: HomeList, viewModel: HomeViewModel) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    "Transaksi Hari Ini", style = TextStyle(
-                        fontSize = 16.sp,
-                        color = FontBlack,
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 4.dp),
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(color = Blue)
                     )
-                )
+                    Text(
+                        "Transaksi Hari Ini", style = TextStyle(
+                            fontSize = 16.sp,
+                            color = FontBlack,
+                        )
+                    )
+                }
                 Text(
-                    dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.currentDate),
+                    currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalTransactionToday),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = FontBlack,
+                        fontWeight = FontWeight.Medium
                     )
                 )
             }
@@ -240,17 +279,75 @@ fun ListTransactionView(data: HomeList, viewModel: HomeViewModel) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    "Transaksi Bulan Ini", style = TextStyle(
-                        fontSize = 16.sp,
-                        color = FontBlack,
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 4.dp),
+                        imageVector = Icons.Default.RemoveCircle,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(color = BGCashFlow)
                     )
-                )
+                    Text(
+                        "Pengeluaran Hari Ini", style = TextStyle(
+                            fontSize = 16.sp,
+                            color = FontBlack,
+                        )
+                    )
+                }
                 Text(
-                    dateToDisplayMonthYear(viewModel.stateUi.collectAsState().value.startDateMonth),
+                    currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalCashFlowToday),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = FontBlack,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+        }
+        items(data.listCashFlowToday) { item ->
+            HomeItemSmall(
+                categoryName = item.categoryName,
+                categoryUnit = item.categoryUnit,
+                totalQty = item.totalQty,
+                totalPrice = currencyFormatterStringViewZero(item.totalPrice)
+            )
+        }
+        item(span = { GridItemSpan(2) }) {
+            Divider(
+                color = GreyLight,
+                thickness = 2.dp
+            )
+        }
+        item(span = { GridItemSpan(2) }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 4.dp),
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(color = Blue)
+                    )
+                    Text(
+                        "Transaksi Bulan ${dateToDisplayMonthYear(viewModel.stateUi.collectAsState().value.startDateMonth)}",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            color = FontBlack,
+                        )
+                    )
+                }
+                Text(
+                    currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalTransactionMonth),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                        fontWeight = FontWeight.Medium
                     )
                 )
             }
@@ -263,6 +360,49 @@ fun ListTransactionView(data: HomeList, viewModel: HomeViewModel) {
                 totalPrice = currencyFormatterStringViewZero(item.totalPrice)
             )
         }
+        item(span = { GridItemSpan(2) }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 4.dp),
+                        imageVector = Icons.Default.RemoveCircle,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(color = BGCashFlow)
+                    )
+                    Text(
+                        "Pengeluaran ${dateToDisplayMonthYear(viewModel.stateUi.collectAsState().value.currentDate)}",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            color = FontBlack,
+                        )
+                    )
+                }
+
+                Text(
+                    currencyFormatterStringViewZero(viewModel.stateUi.collectAsState().value.totalCashFlowMonth),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+        }
+        items(data.listCashFlowMonth) { item ->
+            HomeItemSmall(
+                categoryName = item.categoryName,
+                categoryUnit = item.categoryUnit,
+                totalQty = item.totalQty,
+                totalPrice = currencyFormatterStringViewZero(item.totalPrice)
+            )
+        }
+
     }
 }
 
