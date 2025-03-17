@@ -35,7 +35,7 @@ class NewUserViewModel(
                 "Standard",
                 "",
                 "",
-                "58 mm",
+                32,
                 "La-Undry",
                 "Terima Kasih",
                 "",
@@ -166,7 +166,7 @@ class NewUserViewModel(
                         "Standard",
                         "",
                         "",
-                        "58 mm",
+                        32,
                         "La-Undry",
                         "Terima Kasih",
                         "",
@@ -317,10 +317,10 @@ class NewUserViewModel(
             )
 
             val cashFlowCategoryList = listOf(
-                CashFlowCategory("0", "Tanpa Kategori", 1, false),
-                CashFlowCategory(UUID.randomUUID().toString(), "Sabun", 1, false),
-                CashFlowCategory(UUID.randomUUID().toString(), "Parfum", 1, false),
-                CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, false)
+                CashFlowCategory("0", "Tanpa Kategori", 1, "Buah", false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Sabun", 1, "ml", false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Parfum", 1, "ml", false),
+                CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, "tabung", false)
             )
 
             val customer = Customer("0", "walk-in customer", "", false)

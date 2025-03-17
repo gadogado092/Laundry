@@ -2,6 +2,7 @@ package amat.laundrysederhana.ui.screen.cashflow
 
 import amat.laundrysederhana.R
 import amat.laundrysederhana.checkDateRangeValid
+import amat.laundrysederhana.cleanPointZeroFloat
 import amat.laundrysederhana.currencyFormatterStringViewZero
 import amat.laundrysederhana.data.CashFlowAndCategory
 import amat.laundrysederhana.dateRoomDay
@@ -255,6 +256,8 @@ fun ListCashFlowView(
                     },
                     categoryId = data.cashFlowCategoryId,
                     categoryName = data.cashFlowCategoryName,
+                    unit = data.unit,
+                    qty = cleanPointZeroFloat(data.qty),
                     note = data.note,
                     nominal = currencyFormatterStringViewZero(data.nominal),
                     createAt = dateUniversalToDisplay(data.createAt)

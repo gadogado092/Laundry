@@ -21,7 +21,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         get() = _stateInitUser
 
     private val _user: MutableStateFlow<User> =
-        MutableStateFlow(User("", "", "", "", "", "", "", "", "","", "", 0, "", ""))
+        MutableStateFlow(User("", "", "", "", "", "", "", 32, "", "", "", 0, "", ""))
     val user: StateFlow<User>
         get() = _user
 
@@ -139,7 +139,7 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         try {
             userRepository.updateUser(user)
             _isProsesSuccess.value = ValidationResult(false)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             _isProsesSuccess.value = ValidationResult(true, e.message.toString())
         }
     }

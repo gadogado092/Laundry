@@ -22,10 +22,10 @@ interface CashFlowDao {
     suspend fun deleteCashFlow(id: String)
 
     @Query(
-        "SELECT Cashflow.id AS cashFlowId, Cashflow.note AS note, Cashflow.nominal AS nominal, Cashflow.createAt AS createAt, " +
-                "CashFlowCategory.id AS cashFlowCategoryId, CashFlowCategory.name AS cashFlowCategoryName " +
+        "SELECT Cashflow.id AS cashFlowId, Cashflow.qty AS qty, Cashflow.note AS note, Cashflow.nominal AS nominal, Cashflow.createAt AS createAt, " +
+                "CashFlowCategory.id AS cashFlowCategoryId, CashFlowCategory.name AS cashFlowCategoryName, CashFlowCategory.unit As unit " +
                 "FROM CashFlow " +
-                "LEFT JOIN (SELECT CashFlowCategory.id, CashFlowCategory.name FROM CashFlowCategory) AS CashFlowCategory ON Cashflow.cashFlowCategoryId = CashFlowCategory.id " +
+                "LEFT JOIN (SELECT CashFlowCategory.id, CashFlowCategory.name, CashFlowCategory.unit FROM CashFlowCategory) AS CashFlowCategory ON Cashflow.cashFlowCategoryId = CashFlowCategory.id " +
                 "WHERE isDelete=0 " +
                 "AND Cashflow.createAt >= :startDate " +
                 "AND Cashflow.createAt <= :endDate ORDER BY Cashflow.createAt DESC"
@@ -33,10 +33,10 @@ interface CashFlowDao {
     suspend fun getCashFlowList(startDate: String, endDate: String): List<CashFlowAndCategory>
 
     @Query(
-        "SELECT Cashflow.id AS cashFlowId, Cashflow.note AS note, Cashflow.nominal AS nominal, Cashflow.createAt AS createAt, " +
-                "CashFlowCategory.id AS cashFlowCategoryId, CashFlowCategory.name AS cashFlowCategoryName " +
+        "SELECT Cashflow.id AS cashFlowId, Cashflow.qty AS qty, Cashflow.note AS note, Cashflow.nominal AS nominal, Cashflow.createAt AS createAt, " +
+                "CashFlowCategory.id AS cashFlowCategoryId, CashFlowCategory.unit AS unit, CashFlowCategory.name AS cashFlowCategoryName " +
                 "FROM CashFlow " +
-                "LEFT JOIN (SELECT CashFlowCategory.id, CashFlowCategory.name FROM CashFlowCategory) AS CashFlowCategory ON Cashflow.cashFlowCategoryId = CashFlowCategory.id " +
+                "LEFT JOIN (SELECT CashFlowCategory.id, CashFlowCategory.name, CashFlowCategory.unit FROM CashFlowCategory) AS CashFlowCategory ON Cashflow.cashFlowCategoryId = CashFlowCategory.id " +
                 "WHERE Cashflow.id =:cashFlowId"
     )
     suspend fun getCashFlow(cashFlowId: String): CashFlowAndCategory

@@ -569,28 +569,13 @@ private fun printNewLine(outputStream: OutputStream) {
     }
 }
 
-fun leftRightAlign(str1: String, str2: String, ukuranStruk: String): String {
+fun leftRightAlign(str1: String, str2: String, sizeCharacter: Int): String {
     var ans = str1 + str2
-    if (ukuranStruk == "3") {
-        if (ans.length < 31) {
-            val n = (31 - str1.length + str2.length)
-            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-        }
-    } else if (ukuranStruk == "2") {
-        if (ans.length < 32) {
-            val n = (20 - str1.length + str2.length)
-            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-        }
-    } else if (ukuranStruk == "1") {
-        if (ans.length < 31) {
-            val n = (22 - str1.length + str2.length)
-            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-        }
-    } else {
-        if (ans.length < 31) {
-            val n = (31 - str1.length + str2.length)
-            ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
-        }
+    if (ans.length < sizeCharacter) {
+        val size = str1.length + str2.length
+        val n = sizeCharacter - size
+        Log.d("mylogb", "$n $size")
+        ans = str1 + String(CharArray(n)).replace("\u0000", " ") + str2
     }
     return ans
 }

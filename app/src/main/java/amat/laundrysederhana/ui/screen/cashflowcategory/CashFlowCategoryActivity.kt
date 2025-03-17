@@ -201,7 +201,7 @@ fun ListCashFlowCategoryView(
                 CashFlowCategoryItem(
                     Modifier.clickable {
                         onItemClick(data.id)
-                    }, name = data.name
+                    }, name = data.name, unit = data.unit
                 )
             }
         }

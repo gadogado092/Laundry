@@ -3,6 +3,7 @@ package amat.laundrysederhana.ui.screen.cashflow
 import amat.laundrysederhana.CashFlowCategoryAdapter
 import amat.laundrysederhana.R
 import amat.laundrysederhana.currencyFormatterString
+import amat.laundrysederhana.data.CashFlowAndCategory
 import amat.laundrysederhana.data.CashFlowCategory
 import amat.laundrysederhana.di.Injection
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
@@ -228,7 +229,7 @@ fun AddCashFlowScreen(
                 }
 
                 is UiState.Success -> {
-                    FormAddCashFlow(context, viewModel)
+                    FormAddCashFlow(context, viewModel, uiState.data)
                 }
 
             }
@@ -238,7 +239,7 @@ fun AddCashFlowScreen(
 }
 
 @Composable
-fun FormAddCashFlow(context: Context, viewModel: AddCashFlowViewModel) {
+fun FormAddCashFlow(context: Context, viewModel: AddCashFlowViewModel, data: CashFlowAndCategory) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -252,6 +253,17 @@ fun FormAddCashFlow(context: Context, viewModel: AddCashFlowViewModel) {
         ) {
             viewModel.getCategory()
         }
+        MyOutlinedTextField(
+            label = "Qty (" + viewModel.stateUi.collectAsState().value.unit + ") ex:1 or 1.4",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            modifier = Modifier.fillMaxWidth(),
+            value = viewModel.stateUi.collectAsState().value.qty,
+            onValueChange = {
+                if (it.length <= 6) viewModel.setQty(it)
+            },
+            isError = viewModel.isQtyValid.collectAsState().value.isError,
+            errorMessage = viewModel.isQtyValid.collectAsState().value.errorMessage
+        )
         Spacer(modifier = Modifier.height(8.dp))
         MyOutlinedTextFieldCurrency(
             label = "Nominal",
@@ -383,7 +395,7 @@ fun showBottomSheetCategory(
     }
 
     val adapter = CashFlowCategoryAdapter {
-        viewModel.setCategorySelected(it.id, it.name)
+        viewModel.setCategorySelected(it.id, it.name, it.unit)
         bottomSheetDialog.dismiss()
     }
 

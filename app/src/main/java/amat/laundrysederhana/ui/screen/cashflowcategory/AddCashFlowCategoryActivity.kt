@@ -215,6 +215,17 @@ fun FormCategory(context: Context, viewModel: AddCashFlowCategoryViewModel) {
             errorMessage = viewModel.isCategoryNameValid.collectAsState().value.errorMessage
         )
 
+        MyOutlinedTextField(
+            label = "Nama Satuan/Unit",
+            value = viewModel.stateUi.collectAsState().value.unit,
+            onValueChange = {
+                viewModel.setUnitName(it)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            isError = viewModel.isUnitNameValid.collectAsState().value.isError,
+            errorMessage = viewModel.isUnitNameValid.collectAsState().value.errorMessage
+        )
+
         Button(
             onClick = {
                 if (viewModel.dataIsComplete()) {

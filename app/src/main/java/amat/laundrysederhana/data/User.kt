@@ -14,7 +14,7 @@ data class User(
     //info printer
     val printerName: String,
     val printerAddress: String,
-    val paperSize: String,
+    val sizeCharacterPrinter: Int,
     val headerNote: String,
     val footerNote: String,
 

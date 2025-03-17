@@ -1,4 +1,4 @@
-plugins {
+    plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.8.0-1.0.8"
@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material:1.3.1")
-    implementation("androidx.compose.material:material-icons-extended:1.3.1")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("com.google.android.material:material:1.7.0")
     implementation("androidx.compose.foundation:foundation-layout-android:1.7.8")
     implementation("androidx.compose.material3:material3-common-android:1.0.0-alpha01")

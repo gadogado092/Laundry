@@ -4,8 +4,7 @@ import amat.laundrysederhana.R
 import amat.laundrysederhana.data.User
 import amat.laundrysederhana.data.entity.PrinterEntity
 import amat.laundrysederhana.di.Injection
-import amat.laundrysederhana.leftRightAlign
-import amat.laundrysederhana.printText
+import amat.laundrysederhana.printConfig
 import amat.laundrysederhana.ui.common.OnLifecycleEvent
 import amat.laundrysederhana.ui.common.UiState
 import amat.laundrysederhana.ui.component.CenterLayout
@@ -476,7 +475,8 @@ class PrinterActivity : ComponentActivity() {
                         Toast.makeText(this, "Printer Mencetak", Toast.LENGTH_LONG)
                             .show()
 
-                        val data = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFG"
+                        val data =
+                            "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJAKHIR"
 
                         val outputStream = bluetoothSocket.outputStream
 
@@ -489,14 +489,8 @@ class PrinterActivity : ComponentActivity() {
                         val ESC_ALIGN_LEFT = byteArrayOf(0x1b, 'a'.code.toByte(), 0x00)
                         outputStream.write(ESC_ALIGN_LEFT)
 
-                        printText(
-                            leftRightAlign(
-                                "1234567890123456",
-                                "1234567890123456",
-                                "2"
-                            ),
-                            outputStream
-                        )
+                        printConfig(outputStream, data, 1, 1, 1)
+                        printConfig(outputStream, data, 2, 1, 1)
 
                         val LF = byteArrayOf(0x0A)
                         outputStream.write(LF)

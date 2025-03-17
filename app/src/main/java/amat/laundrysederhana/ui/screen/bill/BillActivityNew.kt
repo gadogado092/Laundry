@@ -213,7 +213,7 @@ class BillActivityNew : ComponentActivity() {
                         printConfig(outputStream, dataInvoice.businessNumberPhone, 3, 1, 1)
 
                         printCustom(
-                            "-------------------------------------------",
+                            "------------------------------------------",
                             0,
                             1,
                             outputStream
@@ -263,7 +263,7 @@ class BillActivityNew : ComponentActivity() {
                             )
                         }
                         printCustom(
-                            "-------------------------------------------",
+                            "------------------------------------------",
                             0,
                             1,
                             outputStream
@@ -277,7 +277,7 @@ class BillActivityNew : ComponentActivity() {
                                 leftRightAlign(
                                     "${cleanPointZeroFloat(item.qty)} ${item.unit}",
                                     currencyFormatterStringViewZero(item.totalPrice),
-                                    "2"
+                                    dataInvoice.printerCharacterSize
                                 ), 1, 1, 1
                             )
                             if (item.note != "") {
@@ -291,7 +291,7 @@ class BillActivityNew : ComponentActivity() {
 
                         }
                         printCustom(
-                            "-------------------------------------------",
+                            "------------------------------------------",
                             0,
                             1,
                             outputStream
@@ -301,7 +301,7 @@ class BillActivityNew : ComponentActivity() {
                             leftRightAlign(
                                 "Total",
                                 currencyFormatterStringViewZero(dataInvoice.totalPrice),
-                                "2"
+                                dataInvoice.printerCharacterSize
                             ), 2, 1, 1
                         )
 

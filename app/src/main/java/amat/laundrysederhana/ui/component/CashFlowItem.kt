@@ -1,5 +1,6 @@
 package amat.laundrysederhana.ui.component
 
+import amat.laundrysederhana.ui.theme.Blue
 import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,8 @@ fun CashFlowItem(
     categoryName: String,
     nominal: String,
     createAt: String,
+    qty: String,
+    unit: String,
     note: String
 ) {
     Column(
@@ -38,15 +42,23 @@ fun CashFlowItem(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if (categoryId == "0") {
+                Row {
+                    if (categoryId == "0") {
+                        BoxRectangle(
+                            title = categoryName[0].uppercase() + categoryName.drop(1),
+                            backgroundColor = Color.DarkGray,
+                            fontSize = 14.sp
+                        )
+                    } else {
+                        BoxRectangle(
+                            title = categoryName[0].uppercase() + categoryName.drop(1),
+                            fontSize = 14.sp
+                        )
+                    }
+                    Spacer(Modifier.width(4.dp))
                     BoxRectangle(
-                        title = categoryName[0].uppercase() + categoryName.drop(1),
-                        backgroundColor = Color.DarkGray,
-                        fontSize = 14.sp
-                    )
-                } else {
-                    BoxRectangle(
-                        title = categoryName[0].uppercase() + categoryName.drop(1),
+                        title = "$qty $unit",
+                        backgroundColor = Blue,
                         fontSize = 14.sp
                     )
                 }
@@ -58,6 +70,8 @@ fun CashFlowItem(
                     ),
                 )
             }
+
+            Spacer(Modifier.height(2.dp))
 
             Text(
                 text = nominal,

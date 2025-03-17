@@ -10,5 +10,6 @@ data class CashFlowCategory(
     val name: String,
     //type 0=in 1=out
     val type: Int,
+    val unit: String,
     val isDelete: Boolean
 )

@@ -67,6 +67,7 @@ class BillViewModel(
 
                         printerName = dataProfile.printerName,
                         printerAddress = dataProfile.printerAddress,
+                        printerCharacterSize = dataProfile.sizeCharacterPrinter,
 
                         customerName = dataTransaction.customerName,
                         invoiceCode = dataTransaction.invoiceCode,

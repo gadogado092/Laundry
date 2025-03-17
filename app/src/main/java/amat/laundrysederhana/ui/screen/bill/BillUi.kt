@@ -11,6 +11,7 @@ data class BillUi(
 
     val printerName: String = "",
     val printerAddress: String = "",
+    val printerCharacterSize: Int = 32,
 
     val dateTimeTransaction: String = "",
     val customerName: String = "",

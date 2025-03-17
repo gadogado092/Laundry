@@ -31,14 +31,14 @@ class CashFlowViewModel(
         get() = _stateCashFlow
 
     init {
-        //end date
-        val calendarEnd = Calendar.getInstance() // this takes current date
-        calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)
-
         //start date
         val calendarStart = Calendar.getInstance()
-        calendarStart.getActualMaximum(Calendar.DAY_OF_MONTH) // get currentdate -7
-        calendarStart.add(Calendar.DAY_OF_MONTH, -7)
+        calendarStart[Calendar.DAY_OF_MONTH] = 1 // get tanggal 1
+
+        //end date
+        val calendarEnd = Calendar.getInstance()
+        calendarEnd[Calendar.DAY_OF_MONTH] =
+            Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
 
         setInitDate(calendarStart.time, calendarEnd.time)
 

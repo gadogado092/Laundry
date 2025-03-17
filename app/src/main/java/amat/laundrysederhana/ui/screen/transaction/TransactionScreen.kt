@@ -202,7 +202,9 @@ fun ListTransactionView(
                     note = data.note,
                     isFullPayment = data.isFullPayment,
                     customerName = data.customerName,
-                    createAt = dateTimeUniversalToDisplay(data.createAt)
+                    createAt = dateTimeUniversalToDisplay(data.createAt),
+                    cashierName = data.userName,
+                    totalClothes = data.totalClothes
                 )
             }
         }

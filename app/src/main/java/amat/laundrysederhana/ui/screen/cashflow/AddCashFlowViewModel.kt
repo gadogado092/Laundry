@@ -1,5 +1,6 @@
 package amat.laundrysederhana.ui.screen.cashflow
 
+import amat.laundrysederhana.cleanPointZeroFloat
 import amat.laundrysederhana.data.CashFlow
 import amat.laundrysederhana.data.CashFlowAndCategory
 import amat.laundrysederhana.data.CashFlowCategory
@@ -27,18 +28,19 @@ class AddCashFlowViewModel(
     val stateCashFlow: StateFlow<UiState<CashFlowAndCategory>>
         get() = _stateCashFlow
 
-    private val _stateUi: MutableStateFlow<CashFlowAndCategory> =
+    private val _stateUi: MutableStateFlow<AddCashFlowUi> =
         MutableStateFlow(
-            CashFlowAndCategory(
+            AddCashFlowUi(
                 cashFlowId = "",
                 note = "",
                 nominal = "",
-                createAt = "",
+                qty = "",
                 cashFlowCategoryId = "0",
-                cashFlowCategoryName = "Tanpa Kategori"
+                cashFlowCategoryName = "Tanpa Kategori",
+                unit = "Buah"
             )
         )
-    val stateUi: StateFlow<CashFlowAndCategory>
+    val stateUi: StateFlow<AddCashFlowUi>
         get() = _stateUi
 
     private val _stateListCategory: MutableStateFlow<UiState<List<CashFlowCategory>>> =
@@ -51,6 +53,11 @@ class AddCashFlowViewModel(
 
     val isNominalValid: StateFlow<ValidationResult>
         get() = _isNominalValid
+
+    private val _isQtyValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+    val isQtyValid: StateFlow<ValidationResult>
+        get() = _isQtyValid
 
     private val _isProsesFailed: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
@@ -71,14 +78,24 @@ class AddCashFlowViewModel(
                 try {
                     _stateCashFlow.value = UiState.Loading
                     val data = cashFlowRepository.getCashFlow(id)
-                    _stateUi.value = data
+                    _stateUi.value = AddCashFlowUi(
+                        cashFlowId = data.cashFlowId,
+                        cashFlowCategoryId = data.cashFlowCategoryId,
+                        cashFlowCategoryName = data.cashFlowCategoryName,
+                        unit = data.unit,
+                        note = data.note,
+                        nominal = data.nominal,
+                        qty = cleanPointZeroFloat(data.qty),
+                        createAt = data.createAt
+                    )
                     _stateCashFlow.value = UiState.Success(data)
                 } catch (e: Exception) {
                     _stateCashFlow.value = UiState.Error(e.message.toString())
                 }
             }
         } else {
-            _stateCashFlow.value = UiState.Success(stateUi.value)
+            _stateCashFlow.value =
+                UiState.Success(CashFlowAndCategory("", "", "", "", 0F, "", "", ""))
         }
     }
 
@@ -111,6 +128,30 @@ class AddCashFlowViewModel(
         }
     }
 
+    fun setQty(value: String) {
+        clearError()
+
+        if (value.isEmpty()) {
+            _stateUi.value =
+                stateUi.value.copy(qty = "")
+            return
+        }
+
+        var qty = 0F
+        val cleanValue = value.replace(",", ".").replace(" ", "")
+        //check qty is float or not
+        if (cleanValue.toFloatOrNull() != null) {
+            _stateUi.value =
+                stateUi.value.copy(qty = value)
+            _isQtyValid.value = ValidationResult(false, "")
+        } else {
+            _isQtyValid.value = ValidationResult(true, "Masukkan Format Angka Desimal")
+            _stateUi.value =
+                stateUi.value.copy(qty = "")
+        }
+
+    }
+
     fun getCategory() {
         clearError()
         _stateListCategory.value = UiState.Loading
@@ -124,9 +165,10 @@ class AddCashFlowViewModel(
         }
     }
 
-    fun setCategorySelected(id: String, name: String) {
+    fun setCategorySelected(id: String, name: String, unit: String) {
         clearError()
-        _stateUi.value = stateUi.value.copy(cashFlowCategoryId = id, cashFlowCategoryName = name)
+        _stateUi.value =
+            stateUi.value.copy(cashFlowCategoryId = id, cashFlowCategoryName = name, unit = unit)
     }
 
     fun dataIsComplete(): Boolean {
@@ -135,6 +177,31 @@ class AddCashFlowViewModel(
             _isNominalValid.value = ValidationResult(true, "Nominal Tidak Boleh Kosong")
             _isProsesFailed.value = ValidationResult(true, "Nominal Tidak Boleh Kosong")
             return false
+        }
+
+        var qty = 0F
+        val cleanValue = stateUi.value.qty.replace(",", ".").replace(" ", "")
+        //check qty is float or not
+        if (cleanValue.isNotEmpty()) {
+            if (cleanValue.toFloatOrNull() != null) {
+                qty = cleanValue.toFloat()
+            } else {
+                _isQtyValid.value = ValidationResult(true, "Masukkan Format Angka Desimal")
+                _isProsesFailed.value = ValidationResult(true, "Masukkan Format Angka Desimal")
+                return false
+            }
+
+            if (qty < 0F) {
+                _isQtyValid.value = ValidationResult(true, "Angka Qty Harus Positif")
+                _isProsesFailed.value = ValidationResult(true, "Angka Qty Harus Positif")
+                return false
+            }
+
+            if (qty == 0F) {
+                _isQtyValid.value = ValidationResult(true, "Angka Qty Tidak Boleh Kosong")
+                _isProsesFailed.value = ValidationResult(true, "Angka Qty Tidak Boleh Kosong")
+                return false
+            }
         }
 
         return true
@@ -160,6 +227,7 @@ class AddCashFlowViewModel(
                             nominal = dataCashFlow.nominal,
                             cashFlowCategoryId = dataCashFlow.cashFlowCategoryId,
                             type = 1,
+                            qty = dataCashFlow.qty.toFloat(),
                             createAt = dataCashFlow.createAt,
                             isDelete = false
                         )
@@ -173,6 +241,7 @@ class AddCashFlowViewModel(
                             id = id,
                             note = dataCashFlow.note,
                             nominal = dataCashFlow.nominal,
+                            qty = dataCashFlow.qty.toFloat(),
                             cashFlowCategoryId = dataCashFlow.cashFlowCategoryId,
                             type = 1,
                             createAt = createAt,

@@ -9,6 +9,7 @@ data class CashFlow(
     val id: String,
     val note: String,
     val nominal: String,
+    val qty: Float,
     val cashFlowCategoryId: String,
     //type 0=in 1=out
     val type: Int,

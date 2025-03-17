@@ -4,7 +4,9 @@ import amat.laundrysederhana.ui.theme.FontBlack
 import amat.laundrysederhana.ui.theme.FontGrey
 import amat.laundrysederhana.ui.theme.GreyLight
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -18,7 +20,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CashFlowCategoryItem(
     modifier: Modifier = Modifier,
-    name: String
+    name: String,
+    unit: String
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
@@ -39,6 +42,25 @@ fun CashFlowCategoryItem(
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
+        Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
+            Text(
+                "Nama Satuan", style = TextStyle(
+                    fontSize = 14.sp,
+                    color = FontGrey,
+                )
+            )
+            Text(
+                text = unit,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = FontBlack,
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+        }
+        Spacer(Modifier.height(4.dp))
         Divider(
             color = GreyLight,
             thickness = 2.dp

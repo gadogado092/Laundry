@@ -22,7 +22,15 @@ class AddCashFlowCategoryViewModel(
         get() = _stateCategory
 
     private val _stateUi: MutableStateFlow<CashFlowCategory> =
-        MutableStateFlow(CashFlowCategory(id = "", name = "", type = 1, isDelete = false))
+        MutableStateFlow(
+            CashFlowCategory(
+                id = "",
+                name = "",
+                type = 1,
+                unit = "",
+                isDelete = false
+            )
+        )
     val stateUi: StateFlow<CashFlowCategory>
         get() = _stateUi
 
@@ -31,6 +39,12 @@ class AddCashFlowCategoryViewModel(
 
     val isCategoryNameValid: StateFlow<ValidationResult>
         get() = _isCategoryNameValid
+
+    private val _isUnitNameValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+
+    val isUnitNameValid: StateFlow<ValidationResult>
+        get() = _isUnitNameValid
 
     private val _isProsesFailed: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
@@ -70,6 +84,16 @@ class AddCashFlowCategoryViewModel(
             _isCategoryNameValid.value = ValidationResult(true, "Nama Category Tidak Boleh Kosong")
         } else {
             _isCategoryNameValid.value = ValidationResult(false, "")
+        }
+    }
+
+    fun setUnitName(value: String) {
+        clearError()
+        _stateUi.value = _stateUi.value.copy(unit = value)
+        if (stateUi.value.unit.trim().isEmpty()) {
+            _isUnitNameValid.value = ValidationResult(true, "Nama Satuan/Unit Tidak Boleh Kosong")
+        } else {
+            _isUnitNameValid.value = ValidationResult(false, "")
         }
     }
 

@@ -32,6 +32,8 @@ data class CashFlowAndCategory(
     val cashFlowId: String,
     val note: String,
     val nominal: String,
+    val unit: String,
+    val qty: Float,
     val createAt: String,
     val cashFlowCategoryId: String,
     val cashFlowCategoryName: String
