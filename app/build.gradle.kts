@@ -5,11 +5,11 @@
 }
 
 android {
-    namespace = "amat.laundrysederhana"
+    namespace = "amat.laundry"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "amat.laundrysederhana"
+        applicationId = "amat.laundry"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
