@@ -57,7 +57,7 @@ val onboardPagesList = listOf(
     ), OnboardPage(
         imageRes = R.drawable.ic_splash,
         title = "Ketentuan La-Undry",
-        description = "*  Penyimpanan berbasis Offline\r\n* Tambahkan Printer Kasir Pada Menu Lainnya\r\n* Pay As You Go KeKost mulai dari 50.000/Bulan"
+        description = "*  Penyimpanan berbasis Offline\r\n* Tambahkan Printer Kasir Pada Menu Lainnya\r\n* Pay As You Go La-Undry mulai dari 50.000/Bulan"
     )
 )
 
