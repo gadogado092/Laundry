@@ -51,12 +51,6 @@ class PaymentViewModel(
     val isCashierNameValid: StateFlow<ValidationResult>
         get() = _isCashierNameValid
 
-    private val _isTotalClothesValid: MutableStateFlow<ValidationResult> =
-        MutableStateFlow(ValidationResult(false, ""))
-
-    val isTotalClothesValid: StateFlow<ValidationResult>
-        get() = _isTotalClothesValid
-
     private val _isProsesFailed: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
@@ -114,33 +108,33 @@ class PaymentViewModel(
         }
     }
 
-    fun setTotalClothes(value: String) {
-
-        clearError()
-
-        val cleanValue = value.trim().replace(" ", "")
-        if (cleanValue.toIntOrNull() != null) {
-            _stateUi.value = stateUi.value.copy(totalClothes = cleanValue)
-            if (cleanValue.isEmpty() || cleanValue.toInt() < 1) {
-                _isTotalClothesValid.value =
-                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-            } else {
-                _isTotalClothesValid.value = ValidationResult(false, "")
-            }
-        } else {
-            if (cleanValue.isEmpty()) {
-                _isTotalClothesValid.value =
-                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-                _stateUi.value = stateUi.value.copy(totalClothes = "")
-            } else {
-                _isTotalClothesValid.value =
-                    ValidationResult(true, "Masukkan Format Angka Yang Sesuai")
-                _stateUi.value = stateUi.value.copy(totalClothes = "")
-            }
-
-        }
-
-    }
+//    fun setTotalClothes(value: String) {
+//
+//        clearError()
+//
+//        val cleanValue = value.trim().replace(" ", "")
+//        if (cleanValue.toIntOrNull() != null) {
+//            _stateUi.value = stateUi.value.copy(totalClothes = cleanValue)
+//            if (cleanValue.isEmpty() || cleanValue.toInt() < 1) {
+//                _isTotalClothesValid.value =
+//                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
+//            } else {
+//                _isTotalClothesValid.value = ValidationResult(false, "")
+//            }
+//        } else {
+//            if (cleanValue.isEmpty()) {
+//                _isTotalClothesValid.value =
+//                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
+//                _stateUi.value = stateUi.value.copy(totalClothes = "")
+//            } else {
+//                _isTotalClothesValid.value =
+//                    ValidationResult(true, "Masukkan Format Angka Yang Sesuai")
+//                _stateUi.value = stateUi.value.copy(totalClothes = "")
+//            }
+//
+//        }
+//
+//    }
 
     fun process(listDataProduct: List<ProductCart>) {
         try {
@@ -186,15 +180,15 @@ class PaymentViewModel(
                 val transaction = TransactionLaundry(
                     id = transactionId,
                     invoiceCode = newCodeInvoice,
-                    customerId = "0",
-                    customerName = stateUi.value.customerName.trim(),
-                    laundryStatusId = 3,
+                    //todo get custumer id from tabel customer
+                    customerId = stateUi.value.customerId,
+                    customerName = stateUi.value.customerName,
+                    laundryStatusId = 1,
                     isFullPayment = stateUi.value.isFullPayment,
                     totalPrice = stateUi.value.totalPrice,
                     note = stateUi.value.note,
                     userId = stateUi.value.userId,
                     userName = stateUi.value.userName,
-                    totalClothes = stateUi.value.totalClothes,
                     createAt = createAt,
                     isDelete = false
                 )
@@ -214,6 +208,8 @@ class PaymentViewModel(
 
     fun dataIsComplete(): Boolean {
         clearError()
+        //todo check custumer id tidak boleh 0
+        //todo pembayaran ada pilihan customer baru atau lama
         if (stateUi.value.customerName.trim().isEmpty()) {
             _isCustomerNameValid.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
             _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
@@ -226,11 +222,11 @@ class PaymentViewModel(
             return false
         }
 
-        if (stateUi.value.totalClothes.trim().isEmpty() || stateUi.value.totalClothes.trim() == "0") {
-            _isTotalClothesValid.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-            _isProsesFailed.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-            return false
-        }
+//        if (stateUi.value.totalClothes.trim().isEmpty() || stateUi.value.totalClothes.trim() == "0") {
+//            _isTotalClothesValid.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
+//            _isProsesFailed.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
+//            return false
+//        }
 
         return true
     }

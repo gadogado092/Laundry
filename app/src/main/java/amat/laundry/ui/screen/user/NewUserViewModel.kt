@@ -2,6 +2,7 @@ package amat.laundry.ui.screen.user
 
 import amat.laundry.addDateLimitApp
 import amat.laundry.data.CashFlowCategory
+import amat.laundry.data.Cashier
 import amat.laundry.data.Category
 import amat.laundry.data.Customer
 import amat.laundry.data.LaundryStatus
@@ -36,7 +37,7 @@ class NewUserViewModel(
                 "",
                 "",
                 32,
-                32,
+                42,
                 "La-Undry",
                 "Terima Kasih",
                 "",
@@ -204,104 +205,104 @@ class NewUserViewModel(
                     category1Id.toString(),
                     false
                 ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Cuci Lipat Expres",
-                    7000,
-                    category1Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Cuci Setrika",
-                    7000,
-                    category1Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Cuci Setrika Expres",
-                    9000,
-                    category1Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Bed Cover Besar",
-                    40000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Bed Cover Kecil",
-                    35000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Horden Tebal/Besar",
-                    35000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Horden Sedang",
-                    20000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Horden Kecil",
-                    10000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Boneka Besar",
-                    70000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Boneka Kecil",
-                    50000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Selimut Besar",
-                    25000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Selimut Kecil",
-                    10000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Seprei Tebal",
-                    30000,
-                    category2Id.toString(),
-                    false
-                ),
-                Product(
-                    UUID.randomUUID().toString(),
-                    "Seprei Sedang",
-                    20000,
-                    category2Id.toString(),
-                    false
-                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Cuci Lipat Expres",
+//                    7000,
+//                    category1Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Cuci Setrika",
+//                    7000,
+//                    category1Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Cuci Setrika Expres",
+//                    9000,
+//                    category1Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Bed Cover Besar",
+//                    40000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Bed Cover Kecil",
+//                    35000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Horden Tebal/Besar",
+//                    35000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Horden Sedang",
+//                    20000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Horden Kecil",
+//                    10000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Boneka Besar",
+//                    70000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Boneka Kecil",
+//                    50000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Selimut Besar",
+//                    25000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Selimut Kecil",
+//                    10000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Seprei Tebal",
+//                    30000,
+//                    category2Id.toString(),
+//                    false
+//                ),
+//                Product(
+//                    UUID.randomUUID().toString(),
+//                    "Seprei Sedang",
+//                    20000,
+//                    category2Id.toString(),
+//                    false
+//                ),
                 Product(
                     UUID.randomUUID().toString(),
                     "Seprei Kecil",
@@ -325,7 +326,8 @@ class NewUserViewModel(
                 CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, "tabung", false)
             )
 
-            val customer = Customer("0", "walk-in customer", "", false)
+            val customer = Customer("0", "walk-in customer", "", "", "", false)
+            val cashier = Cashier("0", "Pemilik", "", true, false)
 
             userRepository.transactionInsertNewUser(
                 user,
@@ -333,6 +335,7 @@ class NewUserViewModel(
                 categoryList,
                 productList,
                 customer,
+                cashier,
                 cashFlowCategoryList
             )
 

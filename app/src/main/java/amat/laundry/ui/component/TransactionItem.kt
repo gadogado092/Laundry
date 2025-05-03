@@ -36,7 +36,6 @@ fun TransactionItem(
     createAt: String,
     customerName: String,
     cashierName: String,
-    totalClothes: String,
     note: String,
     isFullPayment: Boolean
 ) {
@@ -130,14 +129,6 @@ fun TransactionItem(
                     imageVector = Icons.Default.DryCleaning,
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(color = TealGreen)
-                )
-                Text(
-                    text = "$totalClothes Buah",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = FontBlack,
-                    ),
-                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
         }

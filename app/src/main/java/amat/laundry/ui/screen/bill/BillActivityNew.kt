@@ -213,7 +213,7 @@ class BillActivityNew : ComponentActivity() {
                         printConfig(outputStream, dataInvoice.businessNumberPhone, 3, 1, 1)
 
                         printCustom(
-                            "------------------------------------------",
+                            "-".repeat(dataInvoice.printerCharacterSize),
                             0,
                             1,
                             outputStream
@@ -244,12 +244,6 @@ class BillActivityNew : ComponentActivity() {
                             0,
                             outputStream
                         )
-                        printCustom(
-                            "Jumlah Pakaian ${dataInvoice.totalClothes}",
-                            0,
-                            0,
-                            outputStream
-                        )
 
                         printConfig(outputStream, "Nama   : ${dataInvoice.customerName}", 1, 1, 0)
 
@@ -263,7 +257,7 @@ class BillActivityNew : ComponentActivity() {
                             )
                         }
                         printCustom(
-                            "------------------------------------------",
+                            "-".repeat(dataInvoice.printerCharacterSize),
                             0,
                             1,
                             outputStream
@@ -291,7 +285,7 @@ class BillActivityNew : ComponentActivity() {
 
                         }
                         printCustom(
-                            "------------------------------------------",
+                            "-".repeat(dataInvoice.printerCharacterSize),
                             0,
                             1,
                             outputStream
@@ -636,14 +630,6 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     color = FontGrey,
-                                )
-                            )
-                            Text(
-                                data.totalClothes,
-                                modifier = Modifier.align(Alignment.End),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = FontBlack,
                                 )
                             )
                         }

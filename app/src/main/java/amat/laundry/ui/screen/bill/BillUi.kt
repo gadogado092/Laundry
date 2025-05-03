@@ -12,11 +12,11 @@ data class BillUi(
     val printerName: String = "",
     val printerAddress: String = "",
     val printerCharacterSize: Int = 32,
+    val sizeLinePrinter: Int = 42,
 
     val dateTimeTransaction: String = "",
     val customerName: String = "",
     val cashierName: String = "",
-    val totalClothes: String = "",
     val invoiceCode: String = "",
     val isFullPayment: Boolean = false,
 

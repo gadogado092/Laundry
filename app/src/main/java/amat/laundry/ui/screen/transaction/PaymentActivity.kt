@@ -58,7 +58,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -242,17 +241,14 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                     errorMessage = viewModel.isCashierNameValid.collectAsState().value.errorMessage
                 )
                 MyOutlinedTextField(
-                    label = "Jumlah Pakaian",
-                    value = viewModel.stateUi.collectAsState().value.totalClothes,
+                    label = "Catatan Transaksi",
+                    value = viewModel.stateUi.collectAsState().value.note,
                     onValueChange = {
-                        viewModel.setTotalClothes(it)
+                        viewModel.setNote(it)
                     },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    isError = viewModel.isTotalClothesValid.collectAsState().value.isError,
-                    errorMessage = viewModel.isTotalClothesValid.collectAsState().value.errorMessage
                 )
 
 //                MyOutlinedTextField(

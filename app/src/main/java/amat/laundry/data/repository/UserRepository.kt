@@ -1,6 +1,7 @@
 package amat.laundry.data.repository
 
 import amat.laundry.data.CashFlowCategory
+import amat.laundry.data.Cashier
 import amat.laundry.data.Category
 import amat.laundry.data.Customer
 import amat.laundry.data.LaundryStatus
@@ -48,6 +49,7 @@ class UserRepository(private val userDao: UserDao) {
         categoryList: List<Category>,
         productList: List<Product>,
         customer: Customer,
+        cashier: Cashier,
         cashFlowCategoryList: List<CashFlowCategory>
     ) {
         userDao.transactionInsertNewUser(
@@ -56,6 +58,7 @@ class UserRepository(private val userDao: UserDao) {
             categoryList,
             productList,
             customer,
+            cashier,
             cashFlowCategoryList
         )
     }

@@ -4,12 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Customer(
+data class Cashier(
     @PrimaryKey
     val id: String,
     val name: String,
-    val numberPhone: String,
-    val address: String,
     val note: String,
+    val isLastUsed: Boolean,
     val isDelete: Boolean
 )

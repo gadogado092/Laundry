@@ -63,13 +63,14 @@ class BillViewModel(
                         isFullPayment = dataTransaction.isFullPayment,
 
                         cashierName = dataTransaction.userName,
-                        totalClothes = dataTransaction.totalClothes,
-
                         printerName = dataProfile.printerName,
                         printerAddress = dataProfile.printerAddress,
                         printerCharacterSize = dataProfile.sizeCharacterPrinter,
+                        sizeLinePrinter = dataProfile.sizeLinePrinter,
 
-                        customerName = dataTransaction.customerName,
+                        //Todo
+                        //get customer name from tabel transaction
+                        customerName = "",
                         invoiceCode = dataTransaction.invoiceCode,
                         dateTimeTransaction = dataTransaction.createAt,
                         totalPrice = dataTransaction.totalPrice,
