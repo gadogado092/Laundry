@@ -80,6 +80,8 @@
     <string name="title_product">Produk/Layanan</string>
     <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
     <string name="title_category">Kategori</string>
+    <string name="title_cashier">Kasir</string>
+    <string name="title_customer">Customer/Pelanggan</string>
     <string name="title_cash_flow">Alur Kas</string>
     <string name="title_cash_flow_out">Alur Kas Pengeluaran</string>
     <string name="subtitle_cash_flow">Pantau Pengeluaran Usaha Disini</string>

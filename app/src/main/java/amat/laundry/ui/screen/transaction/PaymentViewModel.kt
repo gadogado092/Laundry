@@ -88,6 +88,27 @@ class PaymentViewModel(
         _stateUi.value = stateUi.value.copy(isFullPayment = value)
     }
 
+    fun setIsOldCustomer(value: Boolean) {
+        clearError()
+        if (value){
+            _stateUi.value = stateUi.value.copy(
+                isOldCustomer = true,
+                customerId = "",
+                customerName = "Pilih Customer/Pelanggan",
+                customerAddress = "",
+                customerNumberPhone = "",
+            )
+        }else{
+            _stateUi.value = stateUi.value.copy(
+                isOldCustomer = false,
+                customerId = "",
+                customerName = "",
+                customerAddress = "",
+                customerNumberPhone = "",
+            )
+        }
+    }
+
     fun setCustomerName(value: String) {
         clearError()
         _stateUi.value = _stateUi.value.copy(customerName = value)
@@ -100,8 +121,8 @@ class PaymentViewModel(
 
     fun setCashierName(value: String) {
         clearError()
-        _stateUi.value = _stateUi.value.copy(userName = value)
-        if (stateUi.value.userName.trim().isEmpty()) {
+        _stateUi.value = _stateUi.value.copy(cashierName = value)
+        if (stateUi.value.cashierName.trim().isEmpty()) {
             _isCashierNameValid.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
         } else {
             _isCashierNameValid.value = ValidationResult(false, "")
@@ -187,8 +208,8 @@ class PaymentViewModel(
                     isFullPayment = stateUi.value.isFullPayment,
                     totalPrice = stateUi.value.totalPrice,
                     note = stateUi.value.note,
-                    userId = stateUi.value.userId,
-                    userName = stateUi.value.userName,
+                    cashierId = stateUi.value.cashierId,
+                    cashierName = stateUi.value.cashierName,
                     createAt = createAt,
                     isDelete = false
                 )
@@ -216,7 +237,7 @@ class PaymentViewModel(
             return false
         }
 
-        if (stateUi.value.userName.trim().isEmpty()) {
+        if (stateUi.value.cashierName.trim().isEmpty()) {
             _isCashierNameValid.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
             _isProsesFailed.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
             return false

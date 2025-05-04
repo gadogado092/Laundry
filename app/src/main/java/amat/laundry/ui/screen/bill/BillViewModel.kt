@@ -62,7 +62,7 @@ class BillViewModel(
                         footerNote = dataProfile.footerNote,
                         isFullPayment = dataTransaction.isFullPayment,
 
-                        cashierName = dataTransaction.userName,
+                        cashierName = dataTransaction.cashierName,
                         printerName = dataProfile.printerName,
                         printerAddress = dataProfile.printerAddress,
                         printerCharacterSize = dataProfile.sizeCharacterPrinter,

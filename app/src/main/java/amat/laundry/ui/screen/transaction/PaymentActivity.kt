@@ -8,6 +8,7 @@ import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.BoxPrice
 import amat.laundry.ui.component.CenterLayout
+import amat.laundry.ui.component.ComboBox
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
@@ -212,34 +213,106 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
         ) {
             item {
 
-                Spacer(modifier = Modifier.height(8.dp))
-                MyOutlinedTextField(
-                    label = "Nama Pelanggan",
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                    value = viewModel.stateUi.collectAsState().value.customerName,
-                    onValueChange = {
-                        viewModel.setCustomerName(it)
-                    },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
-                    errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = "Tipe Customer/Pelanggan", style = TextStyle(
+                            fontSize = 18.sp,
+                            color = FontBlack,
+                        )
+                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    viewModel.setIsOldCustomer(true)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = viewModel.stateUi.collectAsState().value.isOldCustomer,
+                                onClick = { viewModel.setIsOldCustomer(true) }
+                            )
+                            Text(
+                                text = "Lama", style = TextStyle(
+                                    fontSize = 18.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    viewModel.setIsOldCustomer(false)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = !viewModel.stateUi.collectAsState().value.isOldCustomer,
+                                onClick = { viewModel.setIsOldCustomer(false) }
+                            )
+                            Text(
+                                text = "Baru", style = TextStyle(
+                                    fontSize = 18.sp,
+                                    color = FontBlack,
+                                )
+                            )
+                        }
+                    }
+                }
+
+                if (viewModel.stateUi.collectAsState().value.isOldCustomer){
+                    //old user
+                    ComboBox(
+                        modifier = Modifier.padding(8.dp,4.dp,8.dp,0.dp),
+                        title = stringResource(id = R.string.title_customer),
+                        value = viewModel.stateUi.collectAsState().value.customerName,
+                        isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
+                        errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                    ) {
+                        //todo
+                        //viewModel.getCustomer()
+                    }
+                }else{
+                    //new user
+                    Spacer(modifier = Modifier.height(4.dp))
+                    MyOutlinedTextField(
+                        label = "Nama Pelanggan",
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        value = viewModel.stateUi.collectAsState().value.customerName,
+                        onValueChange = {
+                            viewModel.setCustomerName(it)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
+                        errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                    )
+                }
+
+                Divider(
+                    modifier = Modifier.padding(top = 8.dp),
+                    color = GreyLight,
+                    thickness = 8.dp
                 )
 
-                MyOutlinedTextField(
-                    label = "Nama Kasir",
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                    value = viewModel.stateUi.collectAsState().value.userName,
-                    onValueChange = {
-                        viewModel.setCashierName(it)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                ComboBox(
+                    modifier = Modifier.padding(8.dp,8.dp,8.dp,0.dp),
+                    title = stringResource(id = R.string.title_cashier),
+                    value = viewModel.stateUi.collectAsState().value.cashierName,
                     isError = viewModel.isCashierNameValid.collectAsState().value.isError,
                     errorMessage = viewModel.isCashierNameValid.collectAsState().value.errorMessage
-                )
+                ) {
+                    //todo
+                    //viewModel.getCashier()
+                }
+
                 MyOutlinedTextField(
                     label = "Catatan Transaksi",
                     value = viewModel.stateUi.collectAsState().value.note,

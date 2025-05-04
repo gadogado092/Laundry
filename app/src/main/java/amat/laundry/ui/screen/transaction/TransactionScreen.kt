@@ -204,7 +204,7 @@ fun ListTransactionView(
                     //todo get nama cutomer from tabel customer
                     customerName = "",
                     createAt = dateTimeUniversalToDisplay(data.createAt),
-                    cashierName = data.userName
+                    cashierName = data.cashierName
                 )
             }
         }

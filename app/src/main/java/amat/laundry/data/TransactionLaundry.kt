@@ -14,8 +14,8 @@ data class TransactionLaundry(
     val isFullPayment: Boolean,
     val totalPrice: String,
     val note: String,
-    val userId: String,
-    val userName: String,
+    val cashierId: String,
+    val cashierName: String,
     val createAt: String,
     val isDelete: Boolean
 )
