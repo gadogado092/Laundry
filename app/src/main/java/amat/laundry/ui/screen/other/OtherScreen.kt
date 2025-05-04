@@ -39,6 +39,8 @@ import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material.icons.filled.Person2
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Wash
 import androidx.compose.material3.Text
@@ -66,6 +68,8 @@ fun OtherScreen(
     navigateToProduct: () -> Unit,
     navigateToCategory: () -> Unit,
     navigateToCashFlow: () -> Unit,
+    navigateToCashier: () -> Unit,
+    navigateToCustomer: () -> Unit,
     navigateToCashFlowCategory: () -> Unit,
     onClickTutorial: () -> Unit,
     onClickCostumerService: (String) -> Unit
@@ -231,6 +235,26 @@ fun OtherScreen(
         Divider(
             color = GreyLight,
             thickness = 8.dp,
+        )
+
+        OtherMenuItem(
+            Icons.Default.Person2,
+            stringResource(id = R.string.title_customer),
+            stringResource(id = R.string.subtitle_customer_2),
+            modifier = Modifier
+                .clickable {
+                    navigateToCustomer()
+                },
+        )
+
+        OtherMenuItem(
+            Icons.Default.ManageAccounts,
+            stringResource(id = R.string.title_cashier),
+            stringResource(id = R.string.subtitle_cashier),
+            modifier = Modifier
+                .clickable {
+                    navigateToCashier()
+                },
         )
 
         OtherMenuItem(

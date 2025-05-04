@@ -9,7 +9,6 @@ data class Customer(
     val id: String,
     val name: String,
     val numberPhone: String,
-    val address: String,
     val note: String,
     val isDelete: Boolean
 )

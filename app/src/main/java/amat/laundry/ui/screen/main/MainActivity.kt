@@ -7,7 +7,9 @@ import amat.laundry.ui.navigation.NavigationItem
 import amat.laundry.ui.navigation.Screen
 import amat.laundry.ui.screen.cashflow.CashFlowActivity
 import amat.laundry.ui.screen.cashflowcategory.CashFlowCategoryActivity
+import amat.laundry.ui.screen.cashier.CashierActivity
 import amat.laundry.ui.screen.category.CategoryActivity
+import amat.laundry.ui.screen.customer.CustomerActivity
 import amat.laundry.ui.screen.home.HomeScreen
 import amat.laundry.ui.screen.other.OtherScreen
 import amat.laundry.ui.screen.printer.PrinterActivity
@@ -131,6 +133,14 @@ fun MainScreen(
                             it,
                             myViewModel.typeWa.value
                         )
+                    },
+                    navigateToCustomer = {
+                        val intent = Intent(context, CustomerActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    navigateToCashier = {
+                        val intent = Intent(context, CashierActivity::class.java)
+                        context.startActivity(intent)
                     },
                     navigateToProduct = {
                         val intent = Intent(context, ProductActivity::class.java)

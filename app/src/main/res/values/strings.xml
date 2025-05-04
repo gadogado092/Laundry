@@ -81,7 +81,11 @@
     <string name="subtitle_product">Sesuaikan Produk/Layanan Tersedia</string>
     <string name="title_category">Kategori</string>
     <string name="title_cashier">Kasir</string>
+    <string name="subtitle_cashier">Kelola Data Kasir</string>
+    <string name="title_add_cashier">Tambah Kasir</string>
     <string name="title_customer">Customer/Pelanggan</string>
+    <string name="subtitle_customer_2">Kelola Data Customer/Pelanggan</string>
+    <string name="title_add_customer">Tambah Customer/Pelanggan</string>
     <string name="title_cash_flow">Alur Kas</string>
     <string name="title_cash_flow_out">Alur Kas Pengeluaran</string>
     <string name="subtitle_cash_flow">Pantau Pengeluaran Usaha Disini</string>

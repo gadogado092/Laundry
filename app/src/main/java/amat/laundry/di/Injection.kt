@@ -5,6 +5,7 @@ import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CashFlowCategoryRepository
 import amat.laundry.data.repository.CashFlowRepository
 import amat.laundry.data.repository.CategoryRepository
+import amat.laundry.data.repository.CustomerRepository
 import amat.laundry.data.repository.DetailTransactionRepository
 import amat.laundry.data.repository.ProductRepository
 import amat.laundry.data.repository.TransactionRepository
@@ -57,6 +58,12 @@ object Injection {
     fun provideCashFlowRepository(context: Context): CashFlowRepository {
         return CashFlowRepository.getInstance(
             LaundryRoomDatabase.getDatabase(context).cashFlowDao()
+        )
+    }
+
+    fun provideCustomerRepository(context: Context): CustomerRepository {
+        return CustomerRepository.getInstance(
+            LaundryRoomDatabase.getDatabase(context).customerDao()
         )
     }
 

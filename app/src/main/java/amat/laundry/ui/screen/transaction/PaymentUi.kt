@@ -6,7 +6,7 @@ data class PaymentUi(
     val customerId: String = "",
     val customerName: String = "Pilih Customer/Pelanggan",
     val customerNumberPhone: String = "",
-    val customerAddress: String = "",
+    val customerNote: String = "",
 
     val note: String = "",
     val paymentDate: String = "",

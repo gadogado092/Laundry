@@ -326,7 +326,7 @@ class NewUserViewModel(
                 CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, "tabung", false)
             )
 
-            val customer = Customer("0", "walk-in customer", "", "", "", false)
+            val customer = Customer("0", "walk-in customer", "", "",  false)
             val cashier = Cashier("0", "Pemilik", "", true, false)
 
             userRepository.transactionInsertNewUser(

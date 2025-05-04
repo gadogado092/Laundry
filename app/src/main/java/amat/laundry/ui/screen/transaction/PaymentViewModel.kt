@@ -95,7 +95,7 @@ class PaymentViewModel(
                 isOldCustomer = true,
                 customerId = "",
                 customerName = "Pilih Customer/Pelanggan",
-                customerAddress = "",
+                customerNote = "",
                 customerNumberPhone = "",
             )
         }else{
@@ -103,7 +103,7 @@ class PaymentViewModel(
                 isOldCustomer = false,
                 customerId = "",
                 customerName = "",
-                customerAddress = "",
+                customerNote = "",
                 customerNumberPhone = "",
             )
         }
