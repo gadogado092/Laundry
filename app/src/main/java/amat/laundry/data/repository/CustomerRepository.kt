@@ -5,6 +5,10 @@ import amat.laundry.data.CustomerDao
 
 class CustomerRepository(private val customerDao: CustomerDao) {
 
+    suspend fun getCustomer(): List<Customer>{
+        return customerDao.getCustomer()
+    }
+
     suspend fun insert(customer: Customer) {
         customerDao.insert(customer)
     }

@@ -4,13 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerDao {
 
-    @Query("SELECT * FROM Customer WHERE isDelete=0 ")
-    fun getCustomerList(): Flow<List<Customer>>
+    @Query("SELECT * FROM Customer WHERE isDelete=0 AND id!=0")
+    suspend fun getCustomer(): List<Customer>
 
     @Update
     suspend fun update(customer: Customer)
