@@ -1,15 +1,33 @@
 package amat.laundry.ui.screen.cashier
 
 import amat.laundry.R
+import amat.laundry.di.Injection
+import amat.laundry.ui.common.OnLifecycleEvent
+import amat.laundry.ui.component.MyOutlinedTextField
+import amat.laundry.ui.theme.FontBlackSoft
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
+import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -17,23 +35,37 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AddCashierActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val intent = intent
+        val id = intent.getStringExtra("id")
+
         setContent {
             val context = LocalContext.current
             LaundryAppTheme {
-                AddCashierScreen(context)
+                if (id != null) {
+                    AddCashierScreen(context, id)
+                } else {
+                    AddCashierScreen(context, "")
+                }
             }
         }
 
@@ -48,8 +80,60 @@ class AddCashierActivity : ComponentActivity() {
 
 @Composable
 fun AddCashierScreen(
-    context: Context
+    context: Context,
+    id: String
 ) {
+
+    val viewModel: AddCashierViewModel =
+        viewModel(
+            factory = AddCashierViewModelFactory(
+                Injection.provideCashierRepository(context)
+            )
+        )
+
+    OnLifecycleEvent { owner, event ->
+        // do stuff on event
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                viewModel.getCashier(id)
+            }
+
+            else -> { /* other stuff */
+            }
+        }
+    }
+
+    if (!viewModel.isProsesFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Berhasil Simpan Data", Toast.LENGTH_SHORT)
+            .show()
+        val activity = (context as? Activity)
+        activity?.finish()
+    } else {
+        if (viewModel.isProsesFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    if (!viewModel.isProsesDeleteFailed.collectAsState().value.isError) {
+        Toast.makeText(context, "Berhasil Hapus Data", Toast.LENGTH_SHORT)
+            .show()
+        val activity = (context as? Activity)
+        activity?.finish()
+    } else {
+        if (viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage.isNotEmpty()) {
+            Toast.makeText(
+                context,
+                viewModel.isProsesDeleteFailed.collectAsState().value.errorMessage,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
 
     //START UI
     Column {
@@ -78,6 +162,116 @@ fun AddCashierScreen(
             },
         )
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            MyOutlinedTextField(
+                label = "Nama Kasir",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                value = viewModel.stateUi.collectAsState().value.name,
+                onValueChange = {
+                    viewModel.setName(it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                isError = viewModel.isNameValid.collectAsState().value.isError,
+                errorMessage = viewModel.isNameValid.collectAsState().value.errorMessage
+            )
+
+            MyOutlinedTextField(
+                label = "Catatan",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                modifier = Modifier.fillMaxWidth(),
+                value = viewModel.stateUi.collectAsState().value.note,
+                onValueChange = {
+                    viewModel.setNote(it)
+                },
+            )
+
+            Button(
+                onClick = {
+                    if (viewModel.dataIsComplete()) {
+                        showBottomConfirm(
+                            context,
+                            viewModel
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = GreenDark)
+            ) {
+                Text(text = "Simpan", color = FontWhite)
+            }
+
+            if (viewModel.stateUi.collectAsState().value.id.isNotEmpty()) {
+                Button(
+                    onClick = {
+                        if (viewModel.dataDeleteIsComplete()) {
+                            showBottomConfirmDelete(context, viewModel)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = GreyLight
+                    )
+                ) {
+                    Text(text = "Hapus Data", color = FontBlackSoft)
+                }
+            }
+
+        }
+
     }
+
+}
+
+private fun showBottomConfirm(
+    context: Context,
+    viewModel: AddCashierViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Yakin Simpan Data?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.process()
+    }
+    bottomSheetDialog.show()
+
+}
+
+private fun showBottomConfirmDelete(
+    context: Context,
+    viewModel: AddCashierViewModel
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    val messageString =
+        "Yakin Hapus Data?"
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.processDelete()
+    }
+    bottomSheetDialog.show()
 
 }
