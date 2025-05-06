@@ -1,7 +1,9 @@
 package amat.laundry.ui.screen.transaction
 
+import amat.laundry.CashierAdapter
 import amat.laundry.R
 import amat.laundry.currencyFormatterStringViewZero
+import amat.laundry.data.Cashier
 import amat.laundry.data.ProductCart
 import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
@@ -14,6 +16,7 @@ import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
 import amat.laundry.ui.component.PaymentCartItem
 import amat.laundry.ui.screen.bill.BillActivityNew
+import amat.laundry.ui.screen.cashier.AddCashierActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
@@ -23,6 +26,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -66,6 +70,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class PaymentActivity : ComponentActivity() {
@@ -97,7 +103,8 @@ fun PaymentScreen(
         viewModel(
             factory = PaymentViewModelFactory(
                 Injection.provideCartRepository(context),
-                Injection.provideTransactionRepository(context)
+                Injection.provideTransactionRepository(context),
+                Injection.provideCashierRepository(context)
             )
         )
 
@@ -116,6 +123,37 @@ fun PaymentScreen(
             }
 
             else -> { /* other stuff */
+            }
+        }
+    }
+
+    //catch get Cashier result
+    viewModel.stateListCashier.collectAsState(initial = UiState.Error("")).value.let { uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                if (uiState.errorMessage.isNotEmpty()) {
+                    Toast.makeText(
+                        context,
+                        uiState.errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            UiState.Loading -> {
+                Toast.makeText(
+                    context,
+                    "Loading Data Kasir",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is UiState.Success -> {
+                showBottomSheetCashier(
+                    viewModel = viewModel,
+                    context = context,
+                    uiState.data
+                )
             }
         }
     }
@@ -266,10 +304,10 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                     }
                 }
 
-                if (viewModel.stateUi.collectAsState().value.isOldCustomer){
+                if (viewModel.stateUi.collectAsState().value.isOldCustomer) {
                     //old user
                     ComboBox(
-                        modifier = Modifier.padding(8.dp,4.dp,8.dp,0.dp),
+                        modifier = Modifier.padding(8.dp, 4.dp, 8.dp, 0.dp),
                         title = stringResource(id = R.string.title_customer),
                         value = viewModel.stateUi.collectAsState().value.customerName,
                         isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
@@ -278,7 +316,7 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                         //todo
                         //viewModel.getCustomer()
                     }
-                }else{
+                } else {
                     //new user
                     Spacer(modifier = Modifier.height(4.dp))
                     MyOutlinedTextField(
@@ -303,14 +341,13 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                 )
 
                 ComboBox(
-                    modifier = Modifier.padding(8.dp,8.dp,8.dp,0.dp),
+                    modifier = Modifier.padding(8.dp, 8.dp, 8.dp, 0.dp),
                     title = stringResource(id = R.string.title_cashier),
                     value = viewModel.stateUi.collectAsState().value.cashierName,
                     isError = viewModel.isCashierNameValid.collectAsState().value.isError,
                     errorMessage = viewModel.isCashierNameValid.collectAsState().value.errorMessage
                 ) {
-                    //todo
-                    //viewModel.getCashier()
+                    viewModel.getCashier()
                 }
 
                 MyOutlinedTextField(
@@ -323,18 +360,6 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                 )
-
-//                MyOutlinedTextField(
-//                    label = "Catatan",
-//                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 8.dp),
-//                    value = viewModel.stateUi.collectAsState().value.note,
-//                    onValueChange = {
-//                        viewModel.setNote(it)
-//                    },
-//                )
 
                 Divider(
                     modifier = Modifier.padding(top = 8.dp),
@@ -478,4 +503,45 @@ private fun showBottomConfirm(
     }
     bottomSheetDialog.show()
 
+}
+
+fun showBottomSheetCashier(
+    viewModel: PaymentViewModel,
+    context: Context,
+    data: List<Cashier>
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_select_list)
+    val title = bottomSheetDialog.findViewById<TextView>(R.id.text_title)
+    val textEmpty = bottomSheetDialog.findViewById<TextView>(R.id.text_empty)
+    val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
+    val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
+
+    title?.setText(R.string.title_category)
+    buttonAdd?.setText(R.string.add)
+
+    if (data.isEmpty()) {
+        textEmpty?.visibility = View.VISIBLE
+    }
+
+    buttonAdd?.setOnClickListener {
+        val intent = Intent(context, AddCashierActivity::class.java)
+        context.startActivity(intent)
+        bottomSheetDialog.dismiss()
+    }
+
+    val adapter = CashierAdapter {
+        viewModel.setCashierSelected(it.id, it.name)
+        bottomSheetDialog.dismiss()
+    }
+
+    with(recyclerView) {
+        this?.setHasFixedSize(true)
+        this?.layoutManager =
+            LinearLayoutManager(context)
+        this?.adapter = adapter
+    }
+
+    adapter.setData(data)
+    bottomSheetDialog.show()
 }

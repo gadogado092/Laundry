@@ -9,6 +9,14 @@ class CashierRepository(private val cashierDao: CashierDao) {
         return cashierDao.getCashier()
     }
 
+    suspend fun getAllCashier(): List<Cashier> {
+        return cashierDao.getAllCashier()
+    }
+
+    suspend fun getCashierLastUsed(): List<Cashier> {
+        return cashierDao.getCashierLastUsed()
+    }
+
     suspend fun insert(cashier: Cashier) {
         cashierDao.insert(cashier)
     }
@@ -19,6 +27,10 @@ class CashierRepository(private val cashierDao: CashierDao) {
 
     suspend fun deleteCashier(id: String) {
         cashierDao.deleteCashier(id)
+    }
+
+    suspend fun setCashierIsLastUsed(id: String) {
+        cashierDao.transactionSetCashierLastUsed(id)
     }
 
     suspend fun getCashier(id: String): Cashier {

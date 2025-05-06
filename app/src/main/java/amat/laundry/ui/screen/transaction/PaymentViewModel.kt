@@ -1,10 +1,12 @@
 package amat.laundry.ui.screen.transaction
 
+import amat.laundry.data.Cashier
 import amat.laundry.data.DetailTransaction
 import amat.laundry.data.ProductCart
 import amat.laundry.data.TransactionLaundry
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
+import amat.laundry.data.repository.CashierRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.dateTimeToKodeInvoice
 import amat.laundry.generateDateTimeNow
@@ -21,7 +23,8 @@ import java.util.UUID
 
 class PaymentViewModel(
     private val cartRepository: CartRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val cashierRepository: CashierRepository
 ) : ViewModel() {
 
     private val _stateProduct: MutableStateFlow<UiState<List<ProductCart>>> =
@@ -51,11 +54,36 @@ class PaymentViewModel(
     val isCashierNameValid: StateFlow<ValidationResult>
         get() = _isCashierNameValid
 
+    private val _stateListCashier: MutableStateFlow<UiState<List<Cashier>>> =
+        MutableStateFlow(UiState.Error(""))
+    val stateListCashier: StateFlow<UiState<List<Cashier>>>
+        get() = _stateListCashier
+
     private val _isProsesFailed: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(true, ""))
 
     val isProsesFailed: StateFlow<ValidationResult>
         get() = _isProsesFailed
+
+    init {
+        initCashierLastUsed()
+    }
+
+    private fun initCashierLastUsed() {
+        viewModelScope.launch {
+            try {
+                val data = cashierRepository.getCashierLastUsed()
+                if (data.isNotEmpty()) {
+                    setCashierSelected(data[0].id, data[0].name)
+                } else {
+                    setCashierSelected("0", "Pemilik")
+                }
+            } catch (e: Exception) {
+                Log.e("payment", e.message.toString())
+                setCashierSelected("0", "Pemilik")
+            }
+        }
+    }
 
 
     fun getProduct() {
@@ -78,6 +106,18 @@ class PaymentViewModel(
         }
     }
 
+    fun setCashierSelected(id: String, name: String) {
+        clearError()
+        _stateUi.value = stateUi.value.copy(cashierId = id, cashierName = name)
+        try {
+            viewModelScope.launch {
+                cashierRepository.setCashierIsLastUsed(id)
+            }
+        } catch (e: Exception) {
+            Log.e("payment", e.message.toString())
+        }
+    }
+
     fun setNote(value: String) {
         clearError()
         _stateUi.value = stateUi.value.copy(note = value)
@@ -90,7 +130,7 @@ class PaymentViewModel(
 
     fun setIsOldCustomer(value: Boolean) {
         clearError()
-        if (value){
+        if (value) {
             _stateUi.value = stateUi.value.copy(
                 isOldCustomer = true,
                 customerId = "",
@@ -98,7 +138,7 @@ class PaymentViewModel(
                 customerNote = "",
                 customerNumberPhone = "",
             )
-        }else{
+        } else {
             _stateUi.value = stateUi.value.copy(
                 isOldCustomer = false,
                 customerId = "",
@@ -119,43 +159,18 @@ class PaymentViewModel(
         }
     }
 
-    fun setCashierName(value: String) {
+    fun getCashier() {
         clearError()
-        _stateUi.value = _stateUi.value.copy(cashierName = value)
-        if (stateUi.value.cashierName.trim().isEmpty()) {
-            _isCashierNameValid.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
-        } else {
-            _isCashierNameValid.value = ValidationResult(false, "")
+        _stateListCashier.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                val data = cashierRepository.getAllCashier()
+                _stateListCashier.value = UiState.Success(data)
+            } catch (e: Exception) {
+                _stateListCashier.value = UiState.Error(e.message.toString())
+            }
         }
     }
-
-//    fun setTotalClothes(value: String) {
-//
-//        clearError()
-//
-//        val cleanValue = value.trim().replace(" ", "")
-//        if (cleanValue.toIntOrNull() != null) {
-//            _stateUi.value = stateUi.value.copy(totalClothes = cleanValue)
-//            if (cleanValue.isEmpty() || cleanValue.toInt() < 1) {
-//                _isTotalClothesValid.value =
-//                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-//            } else {
-//                _isTotalClothesValid.value = ValidationResult(false, "")
-//            }
-//        } else {
-//            if (cleanValue.isEmpty()) {
-//                _isTotalClothesValid.value =
-//                    ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-//                _stateUi.value = stateUi.value.copy(totalClothes = "")
-//            } else {
-//                _isTotalClothesValid.value =
-//                    ValidationResult(true, "Masukkan Format Angka Yang Sesuai")
-//                _stateUi.value = stateUi.value.copy(totalClothes = "")
-//            }
-//
-//        }
-//
-//    }
 
     fun process(listDataProduct: List<ProductCart>) {
         try {
@@ -237,12 +252,6 @@ class PaymentViewModel(
             return false
         }
 
-        if (stateUi.value.cashierName.trim().isEmpty()) {
-            _isCashierNameValid.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
-            _isProsesFailed.value = ValidationResult(true, "Nama Kasir Tidak Boleh Kosong")
-            return false
-        }
-
 //        if (stateUi.value.totalClothes.trim().isEmpty() || stateUi.value.totalClothes.trim() == "0") {
 //            _isTotalClothesValid.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
 //            _isProsesFailed.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
@@ -255,7 +264,8 @@ class PaymentViewModel(
 
 class PaymentViewModelFactory(
     private val cartRepository: CartRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val cashierRepository: CashierRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -263,7 +273,7 @@ class PaymentViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PaymentViewModel::class.java)) {
             return PaymentViewModel(
-                cartRepository, transactionRepository
+                cartRepository, transactionRepository, cashierRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
