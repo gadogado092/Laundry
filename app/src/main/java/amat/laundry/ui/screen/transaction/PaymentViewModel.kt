@@ -11,6 +11,7 @@ import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.dateTimeToKodeInvoice
 import amat.laundry.generateDateTimeNow
 import amat.laundry.generateZeroInvoice
+import amat.laundry.isNumberPhoneValid
 import amat.laundry.ui.common.UiState
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -42,17 +43,29 @@ class PaymentViewModel(
     val transactionId: StateFlow<String>
         get() = _transactionId
 
-    private val _isCustomerNameValid: MutableStateFlow<ValidationResult> =
+    private val _isOldCustomerValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
 
-    val isCustomerNameValid: StateFlow<ValidationResult>
-        get() = _isCustomerNameValid
+    val isOldCustomerValid: StateFlow<ValidationResult>
+        get() = _isOldCustomerValid
 
-    private val _isCashierNameValid: MutableStateFlow<ValidationResult> =
+    private val _isNewCustomerNameValid: MutableStateFlow<ValidationResult> =
         MutableStateFlow(ValidationResult(false, ""))
 
-    val isCashierNameValid: StateFlow<ValidationResult>
-        get() = _isCashierNameValid
+    val isNewCustomerNameValid: StateFlow<ValidationResult>
+        get() = _isNewCustomerNameValid
+
+    private val _isNewCustomerNumberPhoneValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+
+    val isNewCustomerNumberPhoneValid: StateFlow<ValidationResult>
+        get() = _isNewCustomerNumberPhoneValid
+
+    private val _isCashierValid: MutableStateFlow<ValidationResult> =
+        MutableStateFlow(ValidationResult(false, ""))
+
+    val isCashierValid: StateFlow<ValidationResult>
+        get() = _isCashierValid
 
     private val _stateListCashier: MutableStateFlow<UiState<List<Cashier>>> =
         MutableStateFlow(UiState.Error(""))
@@ -118,6 +131,22 @@ class PaymentViewModel(
         }
     }
 
+    fun setCustomerSelected(id: String, name: String, numberPhone: String, note: String) {
+        clearError()
+        _stateUi.value =
+            stateUi.value.copy(
+                customerId = id,
+                customerName = name,
+                customerNumberPhone = numberPhone,
+                customerNote = note
+            )
+    }
+
+    fun setCustomerNote(value: String) {
+        clearError()
+        _stateUi.value = stateUi.value.copy(customerNote = value)
+    }
+
     fun setNote(value: String) {
         clearError()
         _stateUi.value = stateUi.value.copy(note = value)
@@ -130,6 +159,10 @@ class PaymentViewModel(
 
     fun setIsOldCustomer(value: Boolean) {
         clearError()
+        _isNewCustomerNameValid.value = ValidationResult(false, "")
+        _isNewCustomerNumberPhoneValid.value = ValidationResult(false, "")
+        _isOldCustomerValid.value = ValidationResult(false, "")
+
         if (value) {
             _stateUi.value = stateUi.value.copy(
                 isOldCustomer = true,
@@ -149,13 +182,32 @@ class PaymentViewModel(
         }
     }
 
+    fun setCustomerId(value: String) {
+        clearError()
+        _stateUi.value = _stateUi.value.copy(customerId = value)
+    }
+
     fun setCustomerName(value: String) {
         clearError()
         _stateUi.value = _stateUi.value.copy(customerName = value)
         if (stateUi.value.customerName.trim().isEmpty()) {
-            _isCustomerNameValid.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+            _isNewCustomerNameValid.value =
+                ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
         } else {
-            _isCustomerNameValid.value = ValidationResult(false, "")
+            _isNewCustomerNameValid.value = ValidationResult(false, "")
+        }
+    }
+
+    fun setCustomerNumberPhone(value: String) {
+        clearError()
+        _stateUi.value = _stateUi.value.copy(customerNumberPhone = value)
+
+        if (_stateUi.value.customerNumberPhone.trim().isEmpty()) {
+            _isNewCustomerNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
+        } else if (!isNumberPhoneValid(_stateUi.value.customerNumberPhone.trim())) {
+            _isNewCustomerNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
+        } else {
+            _isNewCustomerNumberPhoneValid.value = ValidationResult(false, "")
         }
     }
 
@@ -246,17 +298,37 @@ class PaymentViewModel(
         clearError()
         //todo check custumer id tidak boleh 0
         //todo pembayaran ada pilihan customer baru atau lama
-        if (stateUi.value.customerName.trim().isEmpty()) {
-            _isCustomerNameValid.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
-            _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
-            return false
+
+        if (stateUi.value.isOldCustomer) {
+            if (stateUi.value.customerId == "") {
+                _isOldCustomerValid.value = ValidationResult(true, "Silahkan Pilih Customer")
+                _isProsesFailed.value = ValidationResult(true, "Silahkan Pilih Customer")
+                return false
+            }
+        } else {
+            if (stateUi.value.customerName.trim().isEmpty()) {
+                _isNewCustomerNameValid.value =
+                    ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+                _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+                return false
+            }
+            if (_stateUi.value.customerNumberPhone.trim().isEmpty()) {
+                _isNewCustomerNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
+                _isProsesFailed.value = ValidationResult(true, "Nomor Harus Terisi")
+                return false
+            }
+            if (!isNumberPhoneValid(_stateUi.value.customerNumberPhone.trim())) {
+                _isNewCustomerNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
+                _isProsesFailed.value = ValidationResult(true, "Nomor Belum Benar")
+                return false
+            }
         }
 
-//        if (stateUi.value.totalClothes.trim().isEmpty() || stateUi.value.totalClothes.trim() == "0") {
-//            _isTotalClothesValid.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-//            _isProsesFailed.value = ValidationResult(true, "Jumlah Pakaian Tidak Boleh Kosong")
-//            return false
-//        }
+        if (stateUi.value.cashierId == "") {
+            _isCashierValid.value = ValidationResult(true, "Silahkan Pilih Kasir")
+            _isProsesFailed.value = ValidationResult(true, "Silahkan Pilih Kasir")
+            return false
+        }
 
         return true
     }

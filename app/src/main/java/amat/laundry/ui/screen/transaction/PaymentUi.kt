@@ -12,7 +12,7 @@ data class PaymentUi(
     val paymentDate: String = "",
     val totalPrice: String = "",
 
-    val cashierId: String = "0",
+    val cashierId: String = "",
     val cashierName: String = "",
 
     val isFullPayment: Boolean = true

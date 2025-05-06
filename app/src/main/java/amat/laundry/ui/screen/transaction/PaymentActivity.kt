@@ -23,6 +23,7 @@ import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -32,7 +33,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,6 +67,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -78,8 +83,10 @@ class PaymentActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val context = LocalContext.current
+
             LaundryAppTheme {
                 PaymentScreen(context = context)
             }
@@ -99,6 +106,7 @@ fun PaymentScreen(
     modifier: Modifier = Modifier,
     context: Context
 ) {
+
     val viewModel: PaymentViewModel =
         viewModel(
             factory = PaymentViewModelFactory(
@@ -177,6 +185,20 @@ fun PaymentScreen(
         }
     }
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode== RESULT_OK){
+            val data = result.data
+            val id = data?.getStringExtra("id")
+            val name = data?.getStringExtra("name")
+            if (id != null && name != null) {
+                viewModel.setCustomerId(id)
+                viewModel.setCustomerName(name)
+            }
+        }
+    }
+
     //START UI
     Column {
         TopAppBar(
@@ -222,7 +244,7 @@ fun PaymentScreen(
                 }
 
                 is UiState.Success -> {
-                    FormPayment(viewModel, uiState.data, context)
+                    FormPayment(viewModel, uiState.data, context, launcher)
                 }
             }
         }
@@ -231,7 +253,12 @@ fun PaymentScreen(
 }
 
 @Composable
-fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, context: Context) {
+fun FormPayment(
+    viewModel: PaymentViewModel,
+    listData: List<ProductCart>,
+    context: Context,
+    startForResult: ActivityResultLauncher<Intent>
+) {
     if (listData.isEmpty()) {
         CenterLayout(
             content = {
@@ -307,18 +334,16 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                 if (viewModel.stateUi.collectAsState().value.isOldCustomer) {
                     //old user
                     ComboBox(
-                        modifier = Modifier.padding(8.dp, 4.dp, 8.dp, 0.dp),
+                        modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 0.dp),
                         title = stringResource(id = R.string.title_customer),
                         value = viewModel.stateUi.collectAsState().value.customerName,
-                        isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
-                        errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                        isError = viewModel.isOldCustomerValid.collectAsState().value.isError,
+                        errorMessage = viewModel.isOldCustomerValid.collectAsState().value.errorMessage
                     ) {
-                        //todo
-                        //viewModel.getCustomer()
+                        startForResult.launch(Intent(context, CustomerActivity::class.java))
                     }
                 } else {
                     //new user
-                    Spacer(modifier = Modifier.height(4.dp))
                     MyOutlinedTextField(
                         label = "Nama Pelanggan",
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
@@ -329,8 +354,32 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
-                        isError = viewModel.isCustomerNameValid.collectAsState().value.isError,
-                        errorMessage = viewModel.isCustomerNameValid.collectAsState().value.errorMessage
+                        isError = viewModel.isNewCustomerNameValid.collectAsState().value.isError,
+                        errorMessage = viewModel.isNewCustomerNameValid.collectAsState().value.errorMessage
+                    )
+                    MyOutlinedTextField(
+                        label = "Nomor Handphone",
+                        value = viewModel.stateUi.collectAsState().value.customerNumberPhone,
+                        onValueChange = {
+                            viewModel.setCustomerNumberPhone(it)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        isError = viewModel.isNewCustomerNumberPhoneValid.collectAsState().value.isError,
+                        errorMessage = viewModel.isNewCustomerNumberPhoneValid.collectAsState().value.errorMessage
+                    )
+                    MyOutlinedTextField(
+                        label = "Catatan",
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        value = viewModel.stateUi.collectAsState().value.customerNote,
+                        onValueChange = {
+                            viewModel.setCustomerNote(it)
+                        },
                     )
                 }
 
@@ -344,8 +393,8 @@ fun FormPayment(viewModel: PaymentViewModel, listData: List<ProductCart>, contex
                     modifier = Modifier.padding(8.dp, 8.dp, 8.dp, 0.dp),
                     title = stringResource(id = R.string.title_cashier),
                     value = viewModel.stateUi.collectAsState().value.cashierName,
-                    isError = viewModel.isCashierNameValid.collectAsState().value.isError,
-                    errorMessage = viewModel.isCashierNameValid.collectAsState().value.errorMessage
+                    isError = viewModel.isCashierValid.collectAsState().value.isError,
+                    errorMessage = viewModel.isCashierValid.collectAsState().value.errorMessage
                 ) {
                     viewModel.getCashier()
                 }
@@ -517,7 +566,7 @@ fun showBottomSheetCashier(
     val buttonAdd = bottomSheetDialog.findViewById<Button>(R.id.button_add)
     val recyclerView = bottomSheetDialog.findViewById<RecyclerView>(R.id.recyclerView)
 
-    title?.setText(R.string.title_category)
+    title?.setText(R.string.title_cashier)
     buttonAdd?.setText(R.string.add)
 
     if (data.isEmpty()) {
