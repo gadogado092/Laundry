@@ -112,7 +112,8 @@ fun PaymentScreen(
             factory = PaymentViewModelFactory(
                 Injection.provideCartRepository(context),
                 Injection.provideTransactionRepository(context),
-                Injection.provideCashierRepository(context)
+                Injection.provideCashierRepository(context),
+                Injection.provideCustomerRepository(context)
             )
         )
 

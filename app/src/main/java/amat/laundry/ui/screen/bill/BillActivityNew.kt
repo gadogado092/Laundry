@@ -19,6 +19,7 @@ import amat.laundry.ui.screen.transaction.AddTransactionActivity
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.FontBlackSoft
+import amat.laundry.ui.theme.FontBlue
 import amat.laundry.ui.theme.FontGrey
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
@@ -625,11 +626,19 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                         }
                         Column {
                             Text(
-                                "Jumlah Pakaian",
+                                "Laundry Status",
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     color = FontGrey,
+                                )
+                            )
+                            Text(
+                                data.laundryStatusName,
+                                modifier = Modifier.align(Alignment.End),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = FontBlue,
                                 )
                             )
                         }

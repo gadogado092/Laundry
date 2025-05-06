@@ -19,6 +19,8 @@ data class BillUi(
     val cashierName: String = "",
     val invoiceCode: String = "",
     val isFullPayment: Boolean = false,
+    val laundryStatusName: String = "",
+    val laundryStatusId: Int = -1,
 
     val listDetailTransaction: List<DetailTransaction> = mutableListOf(),
 

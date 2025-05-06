@@ -1,12 +1,14 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.data.Cashier
+import amat.laundry.data.Customer
 import amat.laundry.data.DetailTransaction
 import amat.laundry.data.ProductCart
 import amat.laundry.data.TransactionLaundry
 import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CashierRepository
+import amat.laundry.data.repository.CustomerRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.dateTimeToKodeInvoice
 import amat.laundry.generateDateTimeNow
@@ -25,7 +27,8 @@ import java.util.UUID
 class PaymentViewModel(
     private val cartRepository: CartRepository,
     private val transactionRepository: TransactionRepository,
-    private val cashierRepository: CashierRepository
+    private val cashierRepository: CashierRepository,
+    private val customerRepository: CustomerRepository
 ) : ViewModel() {
 
     private val _stateProduct: MutableStateFlow<UiState<List<ProductCart>>> =
@@ -184,6 +187,7 @@ class PaymentViewModel(
 
     fun setCustomerId(value: String) {
         clearError()
+        _isOldCustomerValid.value = ValidationResult(false, "")
         _stateUi.value = _stateUi.value.copy(customerId = value)
     }
 
@@ -227,6 +231,20 @@ class PaymentViewModel(
     fun process(listDataProduct: List<ProductCart>) {
         try {
             viewModelScope.launch {
+                //if new  customer
+                if (!stateUi.value.isOldCustomer) {
+                    val customerId = UUID.randomUUID().toString()
+                    customerRepository.insert(
+                        Customer(
+                            id = customerId,
+                            name = stateUi.value.customerName,
+                            numberPhone = stateUi.value.customerNumberPhone,
+                            note = stateUi.value.customerNote,
+                            isDelete = false
+                        )
+                    )
+                }
+
                 val createAt = generateDateTimeNow()
                 val dateInvoice = dateTimeToKodeInvoice(createAt)
                 var lastNumberInvoice = 0
@@ -268,7 +286,6 @@ class PaymentViewModel(
                 val transaction = TransactionLaundry(
                     id = transactionId,
                     invoiceCode = newCodeInvoice,
-                    //todo get custumer id from tabel customer
                     customerId = stateUi.value.customerId,
                     customerName = stateUi.value.customerName,
                     laundryStatusId = 1,
@@ -337,7 +354,8 @@ class PaymentViewModel(
 class PaymentViewModelFactory(
     private val cartRepository: CartRepository,
     private val transactionRepository: TransactionRepository,
-    private val cashierRepository: CashierRepository
+    private val cashierRepository: CashierRepository,
+    private val customerRepository: CustomerRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -345,7 +363,7 @@ class PaymentViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PaymentViewModel::class.java)) {
             return PaymentViewModel(
-                cartRepository, transactionRepository, cashierRepository
+                cartRepository, transactionRepository, cashierRepository, customerRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

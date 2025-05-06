@@ -42,6 +42,26 @@ fun isNumberPhoneValid(numberPhone: String): Boolean {
     return false
 }
 
+fun generateLaundryStatusName(id: Int): String {
+    return when (id) {
+        1 -> {
+            "Proses"
+        }
+        2 -> {
+            "Siap Diambil"
+        }
+        3 -> {
+            "Selesai"
+        }
+        4 -> {
+            "Batal"
+        }
+        else -> {
+            "-"
+        }
+    }
+}
+
 fun checkIsEmailValid(emailAddress: String): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
 }

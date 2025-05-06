@@ -4,6 +4,7 @@ import amat.laundry.data.entity.ValidationResult
 import amat.laundry.data.repository.DetailTransactionRepository
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
+import amat.laundry.generateLaundryStatusName
 import amat.laundry.ui.common.UiState
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -68,13 +69,15 @@ class BillViewModel(
                         printerCharacterSize = dataProfile.sizeCharacterPrinter,
                         sizeLinePrinter = dataProfile.sizeLinePrinter,
 
-                        //Todo
-                        //get customer name from tabel transaction
-                        customerName = "",
+                        customerName = dataTransaction.customerName,
                         invoiceCode = dataTransaction.invoiceCode,
                         dateTimeTransaction = dataTransaction.createAt,
                         totalPrice = dataTransaction.totalPrice,
                         noteTransaction = dataTransaction.note,
+
+                        laundryStatusId = dataTransaction.laundryStatusId,
+                        laundryStatusName = generateLaundryStatusName(dataTransaction.laundryStatusId),
+
                         listDetailTransaction = listDetailTransaction
                     )
 
