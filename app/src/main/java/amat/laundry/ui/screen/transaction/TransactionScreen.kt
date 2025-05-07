@@ -201,8 +201,7 @@ fun ListTransactionView(
                     price = currencyFormatterStringViewZero(data.totalPrice),
                     note = data.note,
                     isFullPayment = data.isFullPayment,
-                    //todo get nama cutomer from tabel customer
-                    customerName = "",
+                    customerName = data.customerName,
                     createAt = dateTimeUniversalToDisplay(data.createAt),
                     cashierName = data.cashierName
                 )

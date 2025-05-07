@@ -4,6 +4,7 @@ import amat.laundry.R
 import amat.laundry.cleanPointZeroFloat
 import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.dateTimeUniversalToDisplay
+import amat.laundry.dateToDisplayMidFormat
 import amat.laundry.di.Injection
 import amat.laundry.leftRightAlign
 import amat.laundry.printConfig
@@ -626,7 +627,7 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                         }
                         Column {
                             Text(
-                                "Laundry Status",
+                                "Estimasi Siap Ambil",
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 14.sp,
@@ -634,7 +635,8 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                                 )
                             )
                             Text(
-                                data.laundryStatusName,
+                                if (data.estimationReadyToPickup.isNotEmpty())
+                                    dateToDisplayMidFormat(data.estimationReadyToPickup) else "-",
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 16.sp,

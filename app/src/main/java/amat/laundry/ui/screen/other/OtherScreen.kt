@@ -40,8 +40,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ManageAccounts
-import androidx.compose.material.icons.filled.Person2
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material.icons.filled.Wash
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -238,7 +238,7 @@ fun OtherScreen(
         )
 
         OtherMenuItem(
-            Icons.Default.Person2,
+            Icons.Default.SupportAgent,
             stringResource(id = R.string.title_customer),
             stringResource(id = R.string.subtitle_customer_2),
             modifier = Modifier

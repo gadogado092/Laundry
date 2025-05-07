@@ -75,6 +75,8 @@ class BillViewModel(
                         totalPrice = dataTransaction.totalPrice,
                         noteTransaction = dataTransaction.note,
 
+                        estimationReadyToPickup = dataTransaction.estimationReadyToPickup,
+
                         laundryStatusId = dataTransaction.laundryStatusId,
                         laundryStatusName = generateLaundryStatusName(dataTransaction.laundryStatusId),
 

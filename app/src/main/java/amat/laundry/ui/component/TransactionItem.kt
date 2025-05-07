@@ -61,7 +61,6 @@ fun TransactionItem(
                         fontSize = 16.sp,
                         color = FontBlack,
                     ),
-                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
             Row(

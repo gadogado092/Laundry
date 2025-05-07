@@ -18,6 +18,7 @@ data class BillUi(
     val customerName: String = "",
     val cashierName: String = "",
     val invoiceCode: String = "",
+    val estimationReadyToPickup: String = "",
     val isFullPayment: Boolean = false,
     val laundryStatusName: String = "",
     val laundryStatusId: Int = -1,

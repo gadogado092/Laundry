@@ -15,5 +15,8 @@ data class PaymentUi(
     val cashierId: String = "",
     val cashierName: String = "",
 
+    val estimationReadyToPickup: String = "",
+    val finishAt:String = "",
+
     val isFullPayment: Boolean = true
 )

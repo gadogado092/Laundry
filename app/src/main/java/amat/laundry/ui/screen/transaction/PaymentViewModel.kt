@@ -1,5 +1,6 @@
 package amat.laundry.ui.screen.transaction
 
+import amat.laundry.addDateLimitApp
 import amat.laundry.data.Cashier
 import amat.laundry.data.Customer
 import amat.laundry.data.DetailTransaction
@@ -10,7 +11,9 @@ import amat.laundry.data.repository.CartRepository
 import amat.laundry.data.repository.CashierRepository
 import amat.laundry.data.repository.CustomerRepository
 import amat.laundry.data.repository.TransactionRepository
+import amat.laundry.dateDialogToUniversalFormat
 import amat.laundry.dateTimeToKodeInvoice
+import amat.laundry.generateDateNow
 import amat.laundry.generateDateTimeNow
 import amat.laundry.generateZeroInvoice
 import amat.laundry.isNumberPhoneValid
@@ -85,6 +88,16 @@ class PaymentViewModel(
         initCashierLastUsed()
     }
 
+    init {
+        _stateUi.value = stateUi.value.copy(
+            estimationReadyToPickup = addDateLimitApp(
+                generateDateNow(),
+                "Hari",
+                1
+            )
+        )
+    }
+
     private fun initCashierLastUsed() {
         viewModelScope.launch {
             try {
@@ -99,6 +112,12 @@ class PaymentViewModel(
                 setCashierSelected("0", "Pemilik")
             }
         }
+    }
+
+    fun setEstimationReadyToPickup(value: String) {
+        clearError()
+        _stateUi.value =
+            stateUi.value.copy(estimationReadyToPickup = dateDialogToUniversalFormat(value))
     }
 
 
@@ -132,17 +151,6 @@ class PaymentViewModel(
         } catch (e: Exception) {
             Log.e("payment", e.message.toString())
         }
-    }
-
-    fun setCustomerSelected(id: String, name: String, numberPhone: String, note: String) {
-        clearError()
-        _stateUi.value =
-            stateUi.value.copy(
-                customerId = id,
-                customerName = name,
-                customerNumberPhone = numberPhone,
-                customerNote = note
-            )
     }
 
     fun setCustomerNote(value: String) {
@@ -234,6 +242,7 @@ class PaymentViewModel(
                 //if new  customer
                 if (!stateUi.value.isOldCustomer) {
                     val customerId = UUID.randomUUID().toString()
+                    _stateUi.value = stateUi.value.copy(customerId = customerId)
                     customerRepository.insert(
                         Customer(
                             id = customerId,
@@ -283,6 +292,10 @@ class PaymentViewModel(
                     )
                 }
 
+                if (stateUi.value.isFullPayment) {
+                    _stateUi.value = stateUi.value.copy(paymentDate = createAt)
+                }
+
                 val transaction = TransactionLaundry(
                     id = transactionId,
                     invoiceCode = newCodeInvoice,
@@ -295,6 +308,9 @@ class PaymentViewModel(
                     cashierId = stateUi.value.cashierId,
                     cashierName = stateUi.value.cashierName,
                     createAt = createAt,
+                    paymentDate = stateUi.value.paymentDate,
+                    finishAt = stateUi.value.finishAt,
+                    estimationReadyToPickup = stateUi.value.estimationReadyToPickup,
                     isDelete = false
                 )
 
@@ -309,12 +325,11 @@ class PaymentViewModel(
 
     private fun clearError() {
         _isProsesFailed.value = ValidationResult(true, "")
+        _stateListCashier.value = UiState.Error("")
     }
 
     fun dataIsComplete(): Boolean {
         clearError()
-        //todo check custumer id tidak boleh 0
-        //todo pembayaran ada pilihan customer baru atau lama
 
         if (stateUi.value.isOldCustomer) {
             if (stateUi.value.customerId == "") {

@@ -53,9 +53,6 @@ fun generateLaundryStatusName(id: Int): String {
         3 -> {
             "Selesai"
         }
-        4 -> {
-            "Batal"
-        }
         else -> {
             "-"
         }

@@ -2,15 +2,20 @@ package amat.laundry.ui.screen.transaction
 
 import amat.laundry.CashierAdapter
 import amat.laundry.R
+import amat.laundry.convertDateToDay
+import amat.laundry.convertDateToMonth
+import amat.laundry.convertDateToYear
 import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.Cashier
 import amat.laundry.data.ProductCart
+import amat.laundry.dateToDisplayMidFormat
 import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.BoxPrice
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ComboBox
+import amat.laundry.ui.component.DateLayout
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.MyOutlinedTextField
@@ -24,11 +29,13 @@ import amat.laundry.ui.theme.GreyLight
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -189,7 +196,7 @@ fun PaymentScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode== RESULT_OK){
+        if (result.resultCode == RESULT_OK) {
             val data = result.data
             val id = data?.getStringExtra("id")
             val name = data?.getStringExtra("name")
@@ -434,6 +441,19 @@ fun FormPayment(
                     color = GreyLight,
                     thickness = 8.dp
                 )
+                DateLayout(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(8.dp)
+                        .clickable { showDatePickerEstimation(context, viewModel) },
+                    title = "Estimasi Siap Diambil",
+                    value = if (viewModel.stateUi.collectAsState().value.estimationReadyToPickup.isNotEmpty())
+                        dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.estimationReadyToPickup) else "-",
+                    isEnable = true
+                )
+                Divider(
+                    color = GreyLight,
+                    thickness = 8.dp
+                )
 
                 Spacer(Modifier.height(8.dp))
                 Text(
@@ -594,4 +614,20 @@ fun showBottomSheetCashier(
 
     adapter.setData(data)
     bottomSheetDialog.show()
+}
+
+fun showDatePickerEstimation(context: Context, viewModel: PaymentViewModel) {
+    val mYear: Int = convertDateToYear(viewModel.stateUi.value.estimationReadyToPickup).toInt()
+    val mMonth: Int =
+        convertDateToMonth(viewModel.stateUi.value.estimationReadyToPickup).toInt() - 1
+    val mDay: Int = convertDateToDay(viewModel.stateUi.value.estimationReadyToPickup).toInt()
+
+    val mDatePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, day: Int ->
+            val dateSelected = "$year-${month + 1}-$day"
+            viewModel.setEstimationReadyToPickup(dateSelected)
+        }, mYear, mMonth, mDay
+    )
+    mDatePickerDialog.show()
 }

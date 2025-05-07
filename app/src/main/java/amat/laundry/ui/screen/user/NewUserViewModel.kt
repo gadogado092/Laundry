@@ -315,8 +315,7 @@ class NewUserViewModel(
             val statusList = listOf(
                 LaundryStatus(1, "Proses"),
                 LaundryStatus(2, "Siap Diambil"),
-                LaundryStatus(3, "Selesai"),
-                LaundryStatus(4, "Batal")
+                LaundryStatus(3, "Selesai")
             )
 
             val cashFlowCategoryList = listOf(
