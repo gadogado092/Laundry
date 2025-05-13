@@ -34,6 +34,10 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         transactionDao.updateTransactionStatusPayment(transactionId, isFullPayment)
     }
 
+    suspend fun updateStatusLaundry(transactionId: String, statusId: Int) {
+        transactionDao.transactionUpdateStatusLaundry(transactionId, statusId)
+    }
+
 
     companion object {
         @Volatile

@@ -43,8 +43,26 @@ interface TransactionLaundryDao {
     )
     suspend fun updateTransactionStatusPayment(transactionId: String, isFullPayment: Boolean)
 
+    @Query(
+        "UPDATE TransactionLaundry " +
+                "SET laundryStatusId=:statusId " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun updateStatusLaundry(transactionId: String, statusId: Int)
+
     @Query("DELETE FROM Cart")
     suspend fun deleteAllCart()
+
+    @Transaction
+    suspend fun transactionUpdateStatusLaundry(transactionId: String, statusId: Int) {
+        if (statusId == 1 || statusId == 2) {
+            updateStatusLaundry(transactionId, statusId)
+        } else if (statusId == 3) {
+            updateStatusLaundry(transactionId, statusId)
+            updateTransactionStatusPayment(transactionId, true)
+        }
+
+    }
 
     @Transaction
     suspend fun insertNewTransaction(

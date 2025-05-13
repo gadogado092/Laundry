@@ -134,6 +134,32 @@ class BillViewModel(
         }
     }
 
+    fun updateStatusLaundry(transactionId: String, statusId: Int) {
+        clearError()
+
+        if (statusId == 1 || statusId == 2 || statusId == 3) {
+            if (transactionId != "") {
+
+                viewModelScope.launch {
+                    try {
+                        transactionRepository.updateStatusLaundry(transactionId, statusId)
+                        _isProsesUpdateStatusFailed.value = ValidationResult(false)
+                    } catch (e: Exception) {
+                        _isProsesUpdateStatusFailed.value =
+                            ValidationResult(true, e.message.toString())
+                    }
+                }
+
+            } else {
+                _isProsesUpdateStatusFailed.value = ValidationResult(true, "Id Transaksi Tidak Ada")
+            }
+        } else {
+            _isProsesUpdateStatusFailed.value =
+                ValidationResult(true, "Id Status Laundry Tidak Valid")
+        }
+
+    }
+
     private fun clearError() {
         _isProsesDeleteFailed.value = ValidationResult(true, "")
         _isProsesUpdateStatusFailed.value = ValidationResult(true, "")

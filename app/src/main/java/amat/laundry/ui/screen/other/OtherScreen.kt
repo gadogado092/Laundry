@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material.icons.filled.Wash
@@ -238,7 +239,7 @@ fun OtherScreen(
         )
 
         OtherMenuItem(
-            Icons.Default.SupportAgent,
+            Icons.Default.Person,
             stringResource(id = R.string.title_customer),
             stringResource(id = R.string.subtitle_customer_2),
             modifier = Modifier
@@ -248,7 +249,7 @@ fun OtherScreen(
         )
 
         OtherMenuItem(
-            Icons.Default.ManageAccounts,
+            Icons.Default.SupportAgent,
             stringResource(id = R.string.title_cashier),
             stringResource(id = R.string.subtitle_cashier),
             modifier = Modifier

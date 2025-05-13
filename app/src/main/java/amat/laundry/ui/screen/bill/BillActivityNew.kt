@@ -15,6 +15,7 @@ import amat.laundry.ui.component.BillItem
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
+import amat.laundry.ui.component.StatusLaundryItem
 import amat.laundry.ui.screen.printer.PrinterActivity
 import amat.laundry.ui.screen.transaction.AddTransactionActivity
 import amat.laundry.ui.theme.Blue
@@ -40,6 +41,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +50,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
@@ -59,7 +62,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LocalLaundryService
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.ShoppingCartCheckout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -738,6 +744,30 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                     thickness = 4.dp
                 )
 
+                Text(
+                    text = "Status Laundry",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                GenerateIconStatus(context, viewModel, transactionId, data.laundryStatusId)
+
+                Text(
+                    "*click icon untuk update status", style = TextStyle(
+                        fontSize = 14.sp,
+                        color = FontGrey,
+                    ),
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                Divider(
+                    color = GreyLight,
+                    thickness = 4.dp
+                )
+
                 if (!data.isFullPayment) {
                     Button(
                         onClick = {
@@ -785,6 +815,73 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
 
 }
 
+@Composable
+fun GenerateIconStatus(
+    context: Context,
+    viewModel: BillViewModel,
+    transactionId: String,
+    laundryStatusId: Int,
+) {
+    Row(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        StatusLaundryItem(
+            Icons.Default.LocalLaundryService, "Diproses",
+            statusIcon = 1
+        )
+        Spacer(Modifier.width(14.dp))
+        StatusLaundryItem(
+            Icons.Default.ShoppingCartCheckout, "Siap Ambil",
+            statusIcon = if (laundryStatusId == 1) {
+                2
+            } else {
+                1
+            },
+            modifier = if (laundryStatusId == 1) {
+                Modifier
+                    .clickable {
+                        showBottomConfirmUpdateStatusLaundry(
+                            context,
+                            viewModel,
+                            transactionId,
+                            2
+                        )
+                    }
+            } else {
+                Modifier
+            },
+        )
+        Spacer(Modifier.width(14.dp))
+        StatusLaundryItem(
+            Icons.Default.Check, "Selesai",
+            statusIcon = if (laundryStatusId == 2) {
+                2
+            } else if (laundryStatusId == 1) {
+                3
+            } else {
+                1
+            },
+            modifier = if (laundryStatusId == 2) {
+                Modifier
+                    .clickable {
+                        showBottomConfirmUpdateStatusLaundry(
+                            context,
+                            viewModel,
+                            transactionId,
+                            3
+                        )
+                    }
+            } else {
+                Modifier
+            },
+        )
+    }
+}
+
 private fun showBottomConfirmDelete(
     context: Context,
     viewModel: BillViewModel,
@@ -819,13 +916,48 @@ private fun showBottomConfirmUpdateStatus(
     val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
 
     val messageString =
-        "Update Status Jadi Lunas?"
+        "Update Status Pembayaran Menjadi Lunas?"
 
     message?.text = messageString
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
         viewModel.updateStatusTransaction(transactionId)
+    }
+    bottomSheetDialog.show()
+
+}
+
+private fun showBottomConfirmUpdateStatusLaundry(
+    context: Context,
+    viewModel: BillViewModel,
+    transactionId: String,
+    statusId: Int,
+) {
+    val bottomSheetDialog = BottomSheetDialog(context)
+    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
+    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
+    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
+
+    var messageString = "Status Laundry Tidak Diketahui"
+
+    if (statusId == 1) {
+        messageString =
+            "Update Status Laundry Jadi Diproses?"
+    } else if (statusId == 2) {
+        messageString =
+            "Update Status Laundry Jadi Siap Diambil?"
+    } else if (statusId == 3) {
+        messageString =
+            "Update Status Laundry Jadi Selesai dan Pembayaran Menjadi Lunas?"
+    }
+
+
+    message?.text = messageString
+
+    buttonOk?.setOnClickListener {
+        bottomSheetDialog.dismiss()
+        viewModel.updateStatusLaundry(transactionId, statusId)
     }
     bottomSheetDialog.show()
 
