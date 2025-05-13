@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DryCleaning
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LocalLaundryService
+import androidx.compose.material.icons.filled.ShoppingCartCheckout
 import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +39,11 @@ fun TransactionItem(
     customerName: String,
     cashierName: String,
     note: String,
-    isFullPayment: Boolean
+    isFullPayment: Boolean,
+    paymentDate: String,
+    finishAt: String,
+    statusId: Int,
+    estimationReadyToPickup: String
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Spacer(Modifier.height(4.dp))
@@ -98,7 +104,7 @@ fun TransactionItem(
                     }
                 }
                 BoxRectangle(
-                    title = if (isFullPayment) "Lunas " else "Belum Lunas ",
+                    title = if (isFullPayment) "Lunas $paymentDate" else "Belum Lunas ",
                     backgroundColor = if (isFullPayment) Blue else ColorPayment
                 )
             }
@@ -120,21 +126,74 @@ fun TransactionItem(
                     modifier = Modifier.padding(end = 8.dp)
                 )
             }
-            Row (verticalAlignment = Alignment.Bottom){
-                Image(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 4.dp),
-                    imageVector = Icons.Default.DryCleaning,
-                    contentDescription = "",
-                    colorFilter = ColorFilter.tint(color = TealGreen)
-                )
+            Row(verticalAlignment = Alignment.Bottom) {
+                generateStatusLaundry(statusId, finishAt, estimationReadyToPickup)
             }
         }
         Spacer(Modifier.height(4.dp))
         Divider(
             color = GreyLight,
             thickness = 1.dp
+        )
+    }
+}
+
+@Composable
+fun generateStatusLaundry(
+    statusId: Int,
+    finishAt: String,
+    estimationReadyToPickup: String
+) {
+    if (statusId == 1){
+        Image(
+            modifier = Modifier
+                .size(24.dp)
+                .padding(end = 4.dp),
+            imageVector = Icons.Default.LocalLaundryService,
+            contentDescription = "",
+            colorFilter = ColorFilter.tint(color = TealGreen)
+        )
+        Text(
+            text = "Diproses - Est. Siap Ambil $estimationReadyToPickup",
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = FontBlack,
+            ),
+            modifier = Modifier.padding(end = 8.dp, bottom = 2.dp)
+        )
+    }else if (statusId==2){
+        Image(
+            modifier = Modifier
+                .size(24.dp)
+                .padding(end = 4.dp),
+            imageVector = Icons.Default.ShoppingCartCheckout,
+            contentDescription = "",
+            colorFilter = ColorFilter.tint(color = TealGreen)
+        )
+        Text(
+            text = "Siap Ambil",
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = FontBlack,
+            ),
+            modifier = Modifier.padding(end = 8.dp, bottom = 2.dp)
+        )
+    }else if (statusId==3){
+        Image(
+            modifier = Modifier
+                .size(24.dp)
+                .padding(end = 4.dp),
+            imageVector = Icons.Default.Check,
+            contentDescription = "",
+            colorFilter = ColorFilter.tint(color = Blue)
+        )
+        Text(
+            text = "Selesai $finishAt",
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = FontBlack,
+            ),
+            modifier = Modifier.padding(end = 8.dp, bottom = 2.dp)
         )
     }
 }

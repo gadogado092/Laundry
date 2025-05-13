@@ -99,23 +99,35 @@ fun dateUniversalToDisplay(dateString: String): String {
 
 @SuppressLint("SimpleDateFormat")
 fun dateTimeUniversalToDisplay(dateString: String): String {
-    val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    val date = fmt.parse(dateString)
+    try {
+        if (dateString.isNotEmpty()) {
+            val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val date = fmt.parse(dateString)
 
-    val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
-    return fmtOut.format(date as Date)
+            val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+            return fmtOut.format(date as Date)
+        } else {
+            return ""
+        }
+    } catch (e: Exception) {
+        return "error format"
+    }
 }
 
 @SuppressLint("SimpleDateFormat")
 fun dateTimeUniversalToDateDisplay(dateString: String): String {
-    if (dateString.isNotEmpty()) {
-        val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val date = fmt.parse(dateString)
+    try {
+        if (dateString.isNotEmpty()) {
+            val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val date = fmt.parse(dateString)
 
-        val fmtOut = SimpleDateFormat("dd MMM yyyy")
-        return fmtOut.format(date as Date)
-    } else {
-        return ""
+            val fmtOut = SimpleDateFormat("dd MMM yyyy")
+            return fmtOut.format(date as Date)
+        } else {
+            return ""
+        }
+    } catch (_: Exception) {
+        return "error format"
     }
 }
 

@@ -7,6 +7,7 @@ import amat.laundry.data.TransactionLaundry
 import amat.laundry.dateRoomDay
 import amat.laundry.dateRoomMonth
 import amat.laundry.dateRoomYear
+import amat.laundry.dateTimeUniversalToDateDisplay
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.dateToDisplayMidFormat
 import amat.laundry.di.Injection
@@ -201,9 +202,13 @@ fun ListTransactionView(
                     price = currencyFormatterStringViewZero(data.totalPrice),
                     note = data.note,
                     isFullPayment = data.isFullPayment,
+                    finishAt = dateTimeUniversalToDateDisplay(data.finishAt),
                     customerName = data.customerName,
                     createAt = dateTimeUniversalToDisplay(data.createAt),
-                    cashierName = data.cashierName
+                    cashierName = data.cashierName,
+                    statusId = data.laundryStatusId,
+                    paymentDate = dateTimeUniversalToDateDisplay(data.paymentDate),
+                    estimationReadyToPickup = dateToDisplayMidFormat(data.estimationReadyToPickup),
                 )
             }
         }
