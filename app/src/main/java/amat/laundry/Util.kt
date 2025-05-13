@@ -47,12 +47,15 @@ fun generateLaundryStatusName(id: Int): String {
         1 -> {
             "Proses"
         }
+
         2 -> {
             "Siap Diambil"
         }
+
         3 -> {
             "Selesai"
         }
+
         else -> {
             "-"
         }
@@ -101,6 +104,19 @@ fun dateTimeUniversalToDisplay(dateString: String): String {
 
     val fmtOut = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
     return fmtOut.format(date as Date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun dateTimeUniversalToDateDisplay(dateString: String): String {
+    if (dateString.isNotEmpty()) {
+        val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val date = fmt.parse(dateString)
+
+        val fmtOut = SimpleDateFormat("dd MMM yyyy")
+        return fmtOut.format(date as Date)
+    } else {
+        return ""
+    }
 }
 
 @SuppressLint("SimpleDateFormat")

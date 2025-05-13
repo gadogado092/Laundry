@@ -293,7 +293,7 @@ class PaymentViewModel(
                 }
 
                 if (stateUi.value.isFullPayment) {
-                    _stateUi.value = stateUi.value.copy(paymentDate = createAt)
+                    _stateUi.value = stateUi.value.copy(paymentDate = generateDateTimeNow())
                 }
 
                 val transaction = TransactionLaundry(

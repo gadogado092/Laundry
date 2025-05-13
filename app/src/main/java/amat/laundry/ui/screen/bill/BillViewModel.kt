@@ -62,6 +62,8 @@ class BillViewModel(
                         businessNumberPhone = dataProfile.numberPhone,
                         footerNote = dataProfile.footerNote,
                         isFullPayment = dataTransaction.isFullPayment,
+                        paymentDate = dataTransaction.paymentDate,
+                        finishAt = dataTransaction.finishAt,
 
                         cashierName = dataTransaction.cashierName,
                         printerName = dataProfile.printerName,
@@ -134,7 +136,7 @@ class BillViewModel(
         }
     }
 
-    fun updateStatusLaundry(transactionId: String, statusId: Int) {
+    fun updateStatusLaundry(transactionId: String, statusId: Int, isFullPayment: Boolean) {
         clearError()
 
         if (statusId == 1 || statusId == 2 || statusId == 3) {
@@ -142,7 +144,11 @@ class BillViewModel(
 
                 viewModelScope.launch {
                     try {
-                        transactionRepository.updateStatusLaundry(transactionId, statusId)
+                        transactionRepository.updateStatusLaundry(
+                            transactionId,
+                            statusId,
+                            isFullPayment
+                        )
                         _isProsesUpdateStatusFailed.value = ValidationResult(false)
                     } catch (e: Exception) {
                         _isProsesUpdateStatusFailed.value =

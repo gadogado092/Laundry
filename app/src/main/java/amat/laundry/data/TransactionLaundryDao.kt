@@ -1,6 +1,7 @@
 package amat.laundry.data
 
 import amat.laundry.data.entity.InvoiceCode
+import amat.laundry.generateDateTimeNow
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -50,16 +51,42 @@ interface TransactionLaundryDao {
     )
     suspend fun updateStatusLaundry(transactionId: String, statusId: Int)
 
+    @Query(
+        "UPDATE TransactionLaundry " +
+                "SET paymentDate=:paymentDate " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun updatePaymentDateLaundry(transactionId: String, paymentDate: String)
+
+    @Query(
+        "UPDATE TransactionLaundry " +
+                "SET finishAt=:finishAt " +
+                "WHERE id=:transactionId"
+    )
+    suspend fun updateDateFinishLaundry(transactionId: String, finishAt: String)
+
     @Query("DELETE FROM Cart")
     suspend fun deleteAllCart()
 
     @Transaction
-    suspend fun transactionUpdateStatusLaundry(transactionId: String, statusId: Int) {
+    suspend fun transactionUpdateStatusLaundry(
+        transactionId: String,
+        statusId: Int,
+        isFullPayment: Boolean
+    ) {
         if (statusId == 1 || statusId == 2) {
             updateStatusLaundry(transactionId, statusId)
         } else if (statusId == 3) {
+
+            val dateTimeNow = generateDateTimeNow()
             updateStatusLaundry(transactionId, statusId)
-            updateTransactionStatusPayment(transactionId, true)
+            updateDateFinishLaundry(transactionId, dateTimeNow)
+
+            if (isFullPayment) {
+                updateTransactionStatusPayment(transactionId, true)
+                updatePaymentDateLaundry(transactionId, dateTimeNow)
+            }
+
         }
 
     }

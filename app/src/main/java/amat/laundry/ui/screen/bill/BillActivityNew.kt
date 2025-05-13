@@ -3,6 +3,7 @@ package amat.laundry.ui.screen.bill
 import amat.laundry.R
 import amat.laundry.cleanPointZeroFloat
 import amat.laundry.currencyFormatterStringViewZero
+import amat.laundry.dateTimeUniversalToDateDisplay
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.dateToDisplayMidFormat
 import amat.laundry.di.Injection
@@ -602,7 +603,9 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                                 )
                             )
                             Text(
-                                if (data.isFullPayment) "Lunas" else "Belum Lunas",
+                                if (data.isFullPayment) "Lunas ${
+                                    dateTimeUniversalToDateDisplay(data.paymentDate)
+                                }" else "Belum Lunas",
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 16.sp,
@@ -633,22 +636,34 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                         }
                         Column {
                             Text(
-                                "Estimasi Siap Ambil",
+                                if (data.laundryStatusId == 3) "Selesai Tanggal" else "Estimasi Siap Ambil",
                                 modifier = Modifier.align(Alignment.End),
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     color = FontGrey,
                                 )
                             )
-                            Text(
-                                if (data.estimationReadyToPickup.isNotEmpty())
-                                    dateToDisplayMidFormat(data.estimationReadyToPickup) else "-",
-                                modifier = Modifier.align(Alignment.End),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = FontBlue,
+                            if (data.laundryStatusId == 3) {
+                                Text(
+                                    if (data.finishAt.isNotEmpty())
+                                        dateTimeUniversalToDateDisplay(data.finishAt) else "-",
+                                    modifier = Modifier.align(Alignment.End),
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        color = FontBlue,
+                                    )
                                 )
-                            )
+                            } else {
+                                Text(
+                                    if (data.estimationReadyToPickup.isNotEmpty())
+                                        dateToDisplayMidFormat(data.estimationReadyToPickup) else "-",
+                                    modifier = Modifier.align(Alignment.End),
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        color = FontBlue,
+                                    )
+                                )
+                            }
                         }
                     }
 
@@ -753,7 +768,13 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                GenerateIconStatus(context, viewModel, transactionId, data.laundryStatusId)
+                GenerateIconStatus(
+                    context,
+                    viewModel,
+                    transactionId,
+                    data.laundryStatusId,
+                    data.isFullPayment
+                )
 
                 Text(
                     "*click icon untuk update status", style = TextStyle(
@@ -821,6 +842,7 @@ fun GenerateIconStatus(
     viewModel: BillViewModel,
     transactionId: String,
     laundryStatusId: Int,
+    statusPaymentNow: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -848,7 +870,8 @@ fun GenerateIconStatus(
                             context,
                             viewModel,
                             transactionId,
-                            2
+                            2,
+                            statusPaymentNow
                         )
                     }
             } else {
@@ -872,7 +895,8 @@ fun GenerateIconStatus(
                             context,
                             viewModel,
                             transactionId,
-                            3
+                            3,
+                            statusPaymentNow
                         )
                     }
             } else {
@@ -933,6 +957,7 @@ private fun showBottomConfirmUpdateStatusLaundry(
     viewModel: BillViewModel,
     transactionId: String,
     statusId: Int,
+    statusPaymentNow: Boolean
 ) {
     val bottomSheetDialog = BottomSheetDialog(context)
     bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
@@ -948,8 +973,16 @@ private fun showBottomConfirmUpdateStatusLaundry(
         messageString =
             "Update Status Laundry Jadi Siap Diambil?"
     } else if (statusId == 3) {
-        messageString =
-            "Update Status Laundry Jadi Selesai dan Pembayaran Menjadi Lunas?"
+
+        if (statusPaymentNow) {
+            messageString =
+                "Update Status Laundry Jadi Selesai?"
+        } else {
+            messageString =
+                "Update Status Laundry Jadi Selesai dan Pembayaran Menjadi Lunas?"
+        }
+
+
     }
 
 
@@ -957,7 +990,8 @@ private fun showBottomConfirmUpdateStatusLaundry(
 
     buttonOk?.setOnClickListener {
         bottomSheetDialog.dismiss()
-        viewModel.updateStatusLaundry(transactionId, statusId)
+        //statusPaymentNow = true status pembayaran akan terupdate, false status diabaikan
+        viewModel.updateStatusLaundry(transactionId, statusId, !statusPaymentNow)
     }
     bottomSheetDialog.show()
 
