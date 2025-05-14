@@ -59,7 +59,7 @@ class BillViewModel(
                     val dataUi = BillUi(
                         businessName = dataProfile.businessName,
                         businessAddress = dataProfile.address,
-                        businessNumberPhone = dataProfile.numberPhone,
+                        businessNumberPhone = dataProfile.phoneNumber,
                         footerNote = dataProfile.footerNote,
                         isFullPayment = dataTransaction.isFullPayment,
                         paymentDate = dataTransaction.paymentDate,

@@ -184,7 +184,7 @@ fun AddCustomerScreen(
 
             MyOutlinedTextField(
                 label = "Nomor Handphone",
-                value = viewModel.stateUi.collectAsState().value.numberPhone,
+                value = viewModel.stateUi.collectAsState().value.phoneNumber,
                 onValueChange = {
                     viewModel.setNumberPhone(it)
                 },

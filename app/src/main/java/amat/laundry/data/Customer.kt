@@ -8,7 +8,7 @@ data class Customer(
     @PrimaryKey
     val id: String,
     val name: String,
-    val numberPhone: String,
+    val phoneNumber: String,
     val note: String,
     val isDelete: Boolean
 )

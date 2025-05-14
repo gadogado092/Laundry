@@ -27,9 +27,9 @@ interface TransactionLaundryDao {
         "SELECT TransactionLaundry.id AS id, TransactionLaundry.invoiceCode AS invoiceCode, " +
                 "TransactionLaundry.customerName AS customerName, TransactionLaundry.laundryStatusId AS laundryStatusId, TransactionLaundry.isFullPayment AS isFullPayment, " +
                 "TransactionLaundry.paymentDate AS paymentDate, TransactionLaundry.estimationReadyToPickup AS estimationReadyToPickup, TransactionLaundry.finishAt AS finishAt, TransactionLaundry.totalPrice AS totalPrice, TransactionLaundry.createAt AS createAt, " +
-                "Customer.numberPhone AS customerNumberPhone " +
+                "Customer.phoneNumber AS customerNumberPhone " +
                 "FROM TransactionLaundry " +
-                "LEFT JOIN (SELECT Customer.id, Customer.numberPhone FROM Customer) AS Customer ON Customer.id = TransactionLaundry.customerId " +
+                "LEFT JOIN (SELECT Customer.id, Customer.phoneNumber FROM Customer) AS Customer ON Customer.id = TransactionLaundry.customerId " +
                 "WHERE TransactionLaundry.isDelete=0 " +
                 "AND TransactionLaundry.createAt >= :startDate " +
                 "AND TransactionLaundry.createAt <= :endDate ORDER BY TransactionLaundry.createAt DESC"

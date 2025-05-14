@@ -185,7 +185,7 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
 
         MyOutlinedTextField(
             label = "Nomor Handphone",
-            value = updateUserViewModel.user.collectAsState().value.numberPhone,
+            value = updateUserViewModel.user.collectAsState().value.phoneNumber,
             onValueChange = {
                 updateUserViewModel.setNumberPhone(it)
             },

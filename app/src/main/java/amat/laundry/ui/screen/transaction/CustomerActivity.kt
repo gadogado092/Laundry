@@ -6,12 +6,12 @@ import amat.laundry.di.Injection
 import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.CenterLayout
+import amat.laundry.ui.component.CustomSearchView
 import amat.laundry.ui.component.CustomerItem
 import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.screen.customer.AddCustomerActivity
 import amat.laundry.ui.theme.FontBlack
-import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
@@ -33,12 +33,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -47,7 +44,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -55,8 +51,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class CustomerActivity : ComponentActivity() {
-
-    //todo add search bar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +88,7 @@ fun CustomerScreen(
         // do stuff on event
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                viewModel.getCustomer()
+                viewModel.setSearch("")
             }
 
             else -> { /* other stuff */
@@ -104,30 +98,40 @@ fun CustomerScreen(
 
     //START UI
     Column {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(id = R.string.title_customer),
-                    color = FontWhite,
-                    fontSize = 22.sp
-                )
+        CustomSearchView(
+            placeHolderText = "Cari Customer",
+            search = viewModel.searchValue.collectAsState().value,
+            onValueChange = {
+                viewModel.setSearch(it)
             },
-            backgroundColor = GreenDark,
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        val activity = (context as? Activity)
-                        activity?.finish()
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                }
-            },
-        )
+            onClickBack = {
+                val activity = (context as? Activity)
+                activity?.finish()
+            })
+//        TopAppBar(
+//            title = {
+//                CustomSearchView(
+//                    search = viewModel.searchValue.collectAsState().value,
+//                    onValueChange = {
+//                        viewModel.setSearch(it)
+//                    })
+//            },
+//            backgroundColor = GreenDark,
+//            navigationIcon = {
+//                IconButton(
+//                    onClick = {
+//                        val activity = (context as? Activity)
+//                        activity?.finish()
+//                    }
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.ArrowBack,
+//                        contentDescription = "",
+//                        tint = Color.White
+//                    )
+//                }
+//            },
+//        )
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -140,7 +144,7 @@ fun CustomerScreen(
                             modifier = Modifier.fillMaxHeight(),
                             errorMessage = uiState.errorMessage
                         ) {
-                            viewModel.getCustomer()
+                            viewModel.setSearch("")
                         }
                     }
 
@@ -217,7 +221,7 @@ fun ListCustomerView(
                 CustomerItem(
                     Modifier.clickable {
                         onItemClick(data.id, data.name)
-                    }, name = data.name, numberPhone = data.numberPhone, note = data.note
+                    }, name = data.name, numberPhone = data.phoneNumber, note = data.note
                 )
             }
         }

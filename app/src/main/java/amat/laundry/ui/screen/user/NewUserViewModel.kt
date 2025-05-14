@@ -83,11 +83,11 @@ class NewUserViewModel(
 
     fun setNumberPhone(value: String) {
         clearError()
-        _user.value = _user.value.copy(numberPhone = value)
+        _user.value = _user.value.copy(phoneNumber = value)
 
-        if (_user.value.numberPhone.trim().isEmpty()) {
+        if (_user.value.phoneNumber.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
-        } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
+        } else if (!isNumberPhoneValid(_user.value.phoneNumber.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
         } else {
             _isUserNumberPhoneValid.value = ValidationResult(false, "")
@@ -123,11 +123,11 @@ class NewUserViewModel(
             return
         }
 
-        if (_user.value.numberPhone.trim().isEmpty()) {
+        if (_user.value.phoneNumber.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
             _isProsesSuccess.value = ValidationResult(true, "Nomor Harus Terisi")
             return
-        } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
+        } else if (!isNumberPhoneValid(_user.value.phoneNumber.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
             _isProsesSuccess.value = ValidationResult(true, "Nomor Belum Benar")
             return
@@ -325,7 +325,7 @@ class NewUserViewModel(
                 CashFlowCategory(UUID.randomUUID().toString(), "Gas", 1, "tabung", false)
             )
 
-            val customer = Customer("0", "walk-in customer", "", "",  false)
+            val customer = Customer("0", "", "", "",  false)
             val cashier = Cashier("0", "Pemilik", "", true, false)
 
             userRepository.transactionInsertNewUser(

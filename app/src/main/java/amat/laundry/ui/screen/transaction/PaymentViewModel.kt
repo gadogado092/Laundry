@@ -247,7 +247,7 @@ class PaymentViewModel(
                         Customer(
                             id = customerId,
                             name = stateUi.value.customerName,
-                            numberPhone = stateUi.value.customerNumberPhone,
+                            phoneNumber = stateUi.value.customerNumberPhone,
                             note = stateUi.value.customerNote,
                             isDelete = false
                         )

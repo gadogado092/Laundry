@@ -123,7 +123,7 @@ fun NewUserScreen() {
 
             MyOutlinedTextField(
                 label = "Nomor Handphone",
-                value = userViewModel.user.collectAsState().value.numberPhone,
+                value = userViewModel.user.collectAsState().value.phoneNumber,
                 onValueChange = {
                     userViewModel.setNumberPhone(it)
                 },

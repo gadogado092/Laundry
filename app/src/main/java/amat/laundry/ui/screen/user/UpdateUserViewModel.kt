@@ -64,11 +64,11 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
 
     fun setNumberPhone(value: String) {
         clearError()
-        _user.value = _user.value.copy(numberPhone = value)
+        _user.value = _user.value.copy(phoneNumber = value)
 
-        if (_user.value.numberPhone.trim().isEmpty()) {
+        if (_user.value.phoneNumber.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
-        } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
+        } else if (!isNumberPhoneValid(_user.value.phoneNumber.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
         } else {
             _isUserNumberPhoneValid.value = ValidationResult(false, "")
@@ -113,11 +113,11 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
 //            return
 //        }
 
-        if (_user.value.numberPhone.trim().isEmpty()) {
+        if (_user.value.phoneNumber.trim().isEmpty()) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
             _isProsesSuccess.value = ValidationResult(true, "Nomor Harus Terisi")
             return
-        } else if (!isNumberPhoneValid(_user.value.numberPhone.trim())) {
+        } else if (!isNumberPhoneValid(_user.value.phoneNumber.trim())) {
             _isUserNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
             _isProsesSuccess.value = ValidationResult(true, "Nomor Belum Benar")
             return

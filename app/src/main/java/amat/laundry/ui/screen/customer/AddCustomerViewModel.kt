@@ -28,7 +28,7 @@ class AddCustomerViewModel(
             Customer(
                 id = "",
                 name = "",
-                numberPhone = "",
+                phoneNumber = "",
                 note = "",
                 isDelete = false
             )
@@ -90,11 +90,11 @@ class AddCustomerViewModel(
 
     fun setNumberPhone(value: String) {
         clearError()
-        _stateUi.value = _stateUi.value.copy(numberPhone = value)
+        _stateUi.value = _stateUi.value.copy(phoneNumber = value)
 
-        if (_stateUi.value.numberPhone.trim().isEmpty()) {
+        if (_stateUi.value.phoneNumber.trim().isEmpty()) {
             _isNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
-        } else if (!isNumberPhoneValid(_stateUi.value.numberPhone.trim())) {
+        } else if (!isNumberPhoneValid(_stateUi.value.phoneNumber.trim())) {
             _isNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
         } else {
             _isNumberPhoneValid.value = ValidationResult(false, "")
@@ -114,12 +114,12 @@ class AddCustomerViewModel(
             return false
         }
 
-        if (_stateUi.value.numberPhone.trim().isEmpty()) {
+        if (_stateUi.value.phoneNumber.trim().isEmpty()) {
             _isNumberPhoneValid.value = ValidationResult(true, "Nomor Harus Terisi")
             _isProsesFailed.value = ValidationResult(true, "Nomor Harus Terisi")
             return false
         }
-        if (!isNumberPhoneValid(_stateUi.value.numberPhone.trim())) {
+        if (!isNumberPhoneValid(_stateUi.value.phoneNumber.trim())) {
             _isNumberPhoneValid.value = ValidationResult(true, "Nomor Belum Benar")
             _isProsesFailed.value = ValidationResult(true, "Nomor Belum Benar")
             return false

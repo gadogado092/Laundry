@@ -203,7 +203,7 @@ fun ListCustomerView(
                 CustomerItem(
                     Modifier.clickable {
                         onItemClick(data.id)
-                    }, name = data.name, numberPhone = data.numberPhone, note = data.note
+                    }, name = data.name, numberPhone = data.phoneNumber, note = data.note
                 )
             }
         }

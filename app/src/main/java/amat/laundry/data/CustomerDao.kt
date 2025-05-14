@@ -8,8 +8,16 @@ import androidx.room.Update
 @Dao
 interface CustomerDao {
 
-    @Query("SELECT * FROM Customer WHERE isDelete=0 AND id!=0")
+    @Query("SELECT * FROM Customer WHERE isDelete=0 AND id!=0 ORDER BY name")
     suspend fun getCustomer(): List<Customer>
+
+    @Query(
+        "SELECT * FROM Customer WHERE name LIKE '%' || :value || '%' OR phoneNumber LIKE '%' || :value || '%' " +
+                "ORDER BY name"
+    )
+    suspend fun searchCustomer(value: String): List<Customer>
+
+//    @Query("SELECT * FROM Customer WHERE '(' || isDelete=0 AND id!=0 || ')' AND '(' || name LIKE '%' || :value || '%' OR phoneNumber LIKE '%' || :value || '%' || ')' ")
 
     @Update
     suspend fun update(customer: Customer)

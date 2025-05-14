@@ -5,8 +5,12 @@ import amat.laundry.data.CustomerDao
 
 class CustomerRepository(private val customerDao: CustomerDao) {
 
-    suspend fun getCustomer(): List<Customer>{
+    suspend fun getCustomer(): List<Customer> {
         return customerDao.getCustomer()
+    }
+
+    suspend fun searchCustomer(value: String): List<Customer> {
+        return customerDao.searchCustomer(value)
     }
 
     suspend fun insert(customer: Customer) {
@@ -17,7 +21,7 @@ class CustomerRepository(private val customerDao: CustomerDao) {
         customerDao.update(customer)
     }
 
-    suspend fun deleteCustomer(id: String){
+    suspend fun deleteCustomer(id: String) {
         customerDao.deleteCustomer(id)
     }
 
