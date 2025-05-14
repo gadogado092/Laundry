@@ -3,7 +3,7 @@ package amat.laundry.ui.screen.transaction
 import amat.laundry.R
 import amat.laundry.checkDateRangeValid
 import amat.laundry.currencyFormatterStringViewZero
-import amat.laundry.data.TransactionLaundry
+import amat.laundry.data.TransactionCustomer
 import amat.laundry.dateRoomDay
 import amat.laundry.dateRoomMonth
 import amat.laundry.dateRoomYear
@@ -11,6 +11,7 @@ import amat.laundry.dateTimeUniversalToDateDisplay
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.dateToDisplayMidFormat
 import amat.laundry.di.Injection
+import amat.laundry.sendWhatsApp
 import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.CenterLayout
@@ -25,6 +26,7 @@ import amat.laundry.ui.theme.TealGreen
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
@@ -143,7 +145,10 @@ fun TransactionScreen(
                                 val intent = Intent(context, BillActivityNew::class.java)
                                 intent.putExtra("id", id)
                                 context.startActivity(intent)
-                            })
+                            },
+                            context,
+                            viewModel
+                        )
                     }
                 }
             }
@@ -175,8 +180,10 @@ fun TransactionScreen(
 
 @Composable
 fun ListTransactionView(
-    listData: List<TransactionLaundry>,
-    onItemClick: (String) -> Unit
+    listData: List<TransactionCustomer>,
+    onItemClick: (String) -> Unit,
+    context: Context,
+    viewModel: TransactionViewModel
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -193,22 +200,86 @@ fun ListTransactionView(
         LazyColumn(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
-            items(listData) { data ->
+            items(listData) { dataTransaction ->
                 TransactionItem(
                     modifier = Modifier.clickable {
-                        onItemClick(data.id)
+                        onItemClick(dataTransaction.id)
                     },
-                    invoiceCode = data.invoiceCode,
-                    price = currencyFormatterStringViewZero(data.totalPrice),
-                    note = data.note,
-                    isFullPayment = data.isFullPayment,
-                    finishAt = dateTimeUniversalToDateDisplay(data.finishAt),
-                    customerName = data.customerName,
-                    createAt = dateTimeUniversalToDisplay(data.createAt),
-                    cashierName = data.cashierName,
-                    statusId = data.laundryStatusId,
-                    paymentDate = dateTimeUniversalToDateDisplay(data.paymentDate),
-                    estimationReadyToPickup = dateToDisplayMidFormat(data.estimationReadyToPickup),
+                    invoiceCode = dataTransaction.invoiceCode,
+                    price = currencyFormatterStringViewZero(dataTransaction.totalPrice),
+                    isFullPayment = dataTransaction.isFullPayment,
+                    finishAt = dateTimeUniversalToDateDisplay(dataTransaction.finishAt),
+                    customerName = dataTransaction.customerName,
+                    createAt = dateTimeUniversalToDisplay(dataTransaction.createAt),
+                    statusId = dataTransaction.laundryStatusId,
+                    paymentDate = dateTimeUniversalToDateDisplay(dataTransaction.paymentDate),
+                    estimationReadyToPickup = dateToDisplayMidFormat(dataTransaction.estimationReadyToPickup),
+                    onClickSms = {
+                        try {
+                            var message = ""
+                            message = if (dataTransaction.isFullPayment) {
+                                "Assalamualaikum... Selamat Pagi, Siang, Sore atau Malam..." +
+                                        "Laundry ${dataTransaction.invoiceCode} Siap Untuk Diambil... Terima Kasih..."
+                            } else {
+                                "Assalamualaikum... Selamat Pagi, Siang, Sore atau Malam..." +
+                                        "Laundry ${dataTransaction.invoiceCode} Siap Untuk Diambil... " +
+                                        "Total Pembayaran ${
+                                            currencyFormatterStringViewZero(
+                                                dataTransaction.totalPrice
+                                            )
+                                        }" +
+                                        "Terima Kasih..."
+                            }
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                data = Uri.parse("smsto:${dataTransaction.customerNumberPhone}")
+                                putExtra("sms_body", message)
+                            }
+                            if (intent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(intent)
+                            } else {
+                                Toast.makeText(context, "Kirim SMS gagal", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Kirim SMS gagal", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onClickWa = {
+                        try {
+                            var message = ""
+                            message = if (dataTransaction.isFullPayment) {
+                                "Assalamualaikum... Selamat Pagi, Siang, Sore atau Malam..." +
+                                        "\nLaundry ${dataTransaction.invoiceCode} Siap Untuk Diambil... \nTerima Kasih..."
+                            } else {
+                                "Assalamualaikum... Selamat Pagi, Siang, Sore atau Malam..." +
+                                        "\nLaundry ${dataTransaction.invoiceCode} Siap Untuk Diambil... " +
+                                        "\nTotal Pembayaran ${
+                                            currencyFormatterStringViewZero(
+                                                dataTransaction.totalPrice
+                                            )
+                                        }" +
+                                        "\nTerima Kasih..."
+                            }
+
+                            sendWhatsApp(
+                                context,
+                                dataTransaction.customerNumberPhone,
+                                message,
+                                viewModel.user.value.typeWa
+                            )
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Kirim Wa gagal", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onClickPhone = {
+                        try {
+                            val intent = Intent(Intent.ACTION_DIAL)
+                            intent.data = Uri.parse("tel:${dataTransaction.customerNumberPhone}")
+                            context.startActivity(intent)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Telpon gagal", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 )
             }
         }

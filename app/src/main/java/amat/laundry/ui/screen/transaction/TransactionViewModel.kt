@@ -1,7 +1,8 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.calenderSelect
-import amat.laundry.data.TransactionLaundry
+import amat.laundry.data.TransactionCustomer
+import amat.laundry.data.User
 import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
 import amat.laundry.dateDialogToRoomFormat
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -24,20 +26,28 @@ class TransactionViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    private val _user: MutableStateFlow<User> =
+        MutableStateFlow(User("", "", "", "", "", "", "", 32, 32, "", "", "", 0, "", ""))
+    val user: StateFlow<User>
+        get() = _user
+
+
     private val _stateUi: MutableStateFlow<TransactionUi> =
         MutableStateFlow(TransactionUi())
     val stateUi: StateFlow<TransactionUi>
         get() = _stateUi
 
-    private val _stateListTransaction: MutableStateFlow<UiState<List<TransactionLaundry>>> =
+    private val _stateListTransaction: MutableStateFlow<UiState<List<TransactionCustomer>>> =
         MutableStateFlow(UiState.Loading)
-    val stateListTransaction: StateFlow<UiState<List<TransactionLaundry>>>
+    val stateListTransaction: StateFlow<UiState<List<TransactionCustomer>>>
         get() = _stateListTransaction
 
     private var _limitDay = ""
 
 
     init {
+        getUser()
+
         //end date
         val calendarEnd = Calendar.getInstance() // this takes current date
         calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -50,6 +60,18 @@ class TransactionViewModel(
         setInitDate(calendarStart.time, calendarEnd.time)
 
         getUserInit()
+    }
+
+    private fun getUser() {
+        viewModelScope.launch {
+            userRepository.getDetail()
+                .catch {
+
+                }
+                .collect { data ->
+                    _user.value = data
+                }
+        }
     }
 
     private fun getUserInit() {

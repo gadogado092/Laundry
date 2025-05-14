@@ -38,3 +38,17 @@ data class CashFlowAndCategory(
     val cashFlowCategoryId: String,
     val cashFlowCategoryName: String
 )
+
+data class TransactionCustomer(
+    val id: String,
+    val invoiceCode: String,
+    val customerName: String,
+    val customerNumberPhone: String,
+    val laundryStatusId: Int,
+    val isFullPayment: Boolean,
+    val paymentDate: String, //DATE
+    val estimationReadyToPickup: String, //DATE
+    val finishAt: String, //DATE
+    val totalPrice: String,
+    val createAt: String //DATE
+)

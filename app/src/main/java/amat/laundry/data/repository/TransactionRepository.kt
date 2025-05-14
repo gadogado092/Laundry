@@ -1,6 +1,7 @@
 package amat.laundry.data.repository
 
 import amat.laundry.data.DetailTransaction
+import amat.laundry.data.TransactionCustomer
 import amat.laundry.data.TransactionLaundry
 import amat.laundry.data.TransactionLaundryDao
 import amat.laundry.data.entity.InvoiceCode
@@ -16,7 +17,7 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         return transactionDao.getTransaction(transactionId)
     }
 
-    suspend fun getTransaction(startDate: String, endDate: String): List<TransactionLaundry> {
+    suspend fun getTransaction(startDate: String, endDate: String): List<TransactionCustomer> {
         return transactionDao.getTransaction(startDate, endDate)
     }
 
