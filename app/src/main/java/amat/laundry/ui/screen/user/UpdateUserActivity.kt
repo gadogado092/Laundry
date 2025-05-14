@@ -241,45 +241,17 @@ fun FormUpdate(updateUserViewModel: UpdateUserViewModel) {
                 }
             }
         }
-//        InformationBox(value = "Informasi Nama Bank, Nomor Rekening dan Catatan akan muncul saat mengirim penagihan ke penyewa")
-//        MyOutlinedTextField(
-//            label = "Nama Bank / Nama Dompet Digital",
-//            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//            value = updateUserViewModel.user.collectAsState().value.bankName,
-//            onValueChange = {
-//                updateUserViewModel.setBankName(it)
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(top = 8.dp),
-//        )
-//        MyOutlinedTextField(
-//            label = "No.Rekening / No.Account",
-//            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//            value = updateUserViewModel.user.collectAsState().value.accountNumber,
-//            onValueChange = {
-//                updateUserViewModel.setAccountNumber(it)
-//            },
-//            modifier = Modifier.fillMaxWidth(),
-//        )
-//        MyOutlinedTextField(
-//            label = "Nama Pemilik Rekening/Dompet Digital",
-//            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//            value = updateUserViewModel.user.collectAsState().value.accountOwnerName,
-//            onValueChange = {
-//                updateUserViewModel.setAccountOwnerName(it)
-//            },
-//            modifier = Modifier.fillMaxWidth(),
-//        )
-//        MyOutlinedTextField(
-//            label = "Catatan Tambahan",
-//            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-//            value = updateUserViewModel.user.collectAsState().value.note,
-//            onValueChange = {
-//                updateUserViewModel.setNoteBank(it)
-//            },
-//            modifier = Modifier.fillMaxWidth(),
-//        )
+
+        MyOutlinedTextField(
+            label = "Catatan Bawah Nota",
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            value = updateUserViewModel.user.collectAsState().value.footerNote,
+            onValueChange = {
+                updateUserViewModel.setFooterNote(it)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = false
+        )
 
         Button(
             onClick = {

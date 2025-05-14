@@ -100,6 +100,11 @@ class UpdateUserViewModel(private val userRepository: UserRepository) : ViewMode
         }
     }
 
+    fun setFooterNote(value: String) {
+        clearError()
+        _user.value = _user.value.copy(footerNote = value.replace("*", ""))
+    }
+
     fun prosesUpdate() {
         clearError()
 //        if (_user.value.name.trim().isEmpty()) {

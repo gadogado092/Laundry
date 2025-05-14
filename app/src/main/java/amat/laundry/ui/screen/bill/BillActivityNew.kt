@@ -222,7 +222,7 @@ class BillActivityNew : ComponentActivity() {
                         printConfig(outputStream, dataInvoice.businessNumberPhone, 3, 1, 1)
 
                         printCustom(
-                            "-".repeat(dataInvoice.printerCharacterSize),
+                            "-".repeat(dataInvoice.sizeLinePrinter),
                             0,
                             1,
                             outputStream
@@ -279,7 +279,7 @@ class BillActivityNew : ComponentActivity() {
                         }
 
                         printCustom(
-                            "-".repeat(dataInvoice.printerCharacterSize),
+                            "-".repeat(dataInvoice.sizeLinePrinter),
                             0,
                             1,
                             outputStream
@@ -307,7 +307,7 @@ class BillActivityNew : ComponentActivity() {
 
                         }
                         printCustom(
-                            "-".repeat(dataInvoice.printerCharacterSize),
+                            "-".repeat(dataInvoice.sizeLinePrinter),
                             0,
                             1,
                             outputStream
@@ -322,8 +322,20 @@ class BillActivityNew : ComponentActivity() {
                         )
 
                         val LF = byteArrayOf(0x0A)
-                        outputStream.write(LF)
-                        printCustom(dataInvoice.footerNote, 0, 1, outputStream)
+
+                        if (dataInvoice.footerNote != "" || (dataInvoice.footerNote != "Terima Kasih")) {
+                            printConfig(
+                                outputStream,
+                                dataInvoice.footerNote,
+                                3,
+                                1,
+                                0
+                            )
+
+                            outputStream.write(LF)
+                        }
+
+                        printCustom("Terima Kasih", 0, 1, outputStream)
                         outputStream.write(LF)
                         outputStream.write(LF)
 //                        outputStream.write(LF)
@@ -751,6 +763,21 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
 
                 }
 
+                Divider(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    color = GreyLight,
+                    thickness = 4.dp
+                )
+
+                Text(
+                    text = data.footerNote,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = FontBlack,
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -758,7 +785,7 @@ fun BillMainArea(viewModel: BillViewModel, context: Context, data: BillUi, trans
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = data.footerNote,
+                        text = "Terima Kasih",
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = FontBlack,

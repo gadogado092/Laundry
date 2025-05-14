@@ -37,9 +37,9 @@ class NewUserViewModel(
                 "",
                 "",
                 32,
-                42,
-                "La-Undry",
-                "Terima Kasih",
+                32,
+                "",
+                "",
                 "",
                 50000,
                 "",
@@ -112,7 +112,7 @@ class NewUserViewModel(
 
     fun setFooterNote(value: String) {
         clearError()
-        _user.value = _user.value.copy(footerNote = value)
+        _user.value = _user.value.copy(footerNote = value.replace("*", ""))
     }
 
     fun prosesRegistration() {

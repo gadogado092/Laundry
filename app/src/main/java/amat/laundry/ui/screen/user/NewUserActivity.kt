@@ -178,6 +178,18 @@ fun NewUserScreen() {
                     }
                 }
             }
+
+            MyOutlinedTextField(
+                label = "Catatan Bawah Nota",
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                value = userViewModel.user.collectAsState().value.footerNote,
+                onValueChange = {
+                    userViewModel.setFooterNote(it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false
+            )
+
             Button(
                 onClick = {
                     userViewModel.prosesRegistration()
