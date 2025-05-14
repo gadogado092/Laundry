@@ -240,7 +240,9 @@ class BillActivityNew : ComponentActivity() {
                             0,
                             outputStream
                         )
-                        val status = if (dataInvoice.isFullPayment) "Lunas" else "Belum Lunas"
+                        val status = if (dataInvoice.isFullPayment) "Lunas ${
+                            dateTimeUniversalToDateDisplay(dataInvoice.paymentDate)
+                        }" else "Belum Lunas"
                         printCustom(
                             "Status : $status",
                             0,
@@ -265,6 +267,17 @@ class BillActivityNew : ComponentActivity() {
                                 0
                             )
                         }
+
+                        if (dataInvoice.estimationReadyToPickup != "") {
+                            printConfig(
+                                outputStream,
+                                "Siap Ambil ${dateToDisplayMidFormat(dataInvoice.estimationReadyToPickup)}",
+                                3,
+                                1,
+                                0
+                            )
+                        }
+
                         printCustom(
                             "-".repeat(dataInvoice.printerCharacterSize),
                             0,
