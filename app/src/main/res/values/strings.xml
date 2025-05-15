@@ -18,6 +18,7 @@
 
     <string name="title_bottom_sheet">Title Bottom Sheet</string>
     <string name="note_empty_data">Data %s kosong</string>
+    <string name="note_empty_search_data">Data pencarian %s kosong</string>
     <string name="select_status">Select Status</string>
 
     <string name="limit_extend">Batas pemakaian</string>

@@ -1,12 +1,8 @@
 package amat.laundry.ui.screen.transaction
 
 import amat.laundry.R
-import amat.laundry.checkDateRangeValid
 import amat.laundry.currencyFormatterStringViewZero
 import amat.laundry.data.TransactionCustomer
-import amat.laundry.dateRoomDay
-import amat.laundry.dateRoomMonth
-import amat.laundry.dateRoomYear
 import amat.laundry.dateTimeUniversalToDateDisplay
 import amat.laundry.dateTimeUniversalToDisplay
 import amat.laundry.dateToDisplayMidFormat
@@ -15,68 +11,72 @@ import amat.laundry.sendWhatsApp
 import amat.laundry.ui.common.OnLifecycleEvent
 import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.CenterLayout
-import amat.laundry.ui.component.DateLayout
-import amat.laundry.ui.component.ErrorLayout
+import amat.laundry.ui.component.CustomSearchView
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.component.TransactionItem
 import amat.laundry.ui.screen.bill.BillActivityNew
 import amat.laundry.ui.theme.FontBlack
-import amat.laundry.ui.theme.GreenDark
-import amat.laundry.ui.theme.TealGreen
-import android.app.DatePickerDialog
+import amat.laundry.ui.theme.LaundryAppTheme
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.TextView
+import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
+
+class SearchTransactionActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            val context = LocalContext.current
+            LaundryAppTheme {
+                SearchTransactionScreen(context)
+            }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+            val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            view.updatePadding(bottom = bottom)
+            insets
+        }
+
+    }
+}
 
 @Composable
-fun TransactionScreen(
-    context: Context,
-    modifier: Modifier = Modifier
+fun SearchTransactionScreen(
+    context: Context
 ) {
 
-    val viewModel: TransactionViewModel =
+    val viewModel: SearchTransactionViewModel =
         viewModel(
-            factory = TransactionViewModelFactory(
+            factory = SearchTransactionViewModelFactory(
                 Injection.provideTransactionRepository(context),
-                Injection.provideUserRepository(context)
+                Injection.provideUserRepository(context),
             )
         )
 
@@ -84,7 +84,7 @@ fun TransactionScreen(
         // do stuff on event
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                viewModel.getTransaction()
+                viewModel.setSearch(viewModel.searchValue.value)
             }
 
             else -> { /* other stuff */
@@ -92,79 +92,42 @@ fun TransactionScreen(
         }
     }
 
-    Column(modifier = modifier) {
-        Column(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
-            Text(
-                text = "Range Tanggal Transaksi", style = TextStyle(
-                    fontSize = 16.sp,
-                    color = FontBlack,
-                )
-            )
-            Spacer(Modifier.height(2.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                viewModel.stateUi.collectAsState(initial = TransactionUi()).value.let { value ->
-                    if (value.startDate.isNotEmpty() && value.endDate.isNotEmpty()) {
-                        DateLayout(
-                            value = "${dateToDisplayMidFormat(value.startDate)} - ${
-                                dateToDisplayMidFormat(
-                                    value.endDate
-                                )
-                            }",
-                            isEnable = true,
-                            modifier = Modifier.clickable {
-                                showDatePickerStart(context, viewModel)
-                            }
-                        )
-                    } else {
-                        DateLayout(
-                            value = "error gan"
-                        )
-                    }
-                }
-
-                IconButton(
-                    onClick = {
-                        val intent = Intent(context, SearchTransactionActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "",
-                        tint = GreenDark
-                    )
-                }
-
-            }
-        }
-        Divider(
-            color = TealGreen,
-            thickness = 2.dp,
-            modifier = Modifier.padding(top = 2.dp),
-        )
+    //START UI
+    Column {
+        CustomSearchView(
+            placeHolderText = "Nomor atau Kode Invoice",
+            search = viewModel.searchValue.collectAsState().value,
+            onValueChange = {
+                viewModel.setSearch(it)
+            },
+            onClickBack = {
+                val activity = (context as? Activity)
+                activity?.finish()
+            })
 
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            viewModel.stateListTransaction.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            viewModel.stateTransaction.collectAsState(initial = UiState.Loading).value.let { uiState ->
                 when (uiState) {
                     is UiState.Error -> {
-                        ErrorLayout(errorMessage = uiState.errorMessage) {
-                            viewModel.getTransaction()
-                        }
+                        CenterLayout(
+                            content = {
+                                Text(
+                                    text = uiState.errorMessage,
+                                    color = FontBlack
+                                )
+                            }
+                        )
                     }
 
                     UiState.Loading -> {
-                        LoadingLayout()
+                        LoadingLayout(modifier = Modifier.fillMaxHeight())
                     }
 
                     is UiState.Success -> {
-                        ListTransactionView(
+                        ListSearchTransactionView(
                             uiState.data,
                             onItemClick = { id ->
                                 val intent = Intent(context, BillActivityNew::class.java)
@@ -175,49 +138,41 @@ fun TransactionScreen(
                             viewModel
                         )
                     }
+
                 }
             }
 
-            FloatingActionButton(
-                onClick = {
-                    if (viewModel.checkLimitApp()) {
-                        showBottomLimitApp(context)
-                    } else {
-                        val intent = Intent(context, AddTransactionActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
-                backgroundColor = GreenDark
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    "",
-                    modifier = Modifier.size(30.dp),
-                    tint = Color.White,
-                )
-            }
         }
+
     }
+
 }
 
 @Composable
-fun ListTransactionView(
+fun ListSearchTransactionView(
     listData: List<TransactionCustomer>,
     onItemClick: (String) -> Unit,
     context: Context,
-    viewModel: TransactionViewModel
+    viewModel: SearchTransactionViewModel
 ) {
-    if (listData.isEmpty()) {
+    if (listData.isEmpty() && viewModel.searchValue.collectAsState().value == "") {
+        CenterLayout(
+            content = {
+                Text(
+                    text = "Masukkan Nomor Invoice",
+                    color = FontBlack
+                )
+            }
+        )
+    } else if (listData.isEmpty()) {
         CenterLayout(
             content = {
                 Text(
                     text = stringResource(
-                        id = R.string.note_empty_data,
+                        id = R.string.note_empty_search_data,
                         "Transaksi"
-                    ), color = FontBlack
+                    ),
+                    color = FontBlack
                 )
             }
         )
@@ -309,61 +264,4 @@ fun ListTransactionView(
             }
         }
     }
-}
-
-fun showDatePickerStart(context: Context, viewModel: TransactionViewModel) {
-    val mYear: Int = dateRoomYear(viewModel.stateUi.value.startDate).toInt()
-    val mMonth: Int = dateRoomMonth(viewModel.stateUi.value.startDate).toInt() - 1
-    val mDay: Int = dateRoomDay(viewModel.stateUi.value.startDate).toInt()
-
-    val mDatePickerDialog = DatePickerDialog(
-        context,
-        { _: DatePicker, year: Int, month: Int, day: Int ->
-            val dateStart = "$year-${month + 1}-$day"
-            showDatePickerEnd(context, viewModel, dateStart)
-        }, mYear, mMonth, mDay
-    )
-    mDatePickerDialog.setMessage("Pilih Tanggal Awal")
-    mDatePickerDialog.show()
-}
-
-fun showDatePickerEnd(context: Context, viewModel: TransactionViewModel, dateStart: String) {
-    val mYear: Int = dateRoomYear(viewModel.stateUi.value.endDate).toInt()
-    val mMonth: Int = dateRoomMonth(viewModel.stateUi.value.endDate).toInt() - 1
-    val mDay: Int = dateRoomDay(viewModel.stateUi.value.endDate).toInt()
-
-    val mDatePickerDialog = DatePickerDialog(
-        context,
-        { _: DatePicker, year: Int, month: Int, day: Int ->
-            if (checkDateRangeValid(dateStart, "$year-${month + 1}-$day")) {
-                viewModel.setDateDialog(dateStart, "$year-${month + 1}-$day")
-            } else {
-                Toast.makeText(
-                    context,
-                    context.resources.getString(R.string.message_date_range_invalid),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-        }, mYear, mMonth, mDay
-    )
-    mDatePickerDialog.setMessage("Pilih Tanggal Akhir")
-    mDatePickerDialog.show()
-}
-
-private fun showBottomLimitApp(
-    context: Context
-) {
-    val bottomSheetDialog = BottomSheetDialog(context)
-    bottomSheetDialog.setContentView(R.layout.bottom_sheet_confirm)
-    val message = bottomSheetDialog.findViewById<TextView>(R.id.text_message)
-    val buttonOk = bottomSheetDialog.findViewById<Button>(R.id.ok_button)
-
-    message?.text = context.getString(R.string.info_limit)
-
-    buttonOk?.setOnClickListener {
-        bottomSheetDialog.dismiss()
-    }
-    bottomSheetDialog.show()
-
 }

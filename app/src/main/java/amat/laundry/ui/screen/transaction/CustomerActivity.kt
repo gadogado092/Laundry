@@ -8,7 +8,6 @@ import amat.laundry.ui.common.UiState
 import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.CustomSearchView
 import amat.laundry.ui.component.CustomerItem
-import amat.laundry.ui.component.ErrorLayout
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.screen.customer.AddCustomerActivity
 import amat.laundry.ui.theme.FontBlack
@@ -28,7 +27,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -101,7 +99,7 @@ fun CustomerScreen(
     //START UI
     Column {
         CustomSearchView(
-            placeHolderText = "Cari Customer",
+            placeHolderText = "Nama atau Nomor",
             search = viewModel.searchValue.collectAsState().value,
             onValueChange = {
                 viewModel.setSearch(it)
@@ -118,12 +116,14 @@ fun CustomerScreen(
             viewModel.stateCustomer.collectAsState(initial = UiState.Loading).value.let { uiState ->
                 when (uiState) {
                     is UiState.Error -> {
-                        ErrorLayout(
-                            modifier = Modifier.fillMaxHeight(),
-                            errorMessage = uiState.errorMessage
-                        ) {
-                            viewModel.setSearch("")
-                        }
+                        CenterLayout(
+                            content = {
+                                Text(
+                                    text = uiState.errorMessage,
+                                    color = FontBlack
+                                )
+                            }
+                        )
                     }
 
                     UiState.Loading -> {

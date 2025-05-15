@@ -37,6 +37,11 @@ class CustomerViewModel(
                     return@collectLatest
                 }
 
+                if (input.length < 3) {
+                    _stateCustomer.value = UiState.Error("Masukkan Minimal 3 Karakter")
+                    return@collectLatest
+                }
+
                 searchCustomer(input)
             }
         }
