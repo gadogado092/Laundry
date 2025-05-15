@@ -10,7 +10,16 @@ class CustomerRepository(private val customerDao: CustomerDao) {
     }
 
     suspend fun searchCustomer(value: String): List<Customer> {
-        return customerDao.searchCustomer(value)
+
+        val data = customerDao.searchCustomer(value)
+        val dataClean = mutableListOf<Customer>()
+        data.forEach { item ->
+            if (!item.isDelete) {
+                dataClean.add(item)
+            }
+        }
+
+        return dataClean
     }
 
     suspend fun insert(customer: Customer) {

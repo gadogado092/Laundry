@@ -34,7 +34,7 @@ fun CustomSearchView(
     val backgroundColor = FontWhite
 
     Row(
-        Modifier
+        modifier
             .background(GreenDark)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -51,8 +51,9 @@ fun CustomSearchView(
         }
 
         Box(
-            modifier = modifier
-                .padding(4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
                 .clip(CircleShape)
                 .background(backgroundColor),
         ) {

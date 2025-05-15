@@ -49,14 +49,7 @@ class CustomerViewModel(
                 _stateCustomer.value = UiState.Loading
                 val data = customerRepository.searchCustomer(value)
 
-                val dataClean = mutableListOf<Customer>()
-                data.forEach { item ->
-                    if (!item.isDelete) {
-                        dataClean.add(item)
-                    }
-                }
-
-                _stateCustomer.value = UiState.Success(dataClean)
+                _stateCustomer.value = UiState.Success(data)
             } catch (e: Exception) {
                 _stateCustomer.value = UiState.Error(e.message.toString())
             }

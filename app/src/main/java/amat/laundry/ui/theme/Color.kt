@@ -19,6 +19,7 @@ val LightGreen = Color(0xFF25D366)
 val ErrorColor = Color(0xFFFF3333)
 
 val GreyLight = Color(0xE2EEEEEE)
+val BackgroundGrey = Color(0xFFF6F6F6)
 val GreyLight2 = Color(0xE2DBDBDB)
 val GreyLight3 = Color(0xE2666666)
 val GreyLight4 = Color(0xFF3D3D3D)

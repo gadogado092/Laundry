@@ -13,17 +13,22 @@ import amat.laundry.ui.component.HomeItemSmall
 import amat.laundry.ui.component.LoadingLayout
 import amat.laundry.ui.screen.transaction.AddTransactionActivity
 import amat.laundry.ui.theme.BGCashFlow
+import amat.laundry.ui.theme.BackgroundGrey
 import amat.laundry.ui.theme.Blue
 import amat.laundry.ui.theme.FontBlack
+import amat.laundry.ui.theme.FontGrey
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight
+import amat.laundry.ui.theme.GreyLight2
 import amat.laundry.ui.theme.TealGreen
 import android.content.Context
 import android.content.Intent
 import android.widget.Button
 import android.widget.TextView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +42,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -49,9 +56,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -92,7 +102,11 @@ fun HomeScreen(
 
     }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(BackgroundGrey)
+    ) {
 
         viewModel.stateUser.collectAsState(initial = UiState.Loading).value.let { uiState ->
             when (uiState) {
@@ -105,121 +119,130 @@ fun HomeScreen(
                 }
 
                 is UiState.Success -> {
-                    Column(
+
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
                     ) {
-
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Bottom
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .drawBehind {
-                                            drawCircle(
-                                                color = TealGreen,
-                                                radius = this.size.maxDimension
-                                            )
-                                        },
-                                    text = uiState.data.businessName.substring(0, 1),
-                                    color = FontWhite,
-                                    style = TextStyle(fontSize = 24.sp)
-                                )
-
-                                Column {
-                                    Text(
-                                        uiState.data.businessName,
-                                        style = TextStyle(fontSize = 20.sp),
-                                        color = FontBlack,
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                    Text(
-                                        uiState.data.address,
-                                        style = TextStyle(fontSize = 18.sp),
-                                        color = FontBlack,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                }
-
-                            }
-
                             Text(
-                                dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.currentDate),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = FontBlack,
-                                ),
-                                modifier = Modifier.padding(bottom = 2.dp, end = 8.dp)
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .drawBehind {
+                                        drawCircle(
+                                            color = FontWhite,
+                                            radius = this.size.maxDimension
+                                        )
+                                    },
+                                text = uiState.data.businessName.substring(0, 1),
+                                color = FontBlack,
+                                style = TextStyle(fontSize = 24.sp)
                             )
 
+                            Column(Modifier.padding(horizontal = 4.dp)) {
+                                Text(
+                                    uiState.data.businessName,
+                                    style = TextStyle(fontSize = 16.sp),
+                                    color = FontBlack,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                                Text(
+                                    uiState.data.address,
+                                    style = TextStyle(fontSize = 14.sp),
+                                    color = FontGrey,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                                Text(
+                                    uiState.data.phoneNumber,
+                                    style = TextStyle(fontSize = 14.sp),
+                                    color = FontGrey,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
+
                         }
 
-                        Divider(
-                            modifier = Modifier.padding(top = 8.dp),
-                            color = TealGreen,
-                            thickness = 2.dp
-                        )
+//                            Text(
+//                                dateToDisplayMidFormat(viewModel.stateUi.collectAsState().value.currentDate),
+//                                style = TextStyle(
+//                                    fontSize = 16.sp,
+//                                    color = FontBlack,
+//                                ),
+//                                modifier = Modifier.padding(bottom = 2.dp, end = 8.dp)
+//                            )
 
                     }
+
+
                 }
             }
         }
 
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            viewModel.stateList.collectAsState(initial = UiState.Loading).value.let { uiState ->
-                when (uiState) {
-                    is UiState.Error -> {
-                        ErrorLayout(errorMessage = uiState.errorMessage) {
-                            viewModel.getDataTransaction()
-                        }
-                    }
-
-                    UiState.Loading -> {
-                        LoadingLayout()
-                    }
-
-                    is UiState.Success -> {
-                        ListTransactionView(
-                            uiState.data, viewModel
-                        )
-                    }
-                }
-            }
-
-            FloatingActionButton(
-                onClick = {
-                    if (viewModel.checkLimitApp()) {
-                        showBottomLimitApp(context)
-                    } else {
-                        val intent = Intent(context, AddTransactionActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                },
+        Column() {
+            Card(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
-                backgroundColor = GreenDark
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                backgroundColor = Blue
             ) {
-                Icon(
-                    Icons.Filled.Add,
-                    "",
-                    modifier = Modifier.size(30.dp),
-                    tint = Color.White,
-                )
+                Column {
+                    Text("Saldo")
+                    Text("Saldo")
+                }
             }
         }
+
+//        Box(
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            viewModel.stateList.collectAsState(initial = UiState.Loading).value.let { uiState ->
+//                when (uiState) {
+//                    is UiState.Error -> {
+//                        ErrorLayout(errorMessage = uiState.errorMessage) {
+//                            viewModel.getDataTransaction()
+//                        }
+//                    }
+//
+//                    UiState.Loading -> {
+//                        LoadingLayout()
+//                    }
+//
+//                    is UiState.Success -> {
+//                        ListTransactionView(
+//                            uiState.data, viewModel
+//                        )
+//                    }
+//                }
+//            }
+//
+//            FloatingActionButton(
+//                onClick = {
+//                    if (viewModel.checkLimitApp()) {
+//                        showBottomLimitApp(context)
+//                    } else {
+//                        val intent = Intent(context, AddTransactionActivity::class.java)
+//                        context.startActivity(intent)
+//                    }
+//                },
+//                modifier = Modifier
+//                    .align(Alignment.BottomEnd)
+//                    .padding(8.dp),
+//                backgroundColor = GreenDark
+//            ) {
+//                Icon(
+//                    Icons.Filled.Add,
+//                    "",
+//                    modifier = Modifier.size(30.dp),
+//                    tint = Color.White,
+//                )
+//            }
+//        }
     }
 }
 

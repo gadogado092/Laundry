@@ -19,6 +19,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -108,30 +110,6 @@ fun CustomerScreen(
                 val activity = (context as? Activity)
                 activity?.finish()
             })
-//        TopAppBar(
-//            title = {
-//                CustomSearchView(
-//                    search = viewModel.searchValue.collectAsState().value,
-//                    onValueChange = {
-//                        viewModel.setSearch(it)
-//                    })
-//            },
-//            backgroundColor = GreenDark,
-//            navigationIcon = {
-//                IconButton(
-//                    onClick = {
-//                        val activity = (context as? Activity)
-//                        activity?.finish()
-//                    }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.ArrowBack,
-//                        contentDescription = "",
-//                        tint = Color.White
-//                    )
-//                }
-//            },
-//        )
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -153,8 +131,8 @@ fun CustomerScreen(
                     }
 
                     is UiState.Success -> {
-                        ListCustomerView(uiState.data, onItemClick = { id, name ->
-                            passCustomerAsResult(id, name, context)
+                        ListCustomerView(uiState.data, onItemClick = { id, name, isDelete ->
+                            passCustomerAsResult(id, name, isDelete, context)
                         })
                     }
 
@@ -185,7 +163,13 @@ fun CustomerScreen(
 
 }
 
-private fun passCustomerAsResult(id: String, name: String, context: Context) {
+private fun passCustomerAsResult(id: String, name: String, isDelete: Boolean, context: Context) {
+
+    if (id == "0" || id == "" || isDelete == true) {
+        Toast.makeText(context, "Data Penyewa Tidak Valid", Toast.LENGTH_SHORT).show()
+        return
+    }
+
     val data = Intent()
     data.putExtra("id", id)
     data.putExtra("name", name)
@@ -199,7 +183,7 @@ private fun passCustomerAsResult(id: String, name: String, context: Context) {
 @Composable
 fun ListCustomerView(
     listData: List<Customer>,
-    onItemClick: (String, String) -> Unit
+    onItemClick: (String, String, Boolean) -> Unit
 ) {
     if (listData.isEmpty()) {
         CenterLayout(
@@ -220,7 +204,7 @@ fun ListCustomerView(
             items(listData) { data ->
                 CustomerItem(
                     Modifier.clickable {
-                        onItemClick(data.id, data.name)
+                        onItemClick(data.id, data.name, data.isDelete)
                     }, name = data.name, numberPhone = data.phoneNumber, note = data.note
                 )
             }
