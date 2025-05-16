@@ -83,6 +83,8 @@ class AddCustomerViewModel(
         _stateUi.value = _stateUi.value.copy(name = value)
         if (stateUi.value.name.trim().isEmpty()) {
             _isNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+        } else if (stateUi.value.name.trim().length < 3) {
+            _isNameValid.value = ValidationResult(true, "Nama Minimal 3 Karakter")
         } else {
             _isNameValid.value = ValidationResult(false, "")
         }
@@ -111,6 +113,12 @@ class AddCustomerViewModel(
         if (stateUi.value.name.trim().isEmpty()) {
             _isNameValid.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
             _isProsesFailed.value = ValidationResult(true, "Nama Tidak Boleh Kosong")
+            return false
+        }
+
+        if (stateUi.value.name.trim().length < 3) {
+            _isNameValid.value = ValidationResult(true, "Nama Minimal Karakter")
+            _isProsesFailed.value = ValidationResult(true, "Nama Minimal Karakter")
             return false
         }
 

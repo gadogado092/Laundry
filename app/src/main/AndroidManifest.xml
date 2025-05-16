@@ -172,6 +172,12 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.screen.customer.SearchCustomerActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.screen.transaction.SearchTransactionActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"

@@ -205,6 +205,9 @@ class PaymentViewModel(
         if (stateUi.value.customerName.trim().isEmpty()) {
             _isNewCustomerNameValid.value =
                 ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+        } else if (stateUi.value.customerName.trim().length < 3) {
+            _isNewCustomerNameValid.value =
+                ValidationResult(true, "Nama Pelanggan Minimal 3 Karakter")
         } else {
             _isNewCustomerNameValid.value = ValidationResult(false, "")
         }
@@ -342,6 +345,12 @@ class PaymentViewModel(
                 _isNewCustomerNameValid.value =
                     ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
                 _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Tidak Boleh Kosong")
+                return false
+            }
+            if (stateUi.value.customerName.trim().length < 3) {
+                _isNewCustomerNameValid.value =
+                    ValidationResult(true, "Nama Pelanggan Minimal 3 Karakter")
+                _isProsesFailed.value = ValidationResult(true, "Nama Pelanggan Minimal 3 Karakter")
                 return false
             }
             if (_stateUi.value.customerNumberPhone.trim().isEmpty()) {

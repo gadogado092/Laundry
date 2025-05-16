@@ -37,6 +37,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -122,6 +123,20 @@ fun CustomerScreen(
                     )
                 }
             },
+            actions = {
+                IconButton(
+                    onClick = {
+                        val intent = Intent(context, SearchCustomerActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                }
+            }
         )
 
         Box(

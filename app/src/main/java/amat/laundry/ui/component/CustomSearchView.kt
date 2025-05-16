@@ -28,6 +28,7 @@ fun CustomSearchView(
     placeHolderText: String = "Search",
     search: String,
     modifier: Modifier = Modifier,
+    modifierTextField: Modifier = Modifier,
     onClickBack: () -> Unit,
     onValueChange: (String) -> Unit
 ) {
@@ -58,6 +59,7 @@ fun CustomSearchView(
                 .background(backgroundColor),
         ) {
             TextField(
+                modifier = modifierTextField,
                 value = search,
                 onValueChange = onValueChange,
                 colors = TextFieldDefaults.textFieldColors(

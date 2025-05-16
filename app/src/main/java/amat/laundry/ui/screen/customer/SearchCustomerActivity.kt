@@ -1,4 +1,4 @@
-package amat.laundry.ui.screen.transaction
+package amat.laundry.ui.screen.customer
 
 import amat.laundry.R
 import amat.laundry.data.Customer
@@ -9,16 +9,13 @@ import amat.laundry.ui.component.CenterLayout
 import amat.laundry.ui.component.CustomSearchView
 import amat.laundry.ui.component.CustomerItem
 import amat.laundry.ui.component.LoadingLayout
-import amat.laundry.ui.screen.customer.AddCustomerActivity
 import amat.laundry.ui.theme.FontBlack
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.LaundryAppTheme
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -55,7 +52,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-class CustomerActivity : ComponentActivity() {
+class SearchCustomerActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +60,7 @@ class CustomerActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             LaundryAppTheme {
-                CustomerScreen(context)
+                SearchCustomerScreen(context)
                 setResult(1)
             }
         }
@@ -78,16 +75,16 @@ class CustomerActivity : ComponentActivity() {
 }
 
 @Composable
-fun CustomerScreen(
+fun SearchCustomerScreen(
     context: Context
 ) {
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val viewModel: CustomerViewModel =
+    val viewModel: SearchCustomerViewModel =
         viewModel(
-            factory = CustomerViewModelFactory(
+            factory = SearchCustomerViewModelFactory(
                 Injection.provideCustomerRepository(context)
             )
         )
@@ -151,7 +148,9 @@ fun CustomerScreen(
 
                     is UiState.Success -> {
                         ListCustomerView(uiState.data, onItemClick = { id, name, isDelete ->
-                            passCustomerAsResult(id, name, isDelete, context)
+                            val intent = Intent(context, AddCustomerActivity::class.java)
+                            intent.putExtra("id", id)
+                            context.startActivity(intent)
                         })
                     }
 
@@ -180,23 +179,6 @@ fun CustomerScreen(
 
     }
 
-}
-
-private fun passCustomerAsResult(id: String, name: String, isDelete: Boolean, context: Context) {
-
-    if (id == "0" || id == "" || isDelete == true) {
-        Toast.makeText(context, "Data Penyewa Tidak Valid", Toast.LENGTH_SHORT).show()
-        return
-    }
-
-    val data = Intent()
-    data.putExtra("id", id)
-    data.putExtra("name", name)
-
-    val activity = (context as? Activity)
-
-    activity?.setResult(RESULT_OK, data)
-    activity?.finish()
 }
 
 @Composable

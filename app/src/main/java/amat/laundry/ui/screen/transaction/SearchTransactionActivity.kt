@@ -36,8 +36,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
@@ -72,6 +77,9 @@ fun SearchTransactionScreen(
     context: Context
 ) {
 
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val viewModel: SearchTransactionViewModel =
         viewModel(
             factory = SearchTransactionViewModelFactory(
@@ -87,6 +95,10 @@ fun SearchTransactionScreen(
                 viewModel.setSearch(viewModel.searchValue.value)
             }
 
+            Lifecycle.Event.ON_CREATE -> {
+                focusRequester.requestFocus()
+            }
+
             else -> { /* other stuff */
             }
         }
@@ -95,6 +107,13 @@ fun SearchTransactionScreen(
     //START UI
     Column {
         CustomSearchView(
+            modifierTextField = Modifier
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        keyboardController?.show()
+                    }
+                },
             placeHolderText = "Nomor atau Kode Invoice",
             search = viewModel.searchValue.collectAsState().value,
             onValueChange = {
