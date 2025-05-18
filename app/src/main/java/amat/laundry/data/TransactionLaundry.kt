@@ -12,7 +12,7 @@ data class TransactionLaundry(
     val customerName: String,
     val laundryStatusId: Int,
     val isFullPayment: Boolean,
-    val paymentDate: String, //DATE
+    val paymentDate: String, //DATE TIME
     val estimationReadyToPickup: String, //DATE
     val finishAt:String, //DATE
     val totalPrice: String,

@@ -9,7 +9,17 @@ data class HomeUi(
     val totalTransactionMonth: String = "",
 
     val totalCashFlowToday: String = "",
-    val totalCashFlowMonth: String = ""
+    val totalCashFlowMonth: String = "",
+
+    val totalBalance: String = "0",
+    val totalCashInDay: String = "0",
+    val totalCashInMonth: String = "0",
+    val totalCashOutDay: String = "0",
+    val totalCashOutMonth: String = "0",
+
+    val readyToPickup: String = "0",
+    val deadline: String = "0",
+    val late: String = "0",
 )
 
 data class HomeList(

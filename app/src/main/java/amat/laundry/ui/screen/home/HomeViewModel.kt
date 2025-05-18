@@ -34,6 +34,7 @@ class HomeViewModel(
         get() = _stateUser
 
     private var _limitDay = ""
+    private var _typeWa = ""
 
     private val _stateList: MutableStateFlow<UiState<HomeList>> =
         MutableStateFlow(UiState.Loading)
@@ -66,18 +67,94 @@ class HomeViewModel(
 
     }
 
+    fun refresh() {
+        getTotalBalance()
+        getCashInDay()
+        getCashOutDay()
+        getCashOutMonth()
+        getCashInMonth()
+    }
+
     fun getUserInit() {
         try {
             viewModelScope.launch {
                 _stateUser.value = UiState.Loading
                 val data = userRepository.getUser()
                 _limitDay = data[0].limit
+                _typeWa = data[0].typeWa
                 _stateUser.value = UiState.Success(data[0])
             }
         } catch (e: Exception) {
             _stateUser.value = UiState.Error(e.message.toString())
         }
 
+    }
+
+    fun getTotalBalance() {
+        viewModelScope.launch {
+            try {
+                val data = cashFlowRepository.getBalanceNow()
+                _stateUi.value = stateUi.value.copy(totalBalance = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(totalBalance = "e")
+            }
+        }
+    }
+
+    fun getCashOutDay() {
+        viewModelScope.launch {
+            try {
+                val data = cashFlowRepository.getTotalOutcomeByDate(
+                    dateToStartTime(stateUi.value.currentDate),
+                    dateToEndTime(stateUi.value.currentDate)
+                )
+                _stateUi.value = stateUi.value.copy(totalCashOutDay = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(totalCashOutDay = "e")
+            }
+        }
+    }
+
+    fun getCashOutMonth() {
+        viewModelScope.launch {
+            try {
+                val data = cashFlowRepository.getTotalOutcomeByDate(
+                    dateToStartTime(stateUi.value.startDateMonth),
+                    dateToEndTime(stateUi.value.endDateMonth)
+                )
+                _stateUi.value = stateUi.value.copy(totalCashOutMonth = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(totalCashOutMonth = "e")
+            }
+        }
+    }
+
+    fun getCashInDay() {
+        viewModelScope.launch {
+            try {
+                val data = cashFlowRepository.getTotalIncomeByDate(
+                    dateToStartTime(stateUi.value.currentDate),
+                    dateToEndTime(stateUi.value.currentDate)
+                )
+                _stateUi.value = stateUi.value.copy(totalCashInDay = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(totalCashInDay = "e")
+            }
+        }
+    }
+
+    fun getCashInMonth() {
+        viewModelScope.launch {
+            try {
+                val data = cashFlowRepository.getTotalIncomeByDate(
+                    dateToStartTime(stateUi.value.startDateMonth),
+                    dateToEndTime(stateUi.value.endDateMonth)
+                )
+                _stateUi.value = stateUi.value.copy(totalCashInMonth = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(totalCashInMonth = "e")
+            }
+        }
     }
 
     fun getDataTransaction() {
@@ -255,6 +332,10 @@ class HomeViewModel(
         } catch (e: Exception) {
             false
         }
+    }
+
+    fun getTypeWa(): String {
+        return _typeWa
     }
 
 

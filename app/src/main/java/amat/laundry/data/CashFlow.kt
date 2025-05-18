@@ -13,6 +13,6 @@ data class CashFlow(
     val cashFlowCategoryId: String,
     //type 0=in 1=out
     val type: Int,
-    val createAt: String,
+    val createAt: String,// DATE TIME
     val isDelete: Boolean
 )

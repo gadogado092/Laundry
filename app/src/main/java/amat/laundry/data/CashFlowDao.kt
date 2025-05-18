@@ -68,4 +68,32 @@ interface CashFlowDao {
         endDate: String
     ): Sum
 
+    @Query(
+        "SELECT SUM(nominal) AS total " +
+                "FROM cashflow " +
+                "WHERE cashflow.type='1' AND isDelete=0"
+    )
+    suspend fun getTotalOutcome(): Sum
+
+    @Query(
+        "SELECT SUM(totalPrice) AS total " +
+                "FROM transactionlaundry " +
+                "WHERE transactionlaundry.isFullPayment=1 AND isDelete=0"
+    )
+    suspend fun getTotalIncome(): Sum
+
+    @Query(
+        "SELECT SUM(totalPrice) AS total " +
+                "FROM transactionlaundry " +
+                "WHERE transactionlaundry.isFullPayment=1 AND isDelete=0 AND transactionlaundry.paymentDate >= :startDate AND transactionlaundry.paymentDate <= :endDate"
+    )
+    suspend fun getTotalIncomeByDate(startDate: String, endDate: String): Sum
+
+    @Query(
+        "SELECT SUM(nominal) AS total " +
+                "FROM cashflow " +
+                "WHERE cashflow.type='1' AND isDelete=0 AND cashflow.createAt >= :startDate AND cashflow.createAt <= :endDate"
+    )
+    suspend fun getTotalOutcomeByDate(startDate: String, endDate: String): Sum
+
 }

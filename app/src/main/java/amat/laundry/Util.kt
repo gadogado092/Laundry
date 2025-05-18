@@ -255,7 +255,7 @@ fun currencyFormatterStringViewZero(num: String): String {
         val formatter = DecimalFormat("###,###,###,###,###")
         return formatter.format(m).replace(',', '.')
     } catch (e: Exception) {
-        return "error"
+        return "e"
     }
 }
 
