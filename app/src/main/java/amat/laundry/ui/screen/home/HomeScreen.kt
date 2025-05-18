@@ -32,11 +32,8 @@ import amat.laundry.ui.theme.FontGrey
 import amat.laundry.ui.theme.FontWhite
 import amat.laundry.ui.theme.GreenDark
 import amat.laundry.ui.theme.GreyLight
-import amat.laundry.ui.theme.GreyLight2
-import amat.laundry.ui.theme.GreyLight3
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.widget.Button
 import android.widget.TextView
 import androidx.compose.foundation.BorderStroke
@@ -47,36 +44,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowCircleDown
 import androidx.compose.material.icons.filled.ArrowCircleUp
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropDownCircle
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.ManageAccounts
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material.icons.filled.Print
@@ -118,7 +109,8 @@ fun HomeScreen(
                 Injection.provideCategoryRepository(context),
                 Injection.provideDetailTransactionRepository(context),
                 Injection.provideCashFlowCategoryRepository(context),
-                Injection.provideCashFlowRepository(context)
+                Injection.provideCashFlowRepository(context),
+                Injection.provideTransactionRepository(context)
             )
         )
 
@@ -140,6 +132,7 @@ fun HomeScreen(
 
     Column(
         modifier = modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .background(BackgroundGrey)
     ) {
@@ -486,28 +479,35 @@ fun HomeScreen(
                         TopInfo(
                             modifier = Modifier.weight(1F),
                             "Siap Ambil",
-                            "50",
+                            viewModel.stateUi.collectAsState().value.readyToPickup,
                             Icons.Default.ShoppingCartCheckout,
                             GreenDark
                         )
                         TopInfo(
                             modifier = Modifier.weight(1F),
                             "Deadline",
-                            "222",
+                            viewModel.stateUi.collectAsState().value.deadline,
                             Icons.Default.Today,
                             ColorIncome
                         )
                         TopInfo(
                             modifier = Modifier.weight(1F),
                             "Terlambat",
-                            "222",
+                            viewModel.stateUi.collectAsState().value.late,
                             Icons.Default.Timer,
-                            ColorIncome
+                            ColorRed
                         )
                     }
+                    Text(
+                        "deadline-> estimasi besok siap ambil \nterlambat-> hari ini dan sebelumnya siap ambil",
+                        style = TextStyle(fontSize = 12.sp),
+                        color = FontGrey,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 }
             }
 
+            Spacer(Modifier.height(100.dp))
         }
 
     }

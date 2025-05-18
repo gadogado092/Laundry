@@ -1,6 +1,7 @@
 package amat.laundry.data
 
 import amat.laundry.data.entity.InvoiceCode
+import amat.laundry.data.entity.Sum
 import amat.laundry.generateDateTimeNow
 import androidx.room.Dao
 import androidx.room.Insert
@@ -140,4 +141,32 @@ interface TransactionLaundryDao {
         deleteTransaction(transactionId)
         deleteDetailTransaction(transactionId)
     }
+
+    @Query(
+        "SELECT Count(id) AS total " +
+                "FROM transactionlaundry " +
+                "WHERE isDelete=0 AND laundryStatusId=2 "
+    )
+    suspend fun getTotalReadyToPickUp(): Sum
+
+    @Query(
+        "SELECT Count(id) AS total " +
+                "FROM transactionlaundry " +
+                "WHERE isDelete=0 AND laundryStatusId=1 " +
+                "AND transactionlaundry.estimationReadyToPickup <= :dateToday "
+    )
+    suspend fun getTotalLate(
+        dateToday: String
+    ): Sum
+
+    @Query(
+        "SELECT Count(id) AS total " +
+                "FROM transactionlaundry " +
+                "WHERE isDelete=0 AND laundryStatusId=1 " +
+                "AND transactionlaundry.estimationReadyToPickup =:dateTomorrow "
+    )
+    suspend fun getTotalDeadline(
+        dateTomorrow: String
+    ): Sum
+
 }

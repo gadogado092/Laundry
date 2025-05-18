@@ -47,6 +47,36 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         transactionDao.transactionUpdateStatusLaundry(transactionId, statusId, isFullPayment)
     }
 
+    suspend fun getTotalReadyToPickUp(): String {
+        val data = transactionDao.getTotalReadyToPickUp()
+        var total = "0"
+        if (data.total != null) {
+            total = data.total!!
+        }
+
+        return total
+    }
+
+    suspend fun getTotalDeadline(dateTomorrow: String): String {
+        val data = transactionDao.getTotalDeadline(dateTomorrow)
+        var total = "0"
+        if (data.total != null) {
+            total = data.total!!
+        }
+
+        return total
+    }
+
+    suspend fun getTotalLate(dateToday: String): String {
+        val data = transactionDao.getTotalLate(dateToday)
+        var total = "0"
+        if (data.total != null) {
+            total = data.total!!
+        }
+
+        return total
+    }
+
 
     companion object {
         @Volatile

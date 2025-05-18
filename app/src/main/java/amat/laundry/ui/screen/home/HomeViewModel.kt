@@ -6,6 +6,7 @@ import amat.laundry.data.repository.CashFlowCategoryRepository
 import amat.laundry.data.repository.CashFlowRepository
 import amat.laundry.data.repository.CategoryRepository
 import amat.laundry.data.repository.DetailTransactionRepository
+import amat.laundry.data.repository.TransactionRepository
 import amat.laundry.data.repository.UserRepository
 import amat.laundry.dateToEndTime
 import amat.laundry.dateToStartTime
@@ -25,7 +26,8 @@ class HomeViewModel(
     private val categoryRepository: CategoryRepository,
     private val detailTransactionRepository: DetailTransactionRepository,
     private val cashFlowCategoryRepository: CashFlowCategoryRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val cashFlowRepository: CashFlowRepository,
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
     private val _stateUser: MutableStateFlow<UiState<User>> =
@@ -54,6 +56,10 @@ class HomeViewModel(
         //currentDate
         val currentDate = Calendar.getInstance()
 
+        //tomorrow date
+        val calendarTomorrow = Calendar.getInstance()
+        calendarTomorrow.add(Calendar.DAY_OF_MONTH, +1)
+
         //end date
         val endDateMonth = Calendar.getInstance()
         endDateMonth[Calendar.DAY_OF_MONTH] =
@@ -62,7 +68,8 @@ class HomeViewModel(
         setInitDate(
             currentDate = currentDate.time,
             startDateMonth = startDateMonth.time,
-            endDateMonth = endDateMonth.time
+            endDateMonth = endDateMonth.time,
+            tomorrowDate = calendarTomorrow.time
         )
 
     }
@@ -73,6 +80,9 @@ class HomeViewModel(
         getCashOutDay()
         getCashOutMonth()
         getCashInMonth()
+        getTotalReadyToPickUp()
+        getTotalLate()
+        getDeadline()
     }
 
     fun getUserInit() {
@@ -153,6 +163,39 @@ class HomeViewModel(
                 _stateUi.value = stateUi.value.copy(totalCashInMonth = data)
             } catch (_: Exception) {
                 _stateUi.value = stateUi.value.copy(totalCashInMonth = "e")
+            }
+        }
+    }
+
+    fun getTotalReadyToPickUp() {
+        viewModelScope.launch {
+            try {
+                val data = transactionRepository.getTotalReadyToPickUp()
+                _stateUi.value = stateUi.value.copy(readyToPickup = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(readyToPickup = "e")
+            }
+        }
+    }
+
+    fun getTotalLate() {
+        viewModelScope.launch {
+            try {
+                val data = transactionRepository.getTotalLate(stateUi.value.currentDate)
+                _stateUi.value = stateUi.value.copy(late = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(late = "e")
+            }
+        }
+    }
+
+    fun getDeadline() {
+        viewModelScope.launch {
+            try {
+                val data = transactionRepository.getTotalDeadline(stateUi.value.tomorrowDate)
+                _stateUi.value = stateUi.value.copy(deadline = data)
+            } catch (_: Exception) {
+                _stateUi.value = stateUi.value.copy(deadline = "e")
             }
         }
     }
@@ -316,11 +359,17 @@ class HomeViewModel(
         }
     }
 
-    private fun setInitDate(currentDate: Date, startDateMonth: Date, endDateMonth: Date) {
+    private fun setInitDate(
+        currentDate: Date,
+        startDateMonth: Date,
+        endDateMonth: Date,
+        tomorrowDate: Date
+    ) {
         _stateUi.value = stateUi.value.copy(
             currentDate = calenderSelect(currentDate),
             startDateMonth = calenderSelect(startDateMonth),
-            endDateMonth = calenderSelect(endDateMonth)
+            endDateMonth = calenderSelect(endDateMonth),
+            tomorrowDate = calenderSelect(tomorrowDate)
         )
 
     }
@@ -346,7 +395,8 @@ class HomeViewModelFactory(
     private val categoryRepository: CategoryRepository,
     private val detailTransactionRepository: DetailTransactionRepository,
     private val cashFlowCategoryRepository: CashFlowCategoryRepository,
-    private val cashFlowRepository: CashFlowRepository
+    private val cashFlowRepository: CashFlowRepository,
+    private val transactionRepository: TransactionRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
@@ -358,7 +408,8 @@ class HomeViewModelFactory(
                 categoryRepository,
                 detailTransactionRepository,
                 cashFlowCategoryRepository,
-                cashFlowRepository
+                cashFlowRepository,
+                transactionRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

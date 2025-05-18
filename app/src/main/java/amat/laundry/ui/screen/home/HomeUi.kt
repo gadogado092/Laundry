@@ -2,6 +2,7 @@ package amat.laundry.ui.screen.home
 
 data class HomeUi(
     val currentDate: String = "",
+    val tomorrowDate: String = "",
     val startDateMonth: String = "",
     val endDateMonth: String = "",
 
