@@ -47,6 +47,11 @@
             android:theme="@style/Theme.Laundry" />
 
         <activity
+            android:name=".ui.screen.home.TransactionActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Laundry" />
+
+        <activity
             android:name=".ui.screen.onboard.OnboardActivity"
             android:exported="true"
             android:theme="@style/Theme.Laundry"

@@ -143,11 +143,36 @@ interface TransactionLaundryDao {
     }
 
     @Query(
+        "SELECT TransactionLaundry.id AS id, TransactionLaundry.invoiceCode AS invoiceCode, " +
+                "TransactionLaundry.customerName AS customerName, TransactionLaundry.laundryStatusId AS laundryStatusId, TransactionLaundry.isFullPayment AS isFullPayment, " +
+                "TransactionLaundry.paymentDate AS paymentDate, TransactionLaundry.estimationReadyToPickup AS estimationReadyToPickup, TransactionLaundry.finishAt AS finishAt, TransactionLaundry.totalPrice AS totalPrice, TransactionLaundry.createAt AS createAt, " +
+                "Customer.phoneNumber AS customerNumberPhone " +
+                "FROM TransactionLaundry " +
+                "LEFT JOIN (SELECT Customer.id, Customer.phoneNumber FROM Customer) AS Customer ON Customer.id = TransactionLaundry.customerId " +
+                "WHERE TransactionLaundry.isDelete=0 AND TransactionLaundry.laundryStatusId=2 " +
+                "ORDER BY TransactionLaundry.estimationReadyToPickup ASC"
+    )
+    suspend fun getDataReadyToPickUp(): List<TransactionCustomer>
+
+    @Query(
         "SELECT Count(id) AS total " +
                 "FROM transactionlaundry " +
                 "WHERE isDelete=0 AND laundryStatusId=2 "
     )
     suspend fun getTotalReadyToPickUp(): Sum
+
+    @Query(
+        "SELECT TransactionLaundry.id AS id, TransactionLaundry.invoiceCode AS invoiceCode, " +
+                "TransactionLaundry.customerName AS customerName, TransactionLaundry.laundryStatusId AS laundryStatusId, TransactionLaundry.isFullPayment AS isFullPayment, " +
+                "TransactionLaundry.paymentDate AS paymentDate, TransactionLaundry.estimationReadyToPickup AS estimationReadyToPickup, TransactionLaundry.finishAt AS finishAt, TransactionLaundry.totalPrice AS totalPrice, TransactionLaundry.createAt AS createAt, " +
+                "Customer.phoneNumber AS customerNumberPhone " +
+                "FROM TransactionLaundry " +
+                "LEFT JOIN (SELECT Customer.id, Customer.phoneNumber FROM Customer) AS Customer ON Customer.id = TransactionLaundry.customerId " +
+                "WHERE TransactionLaundry.isDelete=0 AND TransactionLaundry.laundryStatusId=1 " +
+                "AND transactionlaundry.estimationReadyToPickup <= :dateToday " +
+                "ORDER BY TransactionLaundry.estimationReadyToPickup ASC"
+    )
+    suspend fun getDataLate(dateToday: String): List<TransactionCustomer>
 
     @Query(
         "SELECT Count(id) AS total " +
@@ -158,6 +183,19 @@ interface TransactionLaundryDao {
     suspend fun getTotalLate(
         dateToday: String
     ): Sum
+
+    @Query(
+        "SELECT TransactionLaundry.id AS id, TransactionLaundry.invoiceCode AS invoiceCode, " +
+                "TransactionLaundry.customerName AS customerName, TransactionLaundry.laundryStatusId AS laundryStatusId, TransactionLaundry.isFullPayment AS isFullPayment, " +
+                "TransactionLaundry.paymentDate AS paymentDate, TransactionLaundry.estimationReadyToPickup AS estimationReadyToPickup, TransactionLaundry.finishAt AS finishAt, TransactionLaundry.totalPrice AS totalPrice, TransactionLaundry.createAt AS createAt, " +
+                "Customer.phoneNumber AS customerNumberPhone " +
+                "FROM TransactionLaundry " +
+                "LEFT JOIN (SELECT Customer.id, Customer.phoneNumber FROM Customer) AS Customer ON Customer.id = TransactionLaundry.customerId " +
+                "WHERE TransactionLaundry.isDelete=0 AND TransactionLaundry.laundryStatusId=1 " +
+                "AND transactionlaundry.estimationReadyToPickup =:dateTomorrow " +
+                "ORDER BY TransactionLaundry.estimationReadyToPickup ASC"
+    )
+    suspend fun getDataDeadLine(dateTomorrow: String): List<TransactionCustomer>
 
     @Query(
         "SELECT Count(id) AS total " +

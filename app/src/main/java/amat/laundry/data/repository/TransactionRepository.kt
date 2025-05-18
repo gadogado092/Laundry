@@ -17,6 +17,18 @@ class TransactionRepository(private val transactionDao: TransactionLaundryDao) {
         return transactionDao.getTransaction(transactionId)
     }
 
+    suspend fun getDataReadyToPickUp(): List<TransactionCustomer> {
+        return transactionDao.getDataReadyToPickUp()
+    }
+
+    suspend fun getDataLate(dateToday: String): List<TransactionCustomer> {
+        return transactionDao.getDataLate(dateToday)
+    }
+
+    suspend fun getDataDeadLine(dateTomorrow: String): List<TransactionCustomer> {
+        return transactionDao.getDataDeadLine(dateTomorrow)
+    }
+
     suspend fun getTransaction(startDate: String, endDate: String): List<TransactionCustomer> {
         return transactionDao.getTransaction(startDate, endDate)
     }

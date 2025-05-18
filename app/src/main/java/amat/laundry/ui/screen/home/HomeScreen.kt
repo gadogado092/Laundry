@@ -477,21 +477,39 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TopInfo(
-                            modifier = Modifier.weight(1F),
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    val intent = Intent(context, TransactionActivity::class.java)
+                                    intent.putExtra("status", "1")
+                                    context.startActivity(intent)
+                                },
                             "Siap Ambil",
                             viewModel.stateUi.collectAsState().value.readyToPickup,
                             Icons.Default.ShoppingCartCheckout,
                             GreenDark
                         )
                         TopInfo(
-                            modifier = Modifier.weight(1F),
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    val intent = Intent(context, TransactionActivity::class.java)
+                                    intent.putExtra("status", "2")
+                                    context.startActivity(intent)
+                                },
                             "Deadline",
                             viewModel.stateUi.collectAsState().value.deadline,
                             Icons.Default.Today,
                             ColorIncome
                         )
                         TopInfo(
-                            modifier = Modifier.weight(1F),
+                            modifier = Modifier
+                                .weight(1F)
+                                .clickable {
+                                    val intent = Intent(context, TransactionActivity::class.java)
+                                    intent.putExtra("status", "3")
+                                    context.startActivity(intent)
+                                },
                             "Terlambat",
                             viewModel.stateUi.collectAsState().value.late,
                             Icons.Default.Timer,
